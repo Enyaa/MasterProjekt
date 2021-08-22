@@ -16,24 +16,28 @@ class MyDrawer extends StatelessWidget {
                 title: const Text('Startseite'),
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/');
                 },
               ),
               ListTile(
                 title: const Text('Aufgaben'),
                 onTap:  () {
                   Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/tasks');
                 },
               ),
               ListTile(
                 title: const Text('Herausforderungen'),
                 onTap:  () {
                   Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/challenges');
                 },
               ),
               ListTile(
                 title: const Text('Bestenlisten'),
                 onTap:  () {
                   Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/leaderboards');
                 },
               ),
             ],
