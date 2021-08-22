@@ -48,6 +48,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Einstellungen'),
             onTap: () {
               Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/settings');
             },
           ),
           ListTile(
@@ -55,6 +56,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Hilfe'),
             onTap: () {
               Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/help');
             },
           ),
           ListTile(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/challenges.dart';
+import 'package:master_projekt/Screens/help.dart';
 import 'package:master_projekt/Screens/homepage.dart';
 import 'package:master_projekt/Screens/leaderboards.dart';
+import 'package:master_projekt/Screens/settings.dart';
 import 'package:master_projekt/Screens/tasks.dart';
 import 'package:master_projekt/drawer.dart';
 
@@ -32,7 +34,9 @@ class MyApp extends StatelessWidget {
         '/': (context) => const Homepage(),
         '/tasks': (context) => const Tasks(),
         '/challenges': (context) => const Challenges(),
-        '/leaderboards': (context) => const Leaderboards()
+        '/leaderboards': (context) => const Leaderboards(),
+        '/settings': (context) => const Settings(),
+        '/help': (context) => const Help(),
       },
     );
   }
