@@ -1,13 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/challenges.dart';
 import 'package:master_projekt/Screens/help.dart';
 import 'package:master_projekt/Screens/homepage.dart';
 import 'package:master_projekt/Screens/leaderboards.dart';
-import 'package:master_projekt/Screens/settings.dart';
+import 'package:master_projekt/Screens/settingsscreen.dart';
 import 'package:master_projekt/Screens/tasks.dart';
-import 'package:master_projekt/drawer.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
         '/tasks': (context) => const Tasks(),
         '/challenges': (context) => const Challenges(),
         '/leaderboards': (context) => const Leaderboards(),
-        '/settings': (context) => const Settings(),
+        '/settings': (context) => const SettingsScreen(),
         '/help': (context) => const Help(),
       },
     );
