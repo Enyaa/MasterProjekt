@@ -12,9 +12,9 @@ class TaskCreate extends StatelessWidget {
     CollectionReference tasks = firestore.collection('tasks');
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    String? title;
-    String? description;
-    String? xp;
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final xpController = TextEditingController();
 
     Future<void> addTask(title, description, xp) {
       return tasks
@@ -58,7 +58,7 @@ class TaskCreate extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                onFieldSubmitted: (String value) {title=value;},
+                controller: titleController,
                 maxLength: 20,
                 decoration: const InputDecoration(
                   hintText: 'Titel'
@@ -71,7 +71,7 @@ class TaskCreate extends StatelessWidget {
                 },
               ),
               TextFormField(
-                onFieldSubmitted: (String value) {description=value;},
+                controller: descriptionController,
                 decoration: const InputDecoration(
                     hintText: 'Beschreibung'
                 ),
@@ -83,7 +83,7 @@ class TaskCreate extends StatelessWidget {
                 },
               ),
               TextFormField(
-                onFieldSubmitted: (String value) {xp=value;},
+                controller: xpController,
                 decoration: const InputDecoration(
                     hintText: 'Punkte'
                 ),
@@ -97,7 +97,7 @@ class TaskCreate extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     if(_formKey.currentState!.validate()) {
-                      addTask(title, description, xp);
+                      addTask(titleController.text, descriptionController.text, xpController.text);
                     }
                   },
                   child: Text('Speichern')
