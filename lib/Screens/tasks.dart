@@ -56,7 +56,7 @@ class Tasks extends StatelessWidget {
 
   getTasks(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data!.docs
-        .map((doc) => new ListTile(title: new Text(doc['title']), subtitle: new Text(doc['description'])))
+        .map((doc) => Card(child: ListTile(title: new Text(doc['title']), subtitle: new Text(doc['description']), trailing: Icon(Icons.arrow_forward_ios_rounded),)))
         .toList();
   }
 }
