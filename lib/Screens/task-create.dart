@@ -54,14 +54,18 @@ class TaskCreate extends StatelessWidget {
         drawer: MyDrawer(),
         body: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          child: Container(
+            margin: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               TextFormField(
                 controller: titleController,
                 maxLength: 20,
                 decoration: const InputDecoration(
-                  hintText: 'Titel'
+                  border: OutlineInputBorder(),
+                  hintText: 'Titel',
+                  labelText: 'Titel'
                 ),
                 validator: (value) {
                   if(value == null || value.isEmpty) {
@@ -70,10 +74,17 @@ class TaskCreate extends StatelessWidget {
                   return null;
                 },
               ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                ),
               TextFormField(
                 controller: descriptionController,
+                maxLines: 5,
+                maxLength: 200,
                 decoration: const InputDecoration(
-                    hintText: 'Beschreibung'
+                    border: OutlineInputBorder(),
+                    hintText: 'Beschreibung',
+                    labelText: 'Beschreibung'
                 ),
                 validator: (value) {
                   if(value == null || value.isEmpty) {
@@ -82,10 +93,15 @@ class TaskCreate extends StatelessWidget {
                   return null;
                 },
               ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                ),
               TextFormField(
                 controller: xpController,
                 decoration: const InputDecoration(
-                    hintText: 'Punkte'
+                    border: OutlineInputBorder(),
+                    hintText: 'Punkte',
+                    labelText: 'Punkte'
                 ),
                 validator: (value) {
                   if(value == null || value.isEmpty) {
@@ -94,10 +110,15 @@ class TaskCreate extends StatelessWidget {
                   return null;
                 },
               ),
+              Padding(
+                padding: EdgeInsets.all(10),
+              ),
               ElevatedButton(
                   onPressed: () {
                     if(_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
                       addTask(titleController.text, descriptionController.text, xpController.text);
+                      Navigator.pushReplacementNamed(context, '/tasks');
                     }
                   },
                   child: Text('Speichern')
@@ -105,6 +126,6 @@ class TaskCreate extends StatelessWidget {
             ],
           ),
         )
-    ));
+    )));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/drawer.dart';
@@ -7,6 +8,7 @@ class Tasks extends StatelessWidget {
 
   @override
   Widget build (BuildContext context) {
+    CollectionReference tasks = FirebaseFirestore.instance.collection('tasks');
 
     return WillPopScope(
         onWillPop: () async {
@@ -33,12 +35,28 @@ class Tasks extends StatelessWidget {
     },child: Scaffold(
       appBar: AppBar(title: const Text('Aufgaben')),
       drawer: MyDrawer(),
-      body: ElevatedButton(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: tasks.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if(!snapshot.hasData) return new Text("Es gibt aktuell keine Aufgaben.");
+          return new ListView(
+            children: getTasks(snapshot),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushReplacementNamed(context, '/task-create');
         },
-        child: Text('Neue Aufgabe erstellen'),
-      )
+        child: const Icon(Icons.add_circle),
+        backgroundColor: Colors.deepOrange,
+      ),
     ));
+  }
+
+  getTasks(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return snapshot.data!.docs
+        .map((doc) => new ListTile(title: new Text(doc['title']), subtitle: new Text(doc['description'])))
+        .toList();
   }
 }
