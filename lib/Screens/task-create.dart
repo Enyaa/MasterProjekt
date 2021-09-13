@@ -17,19 +17,31 @@ class TaskCreate extends StatelessWidget {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
     final xpController = TextEditingController();
+    final subTaskController = TextEditingController();
 
-    initializeDateFormatting('de', null);
+    var subTasks = [];
 
     Future<void> addTask(title, description, xp) {
+      initializeDateFormatting('de', null);
       return tasks
           .add({
         'title': title,
         'description': description,
         'xp': int.parse(xp),
-        'time': DateFormat.yMMMd('de').add_Hm().format(DateTime.now())
+        'time': DateFormat.yMMMd('de').add_Hm().format(DateTime.now()),
+        'subtasks': subTasks
       })
           .then((value) => print("Task added"))
           .catchError((error) => print("Failed to add task: $error"));
+    }
+
+    addSubTask(task) {
+      if(task.isEmpty || task == null) {
+        print('No subtask');
+      } else {
+        subTasks.add(task);
+        print('Subtask added');
+      }
     }
 
     return WillPopScope(
@@ -61,8 +73,7 @@ class TaskCreate extends StatelessWidget {
           key: _formKey,
           child: Container(
             margin: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
               children: [
               TextFormField(
                 controller: titleController,
@@ -101,6 +112,30 @@ class TaskCreate extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(10),
                 ),
+                Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 250,
+                        child: TextFormField(
+                          controller: subTaskController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Hier Teilaufgaben hinzufügen',
+                              labelText: 'Teilaufgabe',
+                          ),
+                        ),
+                      ),
+                  Padding(padding: EdgeInsets.all(10)),
+                  ElevatedButton(onPressed: () {
+                    addSubTask(subTaskController.text);
+                    subTaskController.text = '';
+                    },
+                      child: Icon(Icons.add), style: ElevatedButton.styleFrom(shape: CircleBorder()))
+                ]),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                ),
               TextFormField(
                 controller: xpController,
                 decoration: const InputDecoration(
@@ -112,7 +147,6 @@ class TaskCreate extends StatelessWidget {
                   if(value == null || value.isEmpty) {
                     return 'Bitte geben Sie eine Punktzahl an.';
                   }
-                  return null;
                 },
               ),
               Padding(
