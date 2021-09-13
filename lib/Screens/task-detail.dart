@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 class TaskDetail extends StatelessWidget {
 
-  const TaskDetail({Key? key, required this.title, required this.description, required this.xp, required this.id}) : super(key: key);
+  const TaskDetail({Key? key, required this.title, required this.description, required this.xp, required this.time, required this.id}) : super(key: key);
 
   final String title;
   final String description;
   final int xp;
+  final String time;
   final String id;
 
   @override
@@ -40,7 +41,21 @@ class TaskDetail extends StatelessWidget {
           ,leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
             Navigator.pop(context);
           })),
-      body: Text('Title: ' + title + ' Description: ' + description + ' xp: ' + xp.toString() + ' id: ' + id)
+      body: Container(
+        margin: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+            Padding(padding: EdgeInsets.all(10)),
+            Text(description),
+            Padding(padding: EdgeInsets.all(10)),
+            Text('XP: ' + xp.toString()),
+            Padding(padding: EdgeInsets.all(10)),
+            Text(time)
+          ],
+        )
+      )
     ));
   }
 }

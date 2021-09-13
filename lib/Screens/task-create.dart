@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:master_projekt/drawer.dart';
+import 'package:intl/intl.dart';
 
 class TaskCreate extends StatelessWidget {
   const TaskCreate({Key? key}) : super(key: key);
@@ -16,12 +18,15 @@ class TaskCreate extends StatelessWidget {
     final descriptionController = TextEditingController();
     final xpController = TextEditingController();
 
+    initializeDateFormatting('de', null);
+
     Future<void> addTask(title, description, xp) {
       return tasks
           .add({
         'title': title,
         'description': description,
-        'xp': int.parse(xp)
+        'xp': int.parse(xp),
+        'time': DateFormat.yMMMd('de').add_Hm().format(DateTime.now())
       })
           .then((value) => print("Task added"))
           .catchError((error) => print("Failed to add task: $error"));

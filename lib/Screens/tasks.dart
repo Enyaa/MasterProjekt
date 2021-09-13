@@ -61,7 +61,8 @@ class Tasks extends StatelessWidget {
                                             trailing: Icon(Icons.arrow_forward_ios_rounded),
                                             onTap: () {
                                               Navigator.push(context, MaterialPageRoute(
-                                                  builder: (context) => TaskDetail(title: doc['title'], description: doc['description'], xp: doc['xp'], id: doc.reference.id)));
+                                                  builder: (context) => TaskDetail(title: doc['title'], description: doc['description'], xp: doc['xp'],
+                                                      time: doc['time'], id: doc.reference.id)));
                                             })))
         .toList();
   }
