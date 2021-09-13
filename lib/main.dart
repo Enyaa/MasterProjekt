@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         '/leaderboards': (context) => const Leaderboards(),
         '/settings': (context) => const SettingsScreen(),
         '/help': (context) => const Help(),
-        '/task-create': (context) => const TaskCreate(),
+        '/task-create': (context) => const TaskCreate()
       },
     );
   }

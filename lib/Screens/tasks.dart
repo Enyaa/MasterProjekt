@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/Screens/task-detail.dart';
 import 'package:master_projekt/drawer.dart';
 
 class Tasks extends StatelessWidget {
@@ -40,7 +41,7 @@ class Tasks extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if(!snapshot.hasData) return new Text("Es gibt aktuell keine Aufgaben.");
           return new ListView(
-            children: getTasks(snapshot),
+            children: getTasks(snapshot, context),
           );
         },
       ),
@@ -54,9 +55,14 @@ class Tasks extends StatelessWidget {
     ));
   }
 
-  getTasks(AsyncSnapshot<QuerySnapshot> snapshot) {
+  getTasks(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
-        .map((doc) => Card(child: ListTile(title: new Text(doc['title']), subtitle: new Text(doc['description']), trailing: Icon(Icons.arrow_forward_ios_rounded),)))
+        .map((doc) => Card(child: ListTile(title: new Text(doc['title']), subtitle: new Text(doc['description']),
+                                            trailing: Icon(Icons.arrow_forward_ios_rounded),
+                                            onTap: () {
+                                              Navigator.push(context, MaterialPageRoute(
+                                                  builder: (context) => TaskDetail(title: doc['title'], description: doc['description'], xp: doc['xp'], id: doc.reference.id)));
+                                            })))
         .toList();
   }
 }

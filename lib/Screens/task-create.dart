@@ -21,7 +21,7 @@ class TaskCreate extends StatelessWidget {
           .add({
         'title': title,
         'description': description,
-        'xp': xp
+        'xp': int.parse(xp)
       })
           .then((value) => print("Task added"))
           .catchError((error) => print("Failed to add task: $error"));
