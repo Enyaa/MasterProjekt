@@ -29,7 +29,10 @@ class TaskCreate extends StatelessWidget {
         'description': description,
         'xp': int.parse(xp),
         'time': DateFormat.yMMMd('de').add_Hm().format(DateTime.now()),
-        'subtasks': subTasks
+        'subtasks': subTasks,
+        'accepted': false,
+        'finished': false,
+        'user': ''
       })
           .then((value) => print("Task added"))
           .catchError((error) => print("Failed to add task: $error"));
