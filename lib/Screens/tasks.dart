@@ -93,7 +93,9 @@ class TasksState extends State<Tasks> {
                               subTasks: doc['subtasks'],
                               xp: doc['xp'],
                               time: doc['time'],
-                              id: doc.reference.id)));
+                              id: doc.id,
+                              accepted: doc['accepted'])
+                      ));
                 })))
         .toList();
   }

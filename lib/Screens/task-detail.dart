@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class ListTileModel {
 
 class TaskDetail extends StatefulWidget {
 
-  const TaskDetail({Key? key, required this.title, required this.description, required this.subTasks, required this.xp, required this.time, required this.id}) : super(key: key);
+  const TaskDetail({Key? key, required this.title, required this.description, required this.subTasks, required this.xp, required this.time, required this.id, required this.accepted}) : super(key: key);
 
   final String title;
   final String description;
@@ -18,6 +19,7 @@ class TaskDetail extends StatefulWidget {
   final int xp;
   final String time;
   final String id;
+  final bool accepted;
 
   @override
   _TaskDetailState createState() => _TaskDetailState();
@@ -33,74 +35,88 @@ class _TaskDetailState extends State<TaskDetail> {
   }
 
   void initState() {
-    for(int i = 0; i < widget.subTasks.length; i++) {
+    for (int i = 0; i < widget.subTasks.length; i++) {
       _add(widget.subTasks[i]);
     }
   }
 
   Widget getSubtasks() {
-    if(widget.subTasks.length != 0) {
+    if (widget.subTasks.length != 0) {
       return new ListView(
           shrinkWrap: true,
           children: _items
-              .map((item) => CheckboxListTile(title: Text(item.text), controlAffinity: ListTileControlAffinity.leading, value: item.checked, onChanged: (checked) {
-            item.checked = checked!;
-            setState(() {});
-          })).toList());
+              .map((item) =>
+              CheckboxListTile(title: Text(item.text),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  value: item.checked,
+                  onChanged: (checked) {
+                    item.checked = checked!;
+                    setState(() {});
+                  })).toList());
     } else {
       return Padding(padding: EdgeInsets.all(10));
     }
   }
 
   @override
-  Widget build (BuildContext context) {
-
+  Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
           // show the confirm dialog
           await showDialog(
               context: context,
-              builder: (_) => AlertDialog(
-                title: Text('Go back to Homepage?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () {
-                        willLeave = false;
-                        Navigator.of(context).pop();
-                        Navigator.pushReplacementNamed(context, '/');
-                      },
-                      child: Text('Yes')),
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('No'))
-                ],
-              ));
+              builder: (_) =>
+                  AlertDialog(
+                    title: Text('Go back to Homepage?'),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () {
+                            willLeave = false;
+                            Navigator.of(context).pop();
+                            Navigator.pushReplacementNamed(context, '/');
+                          },
+                          child: Text('Yes')),
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('No'))
+                    ],
+                  ));
           return willLeave;
-        },child: Scaffold(
-      appBar: AppBar(title: const Text('Aufgaben')
-          ,leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
-            Navigator.pop(context);
-          })),
-      body: Container(
-        margin: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-            Padding(padding: EdgeInsets.all(10)),
-            Text(widget.description),
-            getSubtasks(),
-            Text('XP: ' + widget.xp.toString()),
-            Padding(padding: EdgeInsets.all(10)),
-            Row(children: [
-              Icon(Icons.access_time_outlined),
-              Text(' Hochgeladen am '),
-              Text(widget.time)
-            ],)
-          ],
+        }, child: Scaffold(
+        appBar: AppBar(title: const Text('Aufgaben')
+            , leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
+              Navigator.pop(context);
+            })),
+        body: Container(
+            margin: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.title, style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 24)),
+                Padding(padding: EdgeInsets.all(10)),
+                Text(widget.description),
+                getSubtasks(),
+                Text('XP: ' + widget.xp.toString()),
+                Padding(padding: EdgeInsets.all(10)),
+                Row(children: [
+                  Icon(Icons.access_time_outlined),
+                  Text(' Hochgeladen am '),
+                  Text(widget.time)
+                ],),
+                Padding(padding: EdgeInsets.all(10)),
+                if(!widget.accepted) ElevatedButton(
+                    onPressed: () => acceptTask(widget.id), child: Text('Annehmen'))
+              ],
+            )
         )
-      )
     ));
+  }
+
+  void acceptTask(String id) {
+    FirebaseFirestore.instance.collection('tasks').doc(id).update({'accepted': true});
+    Navigator.of(context).pop();
+    Navigator.pushReplacementNamed(context, 'tasks');
   }
 }
