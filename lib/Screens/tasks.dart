@@ -103,7 +103,9 @@ class TasksState extends State<Tasks> {
                               xp: doc['xp'],
                               time: doc['time'],
                               id: doc.id,
-                              accepted: doc['accepted'])
+                              accepted: doc['accepted'],
+                              userId: doc['user'],
+                          ),
                       ));
                 })))
         .toList();

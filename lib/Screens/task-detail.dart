@@ -12,7 +12,8 @@ class ListTileModel {
 
 class TaskDetail extends StatefulWidget {
 
-  const TaskDetail({Key? key, required this.title, required this.description, required this.subTasks, required this.xp, required this.time, required this.id, required this.accepted}) : super(key: key);
+  const TaskDetail({Key? key, required this.title, required this.description, required this.subTasks, required this.xp, required this.time,
+    required this.id, required this.accepted, required this.userId}) : super(key: key);
 
   final String title;
   final String description;
@@ -21,6 +22,7 @@ class TaskDetail extends StatefulWidget {
   final String time;
   final String id;
   final bool accepted;
+  final String userId;
 
   @override
   _TaskDetailState createState() => _TaskDetailState();
@@ -115,7 +117,14 @@ class _TaskDetailState extends State<TaskDetail> {
                   Text(widget.time)
                 ],),
                 Padding(padding: EdgeInsets.all(10)),
-                if(!widget.accepted) ElevatedButton(
+                if(widget.accepted && widget.userId == getUid())
+                  Row(children: [
+                    ElevatedButton(onPressed: () => finishTask(widget.id), child: Text('Abschließen')),
+                    Padding(padding: EdgeInsets.all(10)),
+                    ElevatedButton(onPressed: () => cancelTask(widget.id), child: Text('Abbrechen'))
+                  ],)
+                else if (!widget.accepted)
+                  ElevatedButton(
                     onPressed: () => acceptTask(widget.id), child: Text('Annehmen'))
               ],
             )
@@ -125,6 +134,16 @@ class _TaskDetailState extends State<TaskDetail> {
 
   void acceptTask(String id) {
     FirebaseFirestore.instance.collection('tasks').doc(id).update({'accepted': true, 'user': getUid()});
+    Navigator.of(context).pop();
+    Navigator.pushReplacementNamed(context, 'tasks');
+  }
+  void finishTask(String id) {
+    FirebaseFirestore.instance.collection('tasks').doc(id).update({'finished': true});
+    Navigator.of(context).pop();
+    Navigator.pushReplacementNamed(context, 'tasks');
+  }
+  void cancelTask(String id) {
+    FirebaseFirestore.instance.collection('tasks').doc(id).update({'accepted': false, 'user': ''});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }
