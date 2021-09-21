@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/task-detail.dart';
@@ -12,6 +13,14 @@ class Tasks extends StatefulWidget {
 }
 class TasksState extends State<Tasks> {
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  String getUid() {
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+
+    return uid.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +116,9 @@ class TasksState extends State<Tasks> {
     } else if (value == 2) {
       setSnapshots(tasks.where('accepted', isEqualTo: false).where('finished', isEqualTo: false).snapshots());
     } else if (value == 3) {
-      setSnapshots(tasks.where('accepted', isEqualTo: true).where('finished', isEqualTo: false).snapshots());
+      setSnapshots(tasks.where('accepted', isEqualTo: true).where('user', isEqualTo: getUid()).where('finished', isEqualTo: false).snapshots());
     } else if (value == 4) {
-      setSnapshots(tasks.where('finished', isEqualTo: true).snapshots());
+      setSnapshots(tasks.where('finished', isEqualTo: true).where('user', isEqualTo: getUid()).snapshots());
     }
   }
 

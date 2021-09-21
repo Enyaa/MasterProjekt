@@ -8,6 +8,7 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build (BuildContext context) {
+
     return WillPopScope(
         onWillPop: () async {
       bool willLeave = false;
@@ -32,7 +33,7 @@ class Homepage extends StatelessWidget {
     },child: Scaffold(
         appBar: AppBar(title: const Text('Home')),
         drawer: MyDrawer(),
-        body: Center(child: const Text('Homepage'))
+        body: Center(child: new Text('Homepage'))
     ));
   }
 }

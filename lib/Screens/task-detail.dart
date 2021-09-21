@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +29,14 @@ class TaskDetail extends StatefulWidget {
 class _TaskDetailState extends State<TaskDetail> {
 
   List<ListTileModel> _items = [];
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  String getUid() {
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+
+    return uid.toString();
+  }
 
   void _add(String input) {
     _items.add(ListTileModel(false, input));
@@ -115,7 +124,7 @@ class _TaskDetailState extends State<TaskDetail> {
   }
 
   void acceptTask(String id) {
-    FirebaseFirestore.instance.collection('tasks').doc(id).update({'accepted': true});
+    FirebaseFirestore.instance.collection('tasks').doc(id).update({'accepted': true, 'user': getUid()});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }
