@@ -98,6 +98,10 @@ class _RegisterState extends State<Register> {
                       child: ElevatedButton(onPressed: () async {
                         if (_key.currentState!.validate()) {
                         await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+                        User? user = FirebaseAuth.instance.currentUser;
+                        if (user!= null && !user.emailVerified) {
+                          await user.sendEmailVerification();
+                        }
                         addUser();
                         Navigator.pushReplacementNamed(context, '/homepage');
                         }
@@ -105,7 +109,7 @@ class _RegisterState extends State<Register> {
                     ),
                     ElevatedButton(onPressed: () {
                       Navigator.pushReplacementNamed(context, '/login');
-                    }, child: Text("Login"))
+                    }, child: Text("Ich habe bereits ein Konto"))
                   ],
                 )
             ),

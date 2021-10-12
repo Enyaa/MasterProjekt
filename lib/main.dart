@@ -9,6 +9,7 @@ import 'package:master_projekt/Screens/settingsscreen.dart';
 import 'package:master_projekt/Screens/tasks.dart';
 import 'package:master_projekt/Screens/welcomeScreen.dart';
 import 'package:master_projekt/Screens/register.dart';
+import 'package:master_projekt/Screens/passwortVergessen.dart';
 
 
 void main() async {
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const Welcome(),
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
+        '/password': (context) => const Password(),
         '/homepage': (context) => const Homepage(),
         '/tasks': (context) => const Tasks(),
         '/challenges': (context) => const Challenges(),

@@ -35,18 +35,59 @@ class Login extends StatelessWidget {
         appBar: AppBar(title: const Text('Provisorischer Login')),
         body: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(controller: emailController,),
-            TextField(obscureText: true, controller: passwordController,),
-            ElevatedButton(onPressed: () {
-              Navigator.pushReplacementNamed(context, '/register');
-            }, child: Text("Registrieren")),
+            TextFormField(
+              decoration: const InputDecoration(
+                  icon: Icon(Icons.email),
+                  labelText: 'Email *'
+              ),
+              controller: emailController,
+              validator: validateEmail,
+            ),
+            TextFormField( decoration: const InputDecoration(
+                icon: Icon(Icons.password),
+                labelText: 'Passwort *'
+            ),
+              obscureText: true,
+              controller: passwordController,
+              validator: validatePassword,
+            ),
+
             ElevatedButton(onPressed: () async {
               await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
               Navigator.pushReplacementNamed(context, '/homepage');
-            }, child: Text("Login"))
+            }, child: Text("Login")),
+            ElevatedButton(onPressed: () {
+              Navigator.pushReplacementNamed(context, '/register');
+            }, child: Text("Ich habe noch kein Konto")),
+            ElevatedButton(onPressed: () {
+              Navigator.pushReplacementNamed(context, '/password');
+            }, child: Text("Passwort vergessen"))
     ],
     )
     )));
   }
 }
+
+String? validateEmail(String? formEmail) {
+  if (formEmail == null || formEmail.isEmpty)
+    return 'Bitte gib eine E-Mail an.';
+
+  String pattern = r'\w+@\w+\.\w+';
+  RegExp regex = RegExp(pattern);
+  if (!regex.hasMatch(formEmail)) return 'Keine gültige Mailadresse!';
+
+  return null;
+}
+
+String? validatePassword(String? formPassword) {
+  if (formPassword == null || formPassword.isEmpty)
+    return 'Bitte gib ein Passwort an.';
+
+  if (formPassword.length < 6)
+    return 'Das Passwort muss mind. 6 Zeichen haben';
+
+  return null;
+}
+
