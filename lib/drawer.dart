@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class MyDrawer extends StatelessWidget {
                 title: const Text('Startseite'),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, '/');
+                  Navigator.pushReplacementNamed(context, '/homepage');
                 },
               ),
               ListTile(
@@ -62,8 +63,10 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.input),
             title: const Text('Logout'),
-            onTap: () {
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
               Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/login');
             },
           )
         ],
