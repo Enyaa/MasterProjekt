@@ -32,7 +32,10 @@ class Welcome extends StatelessWidget {
         appBar: AppBar(title: const Text('Welcome')),
         body: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Image(image: AssetImage('Graphics/rettich.png')),
+                Text("TeamRad"),
                 ElevatedButton(onPressed: () {
                   Navigator.pushReplacementNamed(context, '/register');
                 }, child: Text("Registrieren")),
