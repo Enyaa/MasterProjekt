@@ -38,8 +38,8 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
 
     Future<void> addChallenge(title, description, xp, imgUrl) {
       initializeDateFormatting('de', null);
-      return challenges
-          .add({
+      return challenges.doc(uid)
+          .set({
             'title': title,
             'id': uid,
             'description': description,

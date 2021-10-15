@@ -15,7 +15,7 @@ class ChallengeDetail extends StatefulWidget {
   final String id;
   final String userId;
   final String imgUrl;
-  final List<String> finished;
+  final List<dynamic> finished;
 
   @override
   _ChallengeDetailState createState() => _ChallengeDetailState();
@@ -74,14 +74,16 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
                 Text('XP: ' + widget.xp.toString()),
                 Padding(padding: EdgeInsets.all(10)),
                 if(!widget.finished.contains(widget.userId))
-                  ElevatedButton(onPressed: () => finishChallenge(widget.id, widget.userId, widget.finished), child: Text('Abschließen')),
+                  ElevatedButton(onPressed: () => finishChallenge(widget.id, widget.userId), child: Text('Abschließen')),
               ],
             )
         )
     ));
   }
 
-  void finishChallenge(String id, String userId, List<String> finishedArr) {
+  void finishChallenge(String id, String userId) async {
+    var challenge = await FirebaseFirestore.instance.collection('challenges').where('id', isEqualTo: id).get();
+    var finishedArr = challenge.docs[0].data()['finished'];
     finishedArr.add(userId);
     FirebaseFirestore.instance.collection('challenges').doc(id).update({'finished': finishedArr});
     FirebaseFirestore.instance.collection('user').doc(userId).update({'finishedChallengesCount': FieldValue.increment(1)});

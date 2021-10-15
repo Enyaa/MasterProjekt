@@ -34,7 +34,7 @@ class Welcome extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image(image: AssetImage('Graphics/rettich.png')),
+                Image(image: AssetImage('lib/Graphics/rettich.png')),
                 Text("TeamRad"),
                 ElevatedButton(onPressed: () {
                   Navigator.pushReplacementNamed(context, '/register');

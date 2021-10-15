@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:master_projekt/drawer.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class TaskCreate extends StatelessWidget {
   const TaskCreate({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class TaskCreate extends StatelessWidget {
   Widget build (BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference tasks = firestore.collection('tasks');
+    var uid = Uuid().v4();
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final titleController = TextEditingController();
@@ -23,8 +25,8 @@ class TaskCreate extends StatelessWidget {
 
     Future<void> addTask(title, description, xp) {
       initializeDateFormatting('de', null);
-      return tasks
-          .add({
+      return tasks.doc(uid)
+          .set({
         'title': title,
         'description': description,
         'xp': int.parse(xp),
@@ -32,7 +34,8 @@ class TaskCreate extends StatelessWidget {
         'subtasks': subTasks,
         'accepted': false,
         'finished': false,
-        'user': ''
+        'user': '',
+        'id': uid
       })
           .then((value) => print("Task added"))
           .catchError((error) => print("Failed to add task: $error"));

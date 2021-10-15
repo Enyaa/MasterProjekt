@@ -99,8 +99,8 @@ class ChallengesState extends State<Challenges> {
                       title: doc['title'],
                       description: doc['description'],
                       xp: doc['xp'],
-                      id: doc.id,
-                      userId: doc['user'],
+                      id: doc['id'],
+                      userId: getUid(),
                       imgUrl: doc['imgUrl'],
                       finished: doc['finished']
                     ),
@@ -111,13 +111,14 @@ class ChallengesState extends State<Challenges> {
 
   getFiltered(int value) async{
     var challenges = FirebaseFirestore.instance.collection('challenges');
-    var user = await FirebaseFirestore.instance.collection('user').where('userId', isEqualTo: getUid()).get();
+    var user = await FirebaseFirestore.instance.collection('user').where('uid', isEqualTo: getUid()).get();
     var finishedChallenges = user.docs[0].data()['finishedChallenges'];
 
     if(value == 1) {
       setSnapshots(challenges.snapshots());
     } else if (value == 2) {
-      setSnapshots(challenges.where('id', whereNotIn: finishedChallenges));
+      if(finishedChallenges.isNotEmpty) setSnapshots(challenges.where('id', whereNotIn: finishedChallenges).snapshots());
+      else setSnapshots(challenges.snapshots());
     } else if (value == 3) {
       setSnapshots(challenges.where('finished', arrayContains: getUid()).snapshots());
     }
