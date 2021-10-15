@@ -66,9 +66,7 @@ class _RegisterState extends State<Register> {
             padding: EdgeInsets.all(40.0),
             child: Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
