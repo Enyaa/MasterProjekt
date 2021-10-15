@@ -29,20 +29,22 @@ class Welcome extends StatelessWidget {
               ));
           return willLeave;
         },child: Scaffold(
-        appBar: AppBar(title: const Text('Welcome')),
         body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(image: AssetImage('lib/Graphics/rettich.png')),
-                Text("TeamRad"),
-                ElevatedButton(onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/register');
-                }, child: Text("Registrieren")),
-                ElevatedButton(onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/login');
-                }, child: Text("Login"))
-              ],
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Image.asset('lib/Graphics/rettich.png', height: 350, width: 350,),
+                  Text("TeamRad", style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, height: 2), textAlign: TextAlign.center,),
+                  ElevatedButton(onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/register');
+                  }, child: Text("Registrieren"),),
+                  ElevatedButton(onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  }, child: Text("Login"))
+                ],
+              ),
             )
         )));
   }
