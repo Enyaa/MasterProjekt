@@ -17,8 +17,6 @@ class _RegisterState extends State<Register> {
     final passwordController = TextEditingController();
     final nameController = TextEditingController();
     final GlobalKey<FormState> _key = GlobalKey<FormState>();
-    String name;
-    String email;
     int xp = 0;
     int level = 1;
     int finishedTaskCount = 0;
@@ -26,13 +24,14 @@ class _RegisterState extends State<Register> {
     CollectionReference users = FirebaseFirestore.instance.collection('user');
 
     Future<void> addUser() async {
-      return users
-          .add({
-          'email': email = emailController.text,
-          'name': name = nameController.text,
+      return users.doc(FirebaseAuth.instance.currentUser!.uid)
+          .set({
+          'email': emailController.text,
+          'name': nameController.text,
           'xp': xp,
           'level': level,
-          'finishedTaskCount': finishedTaskCount
+          'finishedTaskCount': finishedTaskCount,
+          'uid': FirebaseAuth.instance.currentUser!.uid,
           })
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user"));
@@ -55,6 +54,7 @@ class _RegisterState extends State<Register> {
                       child: Text('Yes')),
                   TextButton(
                       onPressed: () => Navigator.of(context).pop(),
+                      key: _key,
                       child: Text('No'))
                 ],
               ));
@@ -62,7 +62,6 @@ class _RegisterState extends State<Register> {
         },child: Scaffold(
         appBar: AppBar(title: const Text('Provisorischer Register')),
         body: Form(
-          key: _key,
           child: Padding(
             padding: EdgeInsets.all(40.0),
             child: Center(
@@ -91,21 +90,21 @@ class _RegisterState extends State<Register> {
                         labelText: 'Anzeigename *',
                       ),
                       controller: nameController,
+                      validator: validateName,
                     ),
                     Text('Hier noch Bild dazu'),
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       child: ElevatedButton(onPressed: () async {
-                        if (_key.currentState!.validate()) {
                         await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+                        print(FirebaseAuth.instance.currentUser!.uid);
+                        addUser();
                         User? user = FirebaseAuth.instance.currentUser;
-                        if (user!= null && !user.emailVerified) {
+                        if (user != null && !user.emailVerified) {
                           await user.sendEmailVerification();
                         }
-                        addUser();
                         Navigator.pushReplacementNamed(context, '/homepage');
-                        }
-                      }, child: Text("Registrieren")),
+                        }, child: Text("Registrieren")),
                     ),
                     ElevatedButton(onPressed: () {
                       Navigator.pushReplacementNamed(context, '/login');
