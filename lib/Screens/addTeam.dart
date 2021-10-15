@@ -14,6 +14,8 @@ class addTeam extends StatefulWidget {
 }
 
 class _addTeamState extends State<addTeam> {
+  TextEditingController editingController = TextEditingController();
+
   @override
   Widget build (BuildContext context) {
 
@@ -62,10 +64,9 @@ class _addTeamState extends State<addTeam> {
       ),
       body: Form(
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(15.0),
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+              child: ListView(
                 children: [
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Name *'),
@@ -78,6 +79,18 @@ class _addTeamState extends State<addTeam> {
                         fontWeight: FontWeight.bold,
                         leadingDistribution: TextLeadingDistribution.even, height: 5.0),
                   ),
+                  TextField(
+                    onChanged: (value) {
+
+                    },
+                    controller: editingController,
+                    decoration: InputDecoration(
+                        labelText: "Suche",
+                        hintText: "Username",
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                  ),
                   StreamBuilder(
                     stream: snapshots,
                     builder:
@@ -85,14 +98,17 @@ class _addTeamState extends State<addTeam> {
                       if (!snapshot.hasData)
                         return new Text("Du kennst leider keine User");
                       return new ListView(
+                        shrinkWrap: true,
                         children: getUsers(snapshot, context),
                       );
                     }
-                  )
+                  ),
+                  ElevatedButton(onPressed: () {}, child: Text('Team erstellen'))
                 ],
               )
             )
           ),
+
       ),
     ));
   }
@@ -113,7 +129,7 @@ getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
       .map((doc) => Card(
       child: ListTile(
           title: new Text(doc['name']),
-          subtitle: new Text(doc['level'].toString()),
+          subtitle: new Text('Level ' + doc['level'].toString()),
           trailing: Icon(Icons.add),
           )))
       .toList();
