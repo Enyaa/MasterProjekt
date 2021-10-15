@@ -21,6 +21,13 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
+                title: const Text('Teams'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/teams');
+                },
+              ),
+              ListTile(
                 title: const Text('Aufgaben'),
                 onTap:  () {
                   Navigator.pop(context);
@@ -65,8 +72,17 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Logout'),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
+              FirebaseAuth.instance
+                  .authStateChanges()
+                  .listen((User? user) {
+                if (user == null) {
+                  print('User is currently signed out!');
+                } else {
+                  print('User is signed in!');
+                }
+              });
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/login');
+              Navigator.pushReplacementNamed(context, '/');
             },
           )
         ],

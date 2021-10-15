@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +15,28 @@ class _RegisterState extends State<Register> {
   Widget build (BuildContext context) {
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+    final nameController = TextEditingController();
     final GlobalKey<FormState> _key = GlobalKey<FormState>();
+    String name;
+    String email;
+    int xp = 0;
+    int level = 1;
+    int finishedTaskCount = 0;
+
+    CollectionReference users = FirebaseFirestore.instance.collection('user');
+
+    Future<void> addUser() async {
+      return users
+          .add({
+          'email': email = emailController.text,
+          'name': name = nameController.text,
+          'xp': xp,
+          'level': level,
+          'finishedTaskCount': finishedTaskCount
+          })
+      .then((value) => print("User Added"))
+      .catchError((error) => print("Failed to add user"));
+    }
 
     return WillPopScope(
         onWillPop: () async {
@@ -41,22 +63,56 @@ class _RegisterState extends State<Register> {
         appBar: AppBar(title: const Text('Provisorischer Register')),
         body: Form(
           key: _key,
-          child: Center(
-              child: Column(
-                children: [
-                  TextFormField(controller: emailController, validator: validateEmail,),
-                  TextFormField(obscureText: true, controller: passwordController, validator: validatePassword,),
-                  ElevatedButton(onPressed: () async {
-                    if (_key.currentState!.validate()) {
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-                    Navigator.pushReplacementNamed(context, '/homepage');
-                    }
-                  }, child: Text("Registrieren")),
-                  ElevatedButton(onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  }, child: Text("Login"))
-                ],
-              )
+          child: Padding(
+            padding: EdgeInsets.all(40.0),
+            child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                      icon: Icon(Icons.email),
+                        labelText: 'Email *'
+                      ),
+                      controller: emailController,
+                      validator: validateEmail,
+                    ),
+                    TextFormField( decoration: const InputDecoration(
+                      icon: Icon(Icons.password),
+                      labelText: 'Passwort *'
+                      ),
+                      obscureText: true,
+                      controller: passwordController,
+                      validator: validatePassword,
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: 'Anzeigename *',
+                      ),
+                      controller: nameController,
+                    ),
+                    Text('Hier noch Bild dazu'),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: ElevatedButton(onPressed: () async {
+                        if (_key.currentState!.validate()) {
+                        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+                        User? user = FirebaseAuth.instance.currentUser;
+                        if (user!= null && !user.emailVerified) {
+                          await user.sendEmailVerification();
+                        }
+                        addUser();
+                        Navigator.pushReplacementNamed(context, '/homepage');
+                        }
+                      }, child: Text("Registrieren")),
+                    ),
+                    ElevatedButton(onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    }, child: Text("Ich habe bereits ein Konto"))
+                  ],
+                )
+            ),
           ),
         )));
   }
@@ -79,6 +135,17 @@ String? validatePassword(String? formPassword) {
 
   if (formPassword.length < 6)
     return 'Das Passwort muss mind. 6 Zeichen haben';
+
+  return null;
+}
+
+
+String? validateName(String? formName) {
+  if (formName == null || formName.isEmpty)
+    return 'Bitte gib einen Namen ein.';
+
+  if (formName.length < 2)
+    return 'Das Name muss mind. 2 Zeichen haben';
 
   return null;
 }
