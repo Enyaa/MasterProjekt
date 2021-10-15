@@ -67,8 +67,12 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.title, style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 24)),
+                Row(children: [
+                  Text(widget.title, style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 24)),
+                  Padding(padding: EdgeInsets.all(10)),
+                  if(widget.imgUrl != '') ClipRRect(borderRadius: BorderRadius.circular(30),child: Image.network(widget.imgUrl, height: 50, width: 50, fit: BoxFit.fill))
+                ],),
                 Padding(padding: EdgeInsets.all(10)),
                 Text(widget.description),
                 Text('XP: ' + widget.xp.toString()),
