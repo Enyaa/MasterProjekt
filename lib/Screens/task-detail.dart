@@ -13,7 +13,7 @@ class ListTileModel {
 class TaskDetail extends StatefulWidget {
 
   const TaskDetail({Key? key, required this.title, required this.description, required this.subTasks, required this.xp, required this.time,
-    required this.id, required this.accepted, required this.userId}) : super(key: key);
+    required this.id, required this.accepted, required this.finished, required this.userId}) : super(key: key);
 
   final String title;
   final String description;
@@ -22,6 +22,7 @@ class TaskDetail extends StatefulWidget {
   final String time;
   final String id;
   final bool accepted;
+  final bool finished;
   final String userId;
 
   @override
@@ -117,7 +118,9 @@ class _TaskDetailState extends State<TaskDetail> {
                   Text(widget.time)
                 ],),
                 Padding(padding: EdgeInsets.all(10)),
-                if(widget.accepted && widget.userId == getUid())
+                if(widget.finished && widget.userId == getUid())
+                  SizedBox()
+                else if(widget.accepted && widget.userId == getUid())
                   Row(children: [
                     ElevatedButton(onPressed: () => finishTask(widget.id), child: Text('Abschließen')),
                     Padding(padding: EdgeInsets.all(10)),

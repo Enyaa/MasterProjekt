@@ -104,6 +104,7 @@ class TasksState extends State<Tasks> {
                               time: doc['time'],
                               id: doc.id,
                               accepted: doc['accepted'],
+                              finished: doc['finished'],
                               userId: doc['user'],
                           ),
                       ));

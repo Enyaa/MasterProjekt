@@ -45,7 +45,6 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
             'description': description,
             'xp': int.parse(xp),
             'finished': <String>[],
-            'user': '',
             'imgUrl': imgUrl
           })
           .then((value) => print("Challenge added"))
@@ -155,6 +154,12 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                           icon: Icon(Icons.image),
                           label: Text('Bild hochladen')
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                      ),
+                      (imgUrl != null)
+                        ? Image.network(imgUrl!)
+                        : Placeholder(fallbackHeight: 200, fallbackWidth: double.infinity,),
                       Padding(
                         padding: EdgeInsets.all(10),
                       ),
