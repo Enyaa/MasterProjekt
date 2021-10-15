@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/Screens/challenge-create.dart';
 import 'package:master_projekt/Screens/login.dart';
 import 'package:master_projekt/Screens/challenges.dart';
 import 'package:master_projekt/Screens/help.dart';
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: FirebaseAuth.instance.currentUser == null ? '/' : '/homepage',
       routes: {
         '/': (context) => const Welcome(),
         '/login': (context) => const Login(),
@@ -38,7 +40,8 @@ class MyApp extends StatelessWidget {
         '/leaderboards': (context) => const Leaderboards(),
         '/settings': (context) => const SettingsScreen(),
         '/help': (context) => const Help(),
-        '/task-create': (context) => const TaskCreate()
+        '/task-create': (context) => const TaskCreate(),
+        '/challenge-create': (context) => const ChallengeCreate()
       },
     );
   }
