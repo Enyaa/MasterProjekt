@@ -9,9 +9,9 @@ class Leaderboards extends StatelessWidget {
   Widget build (BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-      bool willLeave = false;
-      // show the confirm dialog
-      await showDialog(
+        bool willLeave = false;
+        // show the confirm dialog
+        await showDialog(
           context: context,
           builder: (_) => AlertDialog(
         title: Text('Go back to Homepage?'),
@@ -29,10 +29,22 @@ class Leaderboards extends StatelessWidget {
         ],
       ));
     return willLeave;
-    },child: Scaffold(
-        appBar: AppBar(title: const Text('Bestenlisten')),
-        drawer: MyDrawer(),
-        body: Center(child: const Text('Bestenlisten'))
+    },child: DefaultTabController(
+      length: 3,
+      child: Scaffold(
+          appBar: AppBar(title: const Text('Bestenlisten'),
+              bottom: const TabBar(tabs: [
+                Tab(text: 'XP'),
+                Tab(text: 'Aufgaben'),
+                Tab(text: 'Herausforderungen')
+              ])),
+          drawer: MyDrawer(),
+          body: const TabBarView(children: [
+            Text('XP'),
+            Text('Aufgaben'),
+            Text('Herausforderungen')
+          ])
+      ),
     ));
   }
 }
