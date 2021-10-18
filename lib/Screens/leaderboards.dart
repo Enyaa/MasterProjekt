@@ -88,7 +88,7 @@ class Leaderboards extends StatelessWidget {
           .map((doc) => Card(
           child: ListTile(
               title: new Text(doc['name']),
-              subtitle: new Text('Abgeschlossene Aufgaben: ' + doc['finishedTaskCount'].toString()),
+              subtitle: new Text('Abgeschlossene Aufgaben: ' + doc['finishedTasksCount'].toString()),
               onTap: () {})))
           .toList();
     } else if(mode == 'achievements') {
