@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/challenge-detail.dart';
-import 'package:master_projekt/drawer.dart';
+import 'package:master_projekt/mydrawer.dart';
 
 class Challenges extends StatefulWidget {
   const Challenges({Key? key}) : super(key: key);

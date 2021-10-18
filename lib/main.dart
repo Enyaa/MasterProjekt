@@ -6,11 +6,12 @@ import 'package:master_projekt/Screens/challenge-create.dart';
 import 'package:master_projekt/Screens/login.dart';
 import 'package:master_projekt/Screens/challenges.dart';
 import 'package:master_projekt/Screens/help.dart';
-import 'package:master_projekt/Screens/homepage.dart';
+
 import 'package:master_projekt/Screens/leaderboards.dart';
 import 'package:master_projekt/Screens/settingsscreen.dart';
 import 'package:master_projekt/Screens/task-create.dart';
 import 'package:master_projekt/Screens/tasks.dart';
+import 'package:master_projekt/tabspage.dart';
 import 'package:master_projekt/Screens/welcomeScreen.dart';
 import 'package:master_projekt/Screens/register.dart';
 import 'package:master_projekt/Screens/passwortVergessen.dart';
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
         '/password': (context) => const Password(),
-        '/homepage': (context) => const Homepage(),
+        '/homepage': (context) => TabsPage(selectedIndex: 0),
         '/teams': (context) => const Teams(),
         '/addTeam': (context) => const addTeam(),
         '/tasks': (context) => const Tasks(),
