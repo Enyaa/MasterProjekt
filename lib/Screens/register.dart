@@ -26,15 +26,15 @@ class _RegisterState extends State<Register> {
     Future<void> addUser() async {
       return users.doc(FirebaseAuth.instance.currentUser!.uid)
           .set({
-          'email': emailController.text,
-          'name': nameController.text,
-          'xp': xp,
-          'level': level,
-          'finishedTaskCount': finishedTaskCount,
-          'uid': FirebaseAuth.instance.currentUser!.uid,
-          })
-      .then((value) => print("User Added"))
-      .catchError((error) => print("Failed to add user"));
+        'email': emailController.text,
+        'name': nameController.text,
+        'xp': xp,
+        'level': level,
+        'finishedTaskCount': finishedTaskCount,
+        'uid': FirebaseAuth.instance.currentUser!.uid,
+      })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user"));
     }
 
     return WillPopScope(
@@ -60,57 +60,63 @@ class _RegisterState extends State<Register> {
               ));
           return willLeave;
         },child: Scaffold(
-        appBar: AppBar(title: const Text('Provisorischer Register')),
-        body: Form(
-          child: Padding(
-            padding: EdgeInsets.all(40.0),
-            child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                      icon: Icon(Icons.email),
-                        labelText: 'Email *'
+        body: SingleChildScrollView(
+          child: Form(
+            key: _key,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('lib/Graphics/rettich.png', height: 350, width: 350,),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                            icon: Icon(Icons.email),
+                            labelText: 'Email *'
+                        ),
+                        controller: emailController,
+                        validator: validateEmail,
                       ),
-                      controller: emailController,
-                      validator: validateEmail,
-                    ),
-                    TextFormField( decoration: const InputDecoration(
-                      icon: Icon(Icons.password),
-                      labelText: 'Passwort *'
+                      TextFormField( decoration: const InputDecoration(
+                          icon: Icon(Icons.password),
+                          labelText: 'Passwort *'
                       ),
-                      obscureText: true,
-                      controller: passwordController,
-                      validator: validatePassword,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.person),
-                        labelText: 'Anzeigename *',
+                        obscureText: true,
+                        controller: passwordController,
+                        validator: validatePassword,
                       ),
-                      controller: nameController,
-                      validator: validateName,
-                    ),
-                    Text('Hier noch Bild dazu'),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: ElevatedButton(onPressed: () async {
-                        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-                        print(FirebaseAuth.instance.currentUser!.uid);
-                        addUser();
-                        User? user = FirebaseAuth.instance.currentUser;
-                        if (user != null && !user.emailVerified) {
-                          await user.sendEmailVerification();
-                        }
-                        Navigator.pushReplacementNamed(context, '/homepage');
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.person),
+                          labelText: 'Anzeigename *',
+                        ),
+                        controller: nameController,
+                        validator: validateName,
+                      ),
+                      Text('Hier noch Bild upload hin?', textAlign: TextAlign.center),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: ElevatedButton(onPressed: () async {
+                          if (_key.currentState!.validate()){
+                            await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+                            print(FirebaseAuth.instance.currentUser!.uid);
+                            addUser();
+                            User? user = FirebaseAuth.instance.currentUser;
+                            if (user != null && !user.emailVerified) {
+                              await user.sendEmailVerification();
+                            }
+                            Navigator.pushReplacementNamed(context, '/homepage');
+                          }
                         }, child: Text("Registrieren")),
-                    ),
-                    ElevatedButton(onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/login');
-                    }, child: Text("Ich habe bereits ein Konto"))
-                  ],
-                )
+                      ),
+                      TextButton( onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/login');
+                      }, child: Text("Ich habe bereits ein Konto"))
+                    ],
+                  )
+              ),
             ),
           ),
         )));
@@ -125,7 +131,7 @@ String? validateEmail(String? formEmail) {
   RegExp regex = RegExp(pattern);
   if (!regex.hasMatch(formEmail)) return 'Keine gültige Mailadresse!';
 
-    return null;
+  return null;
 }
 
 String? validatePassword(String? formPassword) {
