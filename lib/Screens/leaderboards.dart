@@ -74,31 +74,75 @@ class Leaderboards extends StatelessWidget {
         ));
   }
 
-  getList(String mode, AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
-    if(mode == 'xp') {
-      return snapshot.data!.docs
-          .map((doc) => Card(
-          child: ListTile(
-              title: new Text(doc['name']),
-              subtitle: new Text('XP: ' + doc['xp'].toString()),
-              onTap: () {})))
+  getList(String mode, AsyncSnapshot<QuerySnapshot> snapshot,
+      BuildContext context) {
+    List<MyUser> _users = new List.empty(growable: true);
+    snapshot.data!.docs.forEach((doc) {
+      String name = doc['name'];
+      int xp = doc['xp'];
+      int finishedTasks = doc['finishedTasksCount'];
+      int finishedChallenges = doc['finishedChallengesCount'];
+
+      MyUser _user = new MyUser(
+          name: name,
+          xp: xp,
+          tasks: finishedTasks,
+          challenges: finishedChallenges);
+      _users.add(_user);
+    });
+
+    if (mode == 'xp') {
+      return sort(_users, 0)
+          .map<Widget>((user) => Card(
+              child: ListTile(
+                  title: new Text(user.name),
+                  subtitle: new Text('XP: ' + user.xp.toString()),
+                  onTap: () {})))
           .toList();
-    } else if(mode == 'tasks') {
-      return snapshot.data!.docs
-          .map((doc) => Card(
-          child: ListTile(
-              title: new Text(doc['name']),
-              subtitle: new Text('Abgeschlossene Aufgaben: ' + doc['finishedTasksCount'].toString()),
-              onTap: () {})))
+    } else if (mode == 'tasks') {
+      return sort(_users, 1)
+          .map<Widget>((user) => Card(
+              child: ListTile(
+                  title: new Text(user.name),
+                  subtitle: new Text('Abgeschlossene Aufgaben: ' +
+                      user.tasks.toString()),
+                  onTap: () {})))
           .toList();
-    } else if(mode == 'achievements') {
-      return snapshot.data!.docs
-          .map((doc) => Card(
-          child: ListTile(
-              title: new Text(doc['name']),
-              subtitle: new Text('Abgeschlossene Achievements: ' + doc['finishedChallengesCount'].toString()),
-              onTap: () {})))
+    } else if (mode == 'achievements') {
+      return sort(_users, 2)
+          .map<Widget>((user) => Card(
+              child: ListTile(
+                  title: new Text(user.name),
+                  subtitle: new Text('Abgeschlossene Achievements: ' +
+                      user.challenges.toString()),
+                  onTap: () {})))
           .toList();
     }
   }
+
+  sort(List<MyUser> users, int mode) {
+    List<MyUser> sorted;
+    if (mode == 0)
+      users.sort((a, b) => a.xp.compareTo(b.xp));
+    else if (mode == 1)
+      users.sort((a, b) => a.tasks.compareTo(b.tasks));
+    else
+      users.sort((a, b) => a.challenges.compareTo(b.challenges));
+
+    sorted = users.reversed.toList();
+    return sorted;
+  }
+}
+
+class MyUser {
+  MyUser(
+      {required this.name,
+      required this.xp,
+      required this.tasks,
+      required this.challenges});
+
+  String name;
+  int xp;
+  int tasks;
+  int challenges;
 }
