@@ -31,6 +31,11 @@ class _addTeamState extends State<addTeam> {
     return list;
   }
 
+  getQueryList(List<dynamic> list){
+    list.add(getUid());
+    return list;
+  }
+
   @override
   Widget build (BuildContext context) {
     var snapshots = FirebaseFirestore.instance.collection('user').where('uid', isNotEqualTo: getUid()).snapshots();
@@ -44,6 +49,7 @@ class _addTeamState extends State<addTeam> {
         'name': nameController.text,
         'member': getList(uidList),
         'creator': getUid(),
+        'queryOperator': getQueryList(uidList),
         'admins': <String>[],
         'mods': <String>[],
         'tasks': <dynamic>[],
