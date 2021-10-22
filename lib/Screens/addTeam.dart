@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/mydrawer.dart';
@@ -14,12 +15,30 @@ class addTeam extends StatefulWidget {
 }
 
 class _addTeamState extends State<addTeam> {
+
+
   TextEditingController editingController = TextEditingController();
+  List<dynamic> toAddList = [];
+  List<dynamic> uidList = [];
+
+  String getUid() {
+      final User? user = FirebaseAuth.instance.currentUser;
+      final uid = user!.uid;
+    return uid.toString();
+  }
+
+  getList(List<dynamic> list){
+    return list;
+  }
+
+  getQueryList(List<dynamic> list){
+    list.add(getUid());
+    return list;
+  }
 
   @override
   Widget build (BuildContext context) {
-
-    var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
+    var snapshots = FirebaseFirestore.instance.collection('user').where('uid', isNotEqualTo: getUid()).snapshots();
     final nameController = TextEditingController();
 
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
@@ -27,6 +46,14 @@ class _addTeamState extends State<addTeam> {
     Future<void> addTeam() async {
       return teams
           .add({
+        'name': nameController.text,
+        'member': getList(uidList),
+        'creator': getUid(),
+        'queryOperator': getQueryList(uidList),
+        'admins': <String>[],
+        'mods': <String>[],
+        'tasks': <dynamic>[],
+        'challenges': <dynamic>[]
       })
           .then((value) => print("Team Added"))
           .catchError((error) => print("Failed to add team"));
@@ -62,59 +89,131 @@ class _addTeamState extends State<addTeam> {
           onPressed:() =>  Navigator.pushReplacementNamed(context, '/teams')
             ,)
       ),
-      body: Form(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Center(
-              child: ListView(
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'Name *'),
-                    controller: nameController,
-                    validator: validateName,
-                  ),
-                  Text('User hinzufügen',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        leadingDistribution: TextLeadingDistribution.even, height: 5.0),
-                  ),
-                  TextField(
-                    onChanged: (value) {
-
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: TextFormField(
+                  decoration: const InputDecoration(labelText: 'Name *'),
+                  controller: nameController,
+                ),
+              ),
+              SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: toAddList.length,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        toAddList.remove(toAddList[index]);
+                        uidList.remove(uidList[index]);
+                      });
                     },
-                    controller: editingController,
-                    decoration: InputDecoration(
-                        labelText: "Suche",
-                        hintText: "Username",
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                    child: Container(
+                      margin: EdgeInsets.all(7.0),
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0.5,
+                            blurRadius: 0.5,
+                            offset: Offset(1,1)
+                          )]),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Icon(Icons.remove_circle_outline, size: 17,),
+                                  ),
+                                  Text(toAddList[index]),
+                                ],
+                              )
+                        ),
+                      )
+                    ),
                   ),
-                  StreamBuilder(
-                    stream: snapshots,
-                    builder:
-                        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData)
-                        return new Text("Du kennst leider keine User");
-                      return new ListView(
-                        shrinkWrap: true,
-                        children: getUsers(snapshot, context),
-                      );
-                    }
-                  ),
-                  ElevatedButton(onPressed: () {}, child: Text('Team erstellen'))
-                ],
-              )
-            )
-          ),
+                ),
+              ),
+              Text('User hinzufügen',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    leadingDistribution: TextLeadingDistribution.even, height: 2.5),
+              ),
+              TextField(
+                onChanged: (value) {
 
+                },
+                controller: editingController,
+                decoration: InputDecoration(
+                    labelText: "Suche",
+                    hintText: "Username",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+              ),
+              StreamBuilder(
+                stream: snapshots,
+                builder:
+                    (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData)
+                    return new Text("Du kennst leider keine User");
+                  return new ListView(
+                    shrinkWrap: true,
+                    children: getUsers(snapshot, context),
+                  );
+                }
+              ),
+              ElevatedButton(onPressed: () {
+                  addTeam();
+                  Navigator.pushReplacementNamed(context, '/teams');
+                }, child: Text('Team erstellen'))
+            ],
+          )
+        ),
       ),
     ));
+  }
+
+  getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
+    return snapshot.data!.docs
+        .map((doc) => Card(
+        child: ListTile(
+          leading: Icon(Icons.account_circle_outlined, size: 45,),
+          title: new Text(doc['name'], style: TextStyle(fontSize: 17),),
+          subtitle: new Text('Level ' + doc['level'].toString()),
+          trailing: Icon(Icons.add),
+          dense: true,
+          onTap: () {
+            setState(() {
+              if (toAddList.contains(doc['name'])){
+                toAddList.remove(doc['name']);
+                uidList.remove(doc['uid']);
+              } else {
+                toAddList.add(doc['name']);
+                uidList.add(doc['uid']);
+              }
+            });
+          },
+        )))
+        .toList();
   }
 }
 
 String? validateName(String? formName) {
+  CollectionReference teams = FirebaseFirestore.instance.collection('teams');
   if (formName == null || formName.isEmpty)
     return 'Bitte gib einen Namen ein.';
 
@@ -124,14 +223,5 @@ String? validateName(String? formName) {
   return null;
 }
 
-getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
-  return snapshot.data!.docs
-      .map((doc) => Card(
-      child: ListTile(
-          title: new Text(doc['name']),
-          subtitle: new Text('Level ' + doc['level'].toString()),
-          trailing: Icon(Icons.add),
-          )))
-      .toList();
-}
+
 
