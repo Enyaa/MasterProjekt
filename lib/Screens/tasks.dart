@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/task-detail.dart';
-import 'package:master_projekt/mydrawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 class Tasks extends StatefulWidget {
   const Tasks({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class Tasks extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new TasksState();
 }
+
 class TasksState extends State<Tasks> {
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,7 +26,6 @@ class TasksState extends State<Tasks> {
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
@@ -49,20 +50,7 @@ class TasksState extends State<Tasks> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Aufgaben'),
-            actions: <Widget>[
-              PopupMenuButton(
-                  itemBuilder: (context) => [
-                        PopupMenuItem(child: Text('Alle'), value: 1),
-                        PopupMenuItem(child: Text('Offen'), value: 2),
-                        PopupMenuItem(child: Text('Angenommen'), value: 3),
-                        PopupMenuItem(child: Text('Abgeschlossen'), value: 4)
-                      ],
-                  onSelected: getFiltered
-              )
-            ],
-          ),
+          appBar: AppBar(title: const Text('Aufgaben')),
           drawer: MyDrawer(),
           body: StreamBuilder<QuerySnapshot>(
             stream: snapshots,
@@ -82,6 +70,7 @@ class TasksState extends State<Tasks> {
             child: const Icon(Icons.add_circle),
             backgroundColor: Colors.deepOrange,
           ),
+          bottomNavigationBar: NavigationBar(2),
         ));
   }
 
@@ -96,32 +85,42 @@ class TasksState extends State<Tasks> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => TaskDetail(
-                              title: doc['title'],
-                              description: doc['description'],
-                              subTasks: doc['subtasks'],
-                              xp: doc['xp'],
-                              time: doc['time'],
-                              id: doc.id,
-                              accepted: doc['accepted'],
-                              finished: doc['finished'],
-                              userId: doc['user'],
-                          ),
+                        builder: (context) => TaskDetail(
+                          title: doc['title'],
+                          description: doc['description'],
+                          subTasks: doc['subtasks'],
+                          xp: doc['xp'],
+                          time: doc['time'],
+                          id: doc.id,
+                          accepted: doc['accepted'],
+                          finished: doc['finished'],
+                          userId: doc['user'],
+                        ),
                       ));
                 })))
         .toList();
   }
 
-   getFiltered(int value) {
+  getFiltered(int value) {
     var tasks = FirebaseFirestore.instance.collection('tasks');
-    if(value == 1) {
+    if (value == 1) {
       setSnapshots(tasks.snapshots());
     } else if (value == 2) {
-      setSnapshots(tasks.where('accepted', isEqualTo: false).where('finished', isEqualTo: false).snapshots());
+      setSnapshots(tasks
+          .where('accepted', isEqualTo: false)
+          .where('finished', isEqualTo: false)
+          .snapshots());
     } else if (value == 3) {
-      setSnapshots(tasks.where('accepted', isEqualTo: true).where('user', isEqualTo: getUid()).where('finished', isEqualTo: false).snapshots());
+      setSnapshots(tasks
+          .where('accepted', isEqualTo: true)
+          .where('user', isEqualTo: getUid())
+          .where('finished', isEqualTo: false)
+          .snapshots());
     } else if (value == 4) {
-      setSnapshots(tasks.where('finished', isEqualTo: true).where('user', isEqualTo: getUid()).snapshots());
+      setSnapshots(tasks
+          .where('finished', isEqualTo: true)
+          .where('user', isEqualTo: getUid())
+          .snapshots());
     }
   }
 

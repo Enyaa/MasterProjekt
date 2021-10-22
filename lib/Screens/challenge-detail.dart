@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 
 class ChallengeDetail extends StatefulWidget {
@@ -81,7 +82,8 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
                   ElevatedButton(onPressed: () => finishChallenge(widget.id, widget.userId), child: Text('Abschließen')),
               ],
             )
-        )
+        ),
+        bottomNavigationBar: NavigationBar(0),
     ));
   }
 

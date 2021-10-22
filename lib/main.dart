@@ -11,12 +11,12 @@ import 'package:master_projekt/Screens/leaderboards.dart';
 import 'package:master_projekt/Screens/settingsscreen.dart';
 import 'package:master_projekt/Screens/task-create.dart';
 import 'package:master_projekt/Screens/tasks.dart';
-import 'package:master_projekt/tabspage.dart';
 import 'package:master_projekt/Screens/welcomeScreen.dart';
 import 'package:master_projekt/Screens/register.dart';
 import 'package:master_projekt/Screens/passwortVergessen.dart';
 import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/addTeam.dart';
+import 'Screens/homepage.dart';
 
 
 void main() async {
@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
         '/password': (context) => const Password(),
-        '/homepage': (context) => TabsPage(selectedIndex: 0),
+        '/homepage': (context) => const Homepage(),
         '/teams': (context) => const Teams(),
         '/addTeam': (context) => const addTeam(),
         '/tasks': (context) => const Tasks(),

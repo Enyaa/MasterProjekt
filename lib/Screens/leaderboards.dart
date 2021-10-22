@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/mydrawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 
 
@@ -36,6 +37,7 @@ class Leaderboards extends StatelessWidget {
           appBar: AppBar(title: const Text('Bestenlisten')),
           drawer: MyDrawer(),
           body: Center(child: const Text('Bestenlisten')),
+          bottomNavigationBar: NavigationBar(4),
         ));
   }
 }

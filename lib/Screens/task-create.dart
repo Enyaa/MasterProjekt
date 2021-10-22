@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:master_projekt/mydrawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:intl/intl.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:uuid/uuid.dart';
 
 class TaskCreate extends StatelessWidget {
@@ -171,6 +172,9 @@ class TaskCreate extends StatelessWidget {
             ],
           ),
         )
-    )));
+    ),
+        bottomNavigationBar: NavigationBar(0)
+    ));
+
   }
 }
