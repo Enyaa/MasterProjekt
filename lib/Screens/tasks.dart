@@ -11,6 +11,7 @@ class Tasks extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new TasksState();
 }
+
 class TasksState extends State<Tasks> {
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,7 +25,6 @@ class TasksState extends State<Tasks> {
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
@@ -59,8 +59,7 @@ class TasksState extends State<Tasks> {
                         PopupMenuItem(child: Text('Angenommen'), value: 3),
                         PopupMenuItem(child: Text('Abgeschlossen'), value: 4)
                       ],
-                  onSelected: getFiltered
-              )
+                  onSelected: getFiltered)
             ],
           ),
           drawer: MyDrawer(),
@@ -96,32 +95,42 @@ class TasksState extends State<Tasks> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => TaskDetail(
-                              title: doc['title'],
-                              description: doc['description'],
-                              subTasks: doc['subtasks'],
-                              xp: doc['xp'],
-                              time: doc['time'],
-                              id: doc.id,
-                              accepted: doc['accepted'],
-                              finished: doc['finished'],
-                              userId: doc['user'],
-                          ),
+                        builder: (context) => TaskDetail(
+                          title: doc['title'],
+                          description: doc['description'],
+                          subTasks: doc['subtasks'],
+                          xp: doc['xp'],
+                          time: doc['time'],
+                          id: doc.id,
+                          accepted: doc['accepted'],
+                          finished: doc['finished'],
+                          userId: doc['user'],
+                        ),
                       ));
                 })))
         .toList();
   }
 
-   getFiltered(int value) {
+  getFiltered(int value) {
     var tasks = FirebaseFirestore.instance.collection('tasks');
-    if(value == 1) {
+    if (value == 1) {
       setSnapshots(tasks.snapshots());
     } else if (value == 2) {
-      setSnapshots(tasks.where('accepted', isEqualTo: false).where('finished', isEqualTo: false).snapshots());
+      setSnapshots(tasks
+          .where('accepted', isEqualTo: false)
+          .where('finished', isEqualTo: false)
+          .snapshots());
     } else if (value == 3) {
-      setSnapshots(tasks.where('accepted', isEqualTo: true).where('user', isEqualTo: getUid()).where('finished', isEqualTo: false).snapshots());
+      setSnapshots(tasks
+          .where('accepted', isEqualTo: true)
+          .where('user', isEqualTo: getUid())
+          .where('finished', isEqualTo: false)
+          .snapshots());
     } else if (value == 4) {
-      setSnapshots(tasks.where('finished', isEqualTo: true).where('user', isEqualTo: getUid()).snapshots());
+      setSnapshots(tasks
+          .where('finished', isEqualTo: true)
+          .where('user', isEqualTo: getUid())
+          .snapshots());
     }
   }
 

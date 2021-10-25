@@ -142,6 +142,7 @@ class _TaskDetailState extends State<TaskDetail> {
   }
   void finishTask(String id) {
     FirebaseFirestore.instance.collection('tasks').doc(id).update({'finished': true});
+    FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'finishedTasksCount': FieldValue.increment(1)});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }
