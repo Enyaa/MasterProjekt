@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/drawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
+
+
 
 class Leaderboards extends StatelessWidget {
   const Leaderboards({Key? key}) : super(key: key);
@@ -9,7 +12,6 @@ class Leaderboards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
-
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
@@ -70,6 +72,7 @@ class Leaderboards extends StatelessWidget {
                 }
               },
             ),
+            bottomNavigationBar: NavigationBar(4),
           ),
         ));
   }

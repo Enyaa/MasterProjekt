@@ -6,7 +6,7 @@ import 'package:master_projekt/Screens/challenge-create.dart';
 import 'package:master_projekt/Screens/login.dart';
 import 'package:master_projekt/Screens/challenges.dart';
 import 'package:master_projekt/Screens/help.dart';
-import 'package:master_projekt/Screens/homepage.dart';
+
 import 'package:master_projekt/Screens/leaderboards.dart';
 import 'package:master_projekt/Screens/settingsscreen.dart';
 import 'package:master_projekt/Screens/task-create.dart';
@@ -16,6 +16,7 @@ import 'package:master_projekt/Screens/register.dart';
 import 'package:master_projekt/Screens/passwortVergessen.dart';
 import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/addTeam.dart';
+import 'Screens/homepage.dart';
 
 
 void main() async {

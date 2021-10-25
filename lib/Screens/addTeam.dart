@@ -1,10 +1,10 @@
-import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/drawer.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 
 class addTeam extends StatefulWidget {
@@ -184,6 +184,7 @@ class _addTeamState extends State<addTeam> {
           )
         ),
       ),
+      bottomNavigationBar: NavigationBar(0),
     ));
   }
 

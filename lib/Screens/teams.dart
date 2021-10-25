@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/drawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 
 class Teams extends StatelessWidget {
@@ -10,7 +11,6 @@ class Teams extends StatelessWidget {
 
   @override
   Widget build (BuildContext context) {
-
 
     CollectionReference users = FirebaseFirestore.instance.collection('user');
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
@@ -66,7 +66,8 @@ class Teams extends StatelessWidget {
         child: const Icon(Icons.add_circle),
         backgroundColor: Colors.deepOrange,
       ),
-    ));;
+      bottomNavigationBar: NavigationBar(0),
+    ));
   }
 
   getTeams(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
