@@ -96,6 +96,7 @@ class Leaderboards extends StatelessWidget {
           .map<Widget>((user) => Card(
               child: ListTile(
                   title: new Text(user.name),
+                  leading: new Text((sort(_users, 0).indexOf(user)+1).toString() + '.', style: TextStyle(fontSize: 40), textAlign: TextAlign.center),
                   subtitle: new Text('XP: ' + user.xp.toString()),
                   onTap: () {})))
           .toList();
@@ -104,6 +105,7 @@ class Leaderboards extends StatelessWidget {
           .map<Widget>((user) => Card(
               child: ListTile(
                   title: new Text(user.name),
+                  leading: new Text((sort(_users, 1).indexOf(user)+1).toString() + '.', style: TextStyle(fontSize: 40), textAlign: TextAlign.center),
                   subtitle: new Text('Abgeschlossene Aufgaben: ' +
                       user.tasks.toString()),
                   onTap: () {})))
@@ -113,6 +115,7 @@ class Leaderboards extends StatelessWidget {
           .map<Widget>((user) => Card(
               child: ListTile(
                   title: new Text(user.name),
+                  leading: new Text((sort(_users, 2).indexOf(user)+1).toString() + '.', style: TextStyle(fontSize: 40), textAlign: TextAlign.center),
                   subtitle: new Text('Abgeschlossene Achievements: ' +
                       user.challenges.toString()),
                   onTap: () {})))
