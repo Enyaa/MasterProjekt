@@ -20,6 +20,8 @@ class _RegisterState extends State<Register> {
     int xp = 0;
     int level = 1;
     int finishedTaskCount = 0;
+    int finishedChallengesCount = 0;
+    List<dynamic> finishedChallenges = [];
 
     CollectionReference users = FirebaseFirestore.instance.collection('user');
 
@@ -31,6 +33,8 @@ class _RegisterState extends State<Register> {
         'xp': xp,
         'level': level,
         'finishedTaskCount': finishedTaskCount,
+        'finishedChallengesCount': finishedChallengesCount,
+        'finishedChallenges': finishedChallenges,
         'uid': FirebaseAuth.instance.currentUser!.uid,
       })
           .then((value) => print("User Added"))
