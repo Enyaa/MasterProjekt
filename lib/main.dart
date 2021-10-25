@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'TeamRad',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepOrange,
       ),
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/' : '/homepage',
       routes: {
