@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/drawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 class Help extends StatelessWidget {
   const Help({Key? key}) : super(key: key);
@@ -32,7 +33,8 @@ class Help extends StatelessWidget {
         },child: Scaffold(
         appBar: AppBar(title: const Text('Hilfe')),
         drawer: MyDrawer(),
-        body: Center(child: const Text('Hilfe'))
+        body: Center(child: const Text('Hilfe')),
+      bottomNavigationBar: NavigationBar(0),
     ));
   }
 }

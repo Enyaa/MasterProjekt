@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/task-detail.dart';
-import 'package:master_projekt/drawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 class Tasks extends StatefulWidget {
   const Tasks({Key? key}) : super(key: key);
@@ -11,7 +12,6 @@ class Tasks extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new TasksState();
 }
-
 class TasksState extends State<Tasks> {
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,6 +25,7 @@ class TasksState extends State<Tasks> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
@@ -81,6 +82,7 @@ class TasksState extends State<Tasks> {
             child: const Icon(Icons.add_circle),
             backgroundColor: Colors.deepOrange,
           ),
+          bottomNavigationBar: NavigationBar(2),
         ));
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/drawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -32,7 +33,8 @@ class SettingsScreen extends StatelessWidget {
         },child: Scaffold(
         appBar: AppBar(title: const Text('Einstellungen')),
         drawer: MyDrawer(),
-        body: Center(child: const Text('Einstellungen'))
+        body: Center(child: const Text('Einstellungen')),
+        bottomNavigationBar: NavigationBar(0),
     ));
   }
 }
