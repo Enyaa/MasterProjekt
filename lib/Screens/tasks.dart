@@ -12,7 +12,6 @@ class Tasks extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new TasksState();
 }
-
 class TasksState extends State<Tasks> {
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -26,6 +25,7 @@ class TasksState extends State<Tasks> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
@@ -50,7 +50,19 @@ class TasksState extends State<Tasks> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: AppBar(title: const Text('Aufgaben')),
+          appBar: AppBar(
+            title: const Text('Aufgaben'),
+            actions: <Widget>[
+              PopupMenuButton(
+                  itemBuilder: (context) => [
+                        PopupMenuItem(child: Text('Alle'), value: 1),
+                        PopupMenuItem(child: Text('Offen'), value: 2),
+                        PopupMenuItem(child: Text('Angenommen'), value: 3),
+                        PopupMenuItem(child: Text('Abgeschlossen'), value: 4)
+                      ],
+                  onSelected: getFiltered)
+            ],
+          ),
           drawer: MyDrawer(),
           body: StreamBuilder<QuerySnapshot>(
             stream: snapshots,

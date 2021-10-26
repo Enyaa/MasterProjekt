@@ -32,7 +32,7 @@ class _RegisterState extends State<Register> {
         'name': nameController.text,
         'xp': xp,
         'level': level,
-        'finishedTaskCount': finishedTaskCount,
+        'finishedTasksCount': finishedTaskCount,
         'finishedChallengesCount': finishedChallengesCount,
         'finishedChallenges': finishedChallenges,
         'uid': FirebaseAuth.instance.currentUser!.uid,
