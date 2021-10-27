@@ -6,8 +6,14 @@ import 'package:master_projekt/drawer.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-class TaskCreate extends StatelessWidget {
+class TaskCreate extends StatefulWidget {
   const TaskCreate({Key? key}) : super(key: key);
+
+  @override
+  _TaskCreateState createState() => _TaskCreateState();
+}
+
+class _TaskCreateState extends State<TaskCreate> {
 
   @override
   Widget build (BuildContext context) {
@@ -45,10 +51,16 @@ class TaskCreate extends StatelessWidget {
       if(task.isEmpty || task == null) {
         print('No subtask');
       } else {
-        subTasks.add(task);
+        setState(() {
+          subTasks.add(task);
+        });
         print('Subtask added');
       }
     }
+
+    // showSubtasks() {
+    //   subTasks.map((subTask) => null);
+    // }
 
     return WillPopScope(
         onWillPop: () async {
