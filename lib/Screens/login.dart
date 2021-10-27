@@ -9,6 +9,7 @@ class Login extends StatelessWidget {
   Widget build (BuildContext context) {
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+    final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
     return WillPopScope(
         onWillPop: () async {
@@ -32,41 +33,55 @@ class Login extends StatelessWidget {
               ));
           return willLeave;
         },child: Scaffold(
-        appBar: AppBar(title: const Text('Provisorischer Login')),
-        body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                  icon: Icon(Icons.email),
-                  labelText: 'Email *'
-              ),
-              controller: emailController,
-              validator: validateEmail,
+        body: SingleChildScrollView(
+          child: Form(
+            key: _key,
+            child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Image.asset('lib/Graphics/rettich.png', height: 350, width: 350,),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                            icon: Icon(Icons.email),
+                            labelText: 'Email *'
+                        ),
+                        controller: emailController,
+                        validator: validateEmail,
+                      ),
+                      TextFormField( decoration: const InputDecoration(
+                          icon: Icon(Icons.password),
+                          labelText: 'Passwort *'
+                      ),
+                        obscureText: true,
+                        controller: passwordController,
+                        validator: validatePassword,
+                      ),
+                      new Container(
+                        margin: EdgeInsets.only(top: 20.0),
+                        child: ElevatedButton(onPressed: () async {
+                          if (_key.currentState!.validate()) {
+                            await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text);
+                            Navigator.pushReplacementNamed(context, '/homepage');
+                          }}, child: Text("Login")),
+                      ),
+                      TextButton(onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/register');
+                      }, child: Text("Ich habe noch kein Konto"),),
+                      TextButton(onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/password');
+                      }, child: Text("Passwort vergessen?"),)
+                    ],
+                  ),
+                )
             ),
-            TextFormField( decoration: const InputDecoration(
-                icon: Icon(Icons.password),
-                labelText: 'Passwort *'
-            ),
-              obscureText: true,
-              controller: passwordController,
-              validator: validatePassword,
-            ),
-
-            ElevatedButton(onPressed: () async {
-              await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-              Navigator.pushReplacementNamed(context, '/homepage');
-            }, child: Text("Login")),
-            ElevatedButton(onPressed: () {
-              Navigator.pushReplacementNamed(context, '/register');
-            }, child: Text("Ich habe noch kein Konto")),
-            ElevatedButton(onPressed: () {
-              Navigator.pushReplacementNamed(context, '/password');
-            }, child: Text("Passwort vergessen"))
-    ],
-    )
-    )));
+          ),
+        )));
   }
 }
 

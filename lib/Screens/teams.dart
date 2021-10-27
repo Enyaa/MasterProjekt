@@ -1,9 +1,9 @@
-import 'dart:ffi';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/drawer.dart';
+import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:master_projekt/navigation/navigationbar.dart';
 
 
 class Teams extends StatelessWidget {
@@ -15,13 +15,13 @@ class Teams extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('user');
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
 
-    Future<void> addTeam() async {
-      return users
-          .add({
-      })
-          .then((value) => print("Team Added"))
-          .catchError((error) => print("Failed to add team"));
+    String getUid() {
+      final User? user = FirebaseAuth.instance.currentUser;
+      final uid = user!.uid;
+      return uid.toString();
     }
+
+    var snapshots = FirebaseFirestore.instance.collection('teams').where('creator', isEqualTo: getUid()).snapshots();
 
     return WillPopScope(
         onWillPop: () async {
@@ -48,16 +48,41 @@ class Teams extends StatelessWidget {
         },child: Scaffold(
         appBar: AppBar(title: const Text('Teams')),
         drawer: MyDrawer(),
-        body: Center(
-            child: const Text('Erstelle ein neues Team!')
-        ),
-            floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/addTeam');
-          },
-          child: const Icon(Icons.add),
-                backgroundColor: Colors.orange,
-        ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: snapshots,
+        builder:
+            (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData)
+            return new Text("Du bist im moment in keinem Team.");
+          return new ListView(
+            children: getTeams(snapshot, context),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, '/addTeam');
+        },
+        child: const Icon(Icons.add_circle),
+        backgroundColor: Colors.deepOrange,
+      ),
+      bottomNavigationBar: NavigationBar(0),
     ));
+  }
+
+  getTeams(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
+    return snapshot.data!.docs
+        .map((doc) => Card(
+      child: ListTile(
+        title: new Text(doc['name']),
+        subtitle: new Text(doc['member'].length.toString() + ' Mitglieder'),
+        leading: Icon(Icons.theater_comedy, size: 40,),
+        trailing: Icon(Icons.arrow_forward),
+        onTap: () {
+          //Navigator.push(context, MaterialPageRoute(builder: (context) => ))
+          print("Go to Detail");
+        },
+      ),
+    )).toList();
   }
 }

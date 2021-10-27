@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
-  Widget build (BuildContext context) {
-   return new Drawer(
-      child: Column (
+  Widget build(BuildContext context) {
+    return new Drawer(
+      child: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           const DrawerHeader(child: Text('Header')),
-          Expanded(child: ListView(
+          Expanded(
+              child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
               ListTile(
+                leading: Icon(Icons.home),
                 title: const Text('Startseite'),
                 onTap: () {
                   Navigator.pop(context);
@@ -21,31 +23,35 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text('Teams'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, '/teams');
-                },
-              ),
-              ListTile(
+                leading: Icon(Icons.note_alt),
                 title: const Text('Aufgaben'),
-                onTap:  () {
+                onTap: () {
                   Navigator.pop(context);
                   Navigator.pushReplacementNamed(context, '/tasks');
                 },
               ),
               ListTile(
+                leading: Icon(Icons.emoji_events),
                 title: const Text('Herausforderungen'),
-                onTap:  () {
+                onTap: () {
                   Navigator.pop(context);
                   Navigator.pushReplacementNamed(context, '/challenges');
                 },
               ),
               ListTile(
+                leading: Icon(Icons.leaderboard),
                 title: const Text('Bestenlisten'),
-                onTap:  () {
+                onTap: () {
                   Navigator.pop(context);
                   Navigator.pushReplacementNamed(context, '/leaderboards');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.group),
+                title: const Text('Teams'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/teams');
                 },
               ),
             ],
@@ -72,9 +78,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Logout'),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
-              FirebaseAuth.instance
-                  .authStateChanges()
-                  .listen((User? user) {
+              FirebaseAuth.instance.authStateChanges().listen((User? user) {
                 if (user == null) {
                   print('User is currently signed out!');
                 } else {
@@ -87,6 +91,6 @@ class MyDrawer extends StatelessWidget {
           )
         ],
       ),
-      );
+    );
   }
 }
