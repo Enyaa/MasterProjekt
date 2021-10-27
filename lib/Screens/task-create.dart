@@ -15,6 +15,7 @@ class TaskCreate extends StatefulWidget {
 }
 
 class _TaskCreateState extends State<TaskCreate> {
+  List<dynamic> subTasks = [];
   @override
   Widget build(BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -26,8 +27,6 @@ class _TaskCreateState extends State<TaskCreate> {
     final descriptionController = TextEditingController();
     final xpController = TextEditingController();
     final subTaskController = TextEditingController();
-
-    var subTasks = [];
 
     Future<void> addTask(title, description, xp) {
       initializeDateFormatting('de', null);
@@ -53,7 +52,9 @@ class _TaskCreateState extends State<TaskCreate> {
         print('No subtask');
       } else {
         print(subTasks.toString());
-        subTasks.add(task);
+        setState(() {
+          subTasks.add(task);
+        });
         print(subTasks.toString());
       }
     }
@@ -149,6 +150,9 @@ class _TaskCreateState extends State<TaskCreate> {
                                 style: ElevatedButton.styleFrom(
                                     shape: CircleBorder()))
                           ]),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                      ),
                       SizedBox(
                         height: 50,
                         child: ListView.builder(
@@ -196,7 +200,7 @@ class _TaskCreateState extends State<TaskCreate> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                       ),
                       TextFormField(
                         controller: xpController,
