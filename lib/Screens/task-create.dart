@@ -58,38 +58,6 @@ class _TaskCreateState extends State<TaskCreate> {
       }
     }
 
-    showSubtasks() {
-      return subTasks.map((subTask) => Container(
-          margin: EdgeInsets.all(7.0),
-          height: 10,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 0.5,
-                    blurRadius: 0.5,
-                    offset: Offset(1, 1))
-              ]),
-          child: Center(
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: Icon(
-                        Icons.remove_circle_outline,
-                        size: 17,
-                      ),
-                    ),
-                    Text(subTask.toString()),
-                  ],
-                )),
-          ))).toList();
-    }
-
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
@@ -138,6 +106,49 @@ class _TaskCreateState extends State<TaskCreate> {
                       ),
                       Padding(
                         padding: EdgeInsets.all(10),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: subTasks.length,
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                subTasks.remove(subTasks[index]);
+                              });
+                            },
+                            child: Container(
+                                margin: EdgeInsets.all(7.0),
+                                height: 10,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 0.5,
+                                          blurRadius: 0.5,
+                                          offset: Offset(1,1)
+                                      )]),
+                                child: Center(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 4.0),
+                                            child: Icon(Icons.remove_circle_outline, size: 17,),
+                                          ),
+                                          Text(subTasks[index]),
+                                        ],
+                                      )
+                                  ),
+                                )
+                            ),
+                          ),
+                        ),
                       ),
                       TextFormField(
                         controller: descriptionController,
