@@ -51,10 +51,11 @@ class _TaskCreateState extends State<TaskCreate> {
       if (task.isEmpty || task == null) {
         print('No subtask');
       } else {
+        print(subTasks.toString());
         setState(() {
           subTasks.add(task);
         });
-        print('Subtask added');
+        print(subTasks.toString());
       }
     }
 
@@ -107,6 +108,48 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(10),
                       ),
+                      TextFormField(
+                        controller: descriptionController,
+                        maxLines: 5,
+                        maxLength: 200,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Beschreibung',
+                            labelText: 'Beschreibung'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Bitte geben Sie eine Beschreibung an.';
+                          }
+                          return null;
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                      ),
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 250,
+                              child: TextFormField(
+                                controller: subTaskController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Hier Teilaufgaben hinzufügen',
+                                  labelText: 'Teilaufgabe',
+                                ),
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.all(10)),
+                            ElevatedButton(
+                                onPressed: () {
+                                  addSubTask(subTaskController.text);
+                                  subTaskController.text = '';
+                                },
+                                child: Icon(Icons.add),
+                                style: ElevatedButton.styleFrom(
+                                    shape: CircleBorder()))
+                          ]),
                       SizedBox(
                         height: 50,
                         child: ListView.builder(
@@ -150,48 +193,6 @@ class _TaskCreateState extends State<TaskCreate> {
                           ),
                         ),
                       ),
-                      TextFormField(
-                        controller: descriptionController,
-                        maxLines: 5,
-                        maxLength: 200,
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Beschreibung',
-                            labelText: 'Beschreibung'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Bitte geben Sie eine Beschreibung an.';
-                          }
-                          return null;
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                      ),
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 250,
-                              child: TextFormField(
-                                controller: subTaskController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Hier Teilaufgaben hinzufügen',
-                                  labelText: 'Teilaufgabe',
-                                ),
-                              ),
-                            ),
-                            Padding(padding: EdgeInsets.all(10)),
-                            ElevatedButton(
-                                onPressed: () {
-                                  addSubTask(subTaskController.text);
-                                  subTaskController.text = '';
-                                },
-                                child: Icon(Icons.add),
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder()))
-                          ]),
                       Padding(
                         padding: EdgeInsets.all(10),
                       ),
