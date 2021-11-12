@@ -18,7 +18,6 @@ import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/addTeam.dart';
 import 'Screens/homepage.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -32,8 +31,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   late StreamSubscription<User?> user;
+
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -46,14 +45,45 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Map<int, Color> color = {
+    50: Color.fromRGBO(53, 53, 53, .1),
+    100: Color.fromRGBO(53, 53, 53, .2),
+    200: Color.fromRGBO(53, 53, 53, .3),
+    300: Color.fromRGBO(53, 53, 53, .4),
+    400: Color.fromRGBO(53, 53, 53, .5),
+    500: Color.fromRGBO(53, 53, 53, .6),
+    600: Color.fromRGBO(53, 53, 53, .7),
+    700: Color.fromRGBO(53, 53, 53, .8),
+    800: Color.fromRGBO(53, 53, 53, .9),
+    900: Color.fromRGBO(53, 53, 53, 1),
+  };
+
   @override
   Widget build(BuildContext context) {
+    MaterialColor darkGrey = MaterialColor(0xff353535, color);
+    MaterialColor grey = MaterialColor(0xff393939, color);
+    Color lightOrange = Color(0xffFB9C26);
+    Color darkOrange = Color(0xffE53147);
+    LinearGradient gradient = LinearGradient(colors: <Color>[darkOrange, lightOrange]);
+
     return MaterialApp(
       title: 'TeamRad',
       theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
+        primaryColor: darkGrey,
+        scaffoldBackgroundColor: darkGrey,
+        bottomAppBarColor: darkGrey,
+        cardColor: grey,
+        textTheme: Typography.whiteCupertino,
+        iconTheme: IconThemeData(color: lightOrange),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: lightOrange
+          ),
+        ),
+        canvasColor: darkGrey,
       ),
-      initialRoute: FirebaseAuth.instance.currentUser == null ? '/' : '/homepage',
+      initialRoute:
+          FirebaseAuth.instance.currentUser == null ? '/' : '/homepage',
       routes: {
         '/': (context) => const Welcome(),
         '/login': (context) => const Login(),

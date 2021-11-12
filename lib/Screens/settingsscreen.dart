@@ -282,6 +282,7 @@ Widget build(BuildContext context) {
                           padding: EdgeInsets.all(10),
                         ),
                         ElevatedButton.icon(
+                          // style: ,
                             onPressed: _imgFromGallery,
                             icon: Icon(Icons.image),
                             label: Text('Bild hochladen')),
