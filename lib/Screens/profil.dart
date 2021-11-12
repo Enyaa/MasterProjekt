@@ -93,27 +93,31 @@ class Profil extends StatelessWidget {
                                     backgroundColor: Colors.grey,
                                   )),
                                   new Container(
-                                      child: Row(children: [
-                                    Text('   Current XP: '),
+                                      child: Column(children: [
                                     Methods(mode: 'currentXp.s'),
-                                    Text('   Points needed: '),
-                                    Methods(mode: 'pointsNeeded.s')
+                                    Methods(mode: 'pointsNeeded.s'),
+                                    Methods(mode: 'checkLevel')
                                   ]))
                                 ]);
                               }
                             }))),
+                SizedBox(
+                  height: 20,
+                ),
                 TabBar(tabs: [
                   Tab(
                       icon: Icon(Icons.star),
-                      child: Text('Punkte', textAlign: TextAlign.center,style: TextStyle(
-                        color: Colors.black))),
+                      child: Text('Punkte',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black))),
                   Tab(
                       icon: Icon(Icons.task),
-                      child: Text('Aufgaben', textAlign: TextAlign.center,style: TextStyle(
-                          color: Colors.black))),
+                      child: Text('Aufgaben',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black))),
                 ]),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                   //child: StreamBuilder<QuerySnapshot>(
                   //    stream: snapshots,
                   //    builder: (BuildContext context,
