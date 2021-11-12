@@ -17,6 +17,7 @@ import 'package:master_projekt/Screens/passwortVergessen.dart';
 import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/addTeam.dart';
 import 'Screens/homepage.dart';
+import 'Screens/profil.dart';
 
 
 void main() async {
@@ -68,7 +69,8 @@ class _MyAppState extends State<MyApp> {
         '/settings': (context) => const SettingsScreen(),
         '/help': (context) => const Help(),
         '/task-create': (context) => const TaskCreate(),
-        '/challenge-create': (context) => const ChallengeCreate()
+        '/challenge-create': (context) => const ChallengeCreate(),
+        '/profil' : (context) => const Profil()
       },
     );
   }
