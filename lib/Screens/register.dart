@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -26,16 +27,21 @@ class _RegisterState extends State<Register> {
     CollectionReference users = FirebaseFirestore.instance.collection('user');
 
     Future<void> addUser() async {
+      var uuid = Uuid();
+      String identifier = nameController.text + '#' + uuid.v4().substring(0,4);
+
       return users.doc(FirebaseAuth.instance.currentUser!.uid)
           .set({
         'email': emailController.text,
         'name': nameController.text,
+        'identifier':identifier,
         'xp': xp,
         'level': level,
         'finishedTasksCount': finishedTaskCount,
         'finishedChallengesCount': finishedChallengesCount,
         'finishedChallenges': finishedChallenges,
         'uid': FirebaseAuth.instance.currentUser!.uid,
+        'imgUrl': ''
       })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user"));
@@ -103,16 +109,28 @@ class _RegisterState extends State<Register> {
                       Padding(
                         padding: EdgeInsets.only(top: 20.0),
                         child: ElevatedButton(onPressed: () async {
-                          if (_key.currentState!.validate()){
-                            await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-                            print(FirebaseAuth.instance.currentUser!.uid);
-                            addUser();
-                            User? user = FirebaseAuth.instance.currentUser;
-                            if (user != null && !user.emailVerified) {
-                              await user.sendEmailVerification();
+                            if (_key.currentState!.validate()) {
+                              try {
+                                await FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text);
+                              } catch (signUpError) {
+                                if(signUpError is PlatformException){
+                                  if(signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Es existiert bereits ein Account mit dieser Adresse')));
+                                  }
+                                }
+                              }
+                              print(FirebaseAuth.instance.currentUser!.uid);
+                              addUser();
+                              User? user = FirebaseAuth.instance.currentUser;
+                              if (user != null && !user.emailVerified) {
+                                await user.sendEmailVerification();
+                              }
+                              Navigator.pushReplacementNamed(
+                                  context, '/homepage');
                             }
-                            Navigator.pushReplacementNamed(context, '/homepage');
-                          }
                         }, child: Text("Registrieren")),
                       ),
                       TextButton( onPressed: () {
@@ -126,14 +144,15 @@ class _RegisterState extends State<Register> {
         )));
   }
 }
-
+/// MUSS NOCH EINZIGARTIG SEIN
 String? validateEmail(String? formEmail) {
   if (formEmail == null || formEmail.isEmpty)
     return 'Bitte gib eine E-Mail an.';
 
   String pattern = r'\w+@\w+\.\w+';
   RegExp regex = RegExp(pattern);
-  if (!regex.hasMatch(formEmail)) return 'Keine gültige Mailadresse!';
+  if (!regex.hasMatch(formEmail))
+    return 'Keine gültige Mailadresse!';
 
   return null;
 }

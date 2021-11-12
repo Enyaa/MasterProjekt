@@ -12,6 +12,7 @@ class Leaderboards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
+
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;

@@ -142,9 +142,12 @@ class _TaskDetailState extends State<TaskDetail> {
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }
-  void finishTask(String id) {
+  Future<void> finishTask(String id) async {
+    var task = await FirebaseFirestore.instance.collection('tasks').where('id', isEqualTo: id).get();
+    var taskXp = task.docs[0].data()['xp'];
     FirebaseFirestore.instance.collection('tasks').doc(id).update({'finished': true});
     FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'finishedTasksCount': FieldValue.increment(1)});
+    FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'xp': FieldValue.increment(taskXp)});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }

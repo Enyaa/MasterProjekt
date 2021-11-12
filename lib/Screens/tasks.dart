@@ -12,7 +12,6 @@ class Tasks extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new TasksState();
 }
-
 class TasksState extends State<Tasks> {
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -26,6 +25,7 @@ class TasksState extends State<Tasks> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
         onWillPop: () async {
           bool willLeave = false;
