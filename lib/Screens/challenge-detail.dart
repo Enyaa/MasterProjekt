@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/level/methods.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
 
@@ -96,6 +97,7 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     FirebaseFirestore.instance.collection('user').doc(userId).update({'finishedChallengesCount': FieldValue.increment(1)});
     FirebaseFirestore.instance.collection('user').doc(userId).update({'finishedChallenges': FieldValue.arrayUnion([id])});
     FirebaseFirestore.instance.collection('user').doc(userId).update({'xp': FieldValue.increment(challengeXp)});
+    Methods(mode: 'checkLevel');
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'challenges');
   }
