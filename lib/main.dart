@@ -64,7 +64,8 @@ class _MyAppState extends State<MyApp> {
     MaterialColor grey = MaterialColor(0xff393939, color);
     Color lightOrange = Color(0xffFB9C26);
     Color darkOrange = Color(0xffE53147);
-    LinearGradient gradient = LinearGradient(colors: <Color>[darkOrange, lightOrange]);
+    LinearGradient gradient =
+        LinearGradient(colors: <Color>[darkOrange, lightOrange]);
 
     return MaterialApp(
       title: 'TeamRad',
@@ -76,8 +77,13 @@ class _MyAppState extends State<MyApp> {
         textTheme: Typography.whiteCupertino,
         iconTheme: IconThemeData(color: lightOrange),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            primary: lightOrange
+          style: ElevatedButton.styleFrom(primary: lightOrange),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(width: 1, color: Colors.white),
+            primary: Colors.white,
+            shape: StadiumBorder(),
           ),
         ),
         canvasColor: darkGrey,

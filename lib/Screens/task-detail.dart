@@ -67,21 +67,26 @@ class _TaskDetailState extends State<TaskDetail> {
           shrinkWrap: true,
           children: _items
               .map((item) => ListTile(
-                  title: Text(item.text,style: TextStyle(fontSize: 16)),
+                  contentPadding: EdgeInsets.all(0),
+                  title: Text(item.text, style: TextStyle(fontSize: 16)),
                   leading: Transform.scale(
                     scale: 1.5,
                     child: Theme(
-                      data: ThemeData(unselectedWidgetColor: Color(0xffFB9C26)),
-                        child: Checkbox(
-                      shape: CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor: Color(0xffFB9C26),
-                      onChanged: (checked) {
-                        item.checked = checked!;
-                        setState(() {});
-                      },
-                      value: item.checked,
-                    )),
+                        data:
+                            ThemeData(unselectedWidgetColor: Color(0xffFB9C26)),
+                        child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Checkbox(
+                              shape: CircleBorder(),
+                              checkColor: Colors.white,
+                              activeColor: Color(0xffFB9C26),
+                              onChanged: (checked) {
+                                item.checked = checked!;
+                                setState(() {});
+                              },
+                              value: item.checked,
+                            ))),
                   )))
               .toList());
     } else {
@@ -123,44 +128,109 @@ class _TaskDetailState extends State<TaskDetail> {
                     Navigator.pop(context);
                   })),
           body: Container(
+            width: double.infinity,
               margin: EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(widget.title,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-                  Padding(padding: EdgeInsets.all(10)),
-                  Text(widget.description, style: TextStyle(fontSize: 16)),
-                  getSubtasks(),
-                  Text('XP: ' + widget.xp.toString()),
-                  Padding(padding: EdgeInsets.all(10)),
-                  Row(
-                    children: [
-                      Icon(Icons.access_time_outlined),
-                      Text(' Hochgeladen am '),
-                      Text(widget.time)
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.all(10)),
+                  Container(
+                      width: 300,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.title,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 24)),
+                          Padding(padding: EdgeInsets.all(10)),
+                          Text(widget.description,
+                              style: TextStyle(fontSize: 18)),
+                          getSubtasks(),
+                          Text('XP: ' + widget.xp.toString()),
+                          Padding(padding: EdgeInsets.all(10)),
+                          Row(
+                            children: [
+                              Icon(Icons.access_time_outlined),
+                              Text(' Hochgeladen am ',
+                                  style: TextStyle(fontSize: 16)),
+                              Text(widget.time, style: TextStyle(fontSize: 16))
+                            ],
+                          ),
+                          Padding(padding: EdgeInsets.all(10)),
+                        ],
+                      )),
                   if (widget.finished && widget.userId == getUid())
                     SizedBox()
                   else if (widget.accepted && widget.userId == getUid())
-                    Row(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                            onPressed: () => finishTask(widget.id),
-                            child: Text('Abschließen')),
+                        Container(
+                            width: 300,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  // 10% of the width, so there are ten blinds.
+                                  colors: <Color>[
+                                    Color(0xffE53147),
+                                    Color(0xffFB9C26)
+                                  ],
+                                  // red to yellow
+                                  tileMode: TileMode
+                                      .repeated, // repeats the gradient over the canvas
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50))),
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    shadowColor: MaterialStateProperty.all(
+                                        Colors.transparent)),
+                                onPressed: () => finishTask(widget.id),
+                                child: Text('Abschließen'))),
                         Padding(padding: EdgeInsets.all(10)),
-                        ElevatedButton(
-                            onPressed: () => cancelTask(widget.id),
-                            child: Text('Abbrechen'))
+                        Container(
+                            height: 50,
+                            width: 300,
+                            child: OutlinedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    shadowColor: MaterialStateProperty.all(
+                                        Colors.transparent)),
+                                onPressed: () => cancelTask(widget.id),
+                                child: Text('Abbrechen')))
                       ],
                     )
                   else if (!widget.accepted)
-                    ElevatedButton(
-                        onPressed: () => acceptTask(widget.id),
-                        child: Text('Annehmen'))
+                    Container(
+                        width: 300,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              // 10% of the width, so there are ten blinds.
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                shadowColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
+                            onPressed: () => acceptTask(widget.id),
+                            child: Text('Annehmen')))
                 ],
               )),
           bottomNavigationBar: NavigationBar(0),
