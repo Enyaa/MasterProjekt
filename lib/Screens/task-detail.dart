@@ -12,9 +12,18 @@ class ListTileModel {
 }
 
 class TaskDetail extends StatefulWidget {
-
-  const TaskDetail({Key? key, required this.title, required this.description, required this.subTasks, required this.xp, required this.time,
-    required this.id, required this.accepted, required this.finished, required this.userId}) : super(key: key);
+  const TaskDetail(
+      {Key? key,
+      required this.title,
+      required this.description,
+      required this.subTasks,
+      required this.xp,
+      required this.time,
+      required this.id,
+      required this.accepted,
+      required this.finished,
+      required this.userId})
+      : super(key: key);
 
   final String title;
   final String description;
@@ -31,7 +40,6 @@ class TaskDetail extends StatefulWidget {
 }
 
 class _TaskDetailState extends State<TaskDetail> {
-
   List<ListTileModel> _items = [];
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -58,14 +66,24 @@ class _TaskDetailState extends State<TaskDetail> {
       return new ListView(
           shrinkWrap: true,
           children: _items
-              .map((item) =>
-              CheckboxListTile(title: Text(item.text),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  value: item.checked,
-                  onChanged: (checked) {
-                    item.checked = checked!;
-                    setState(() {});
-                  })).toList());
+              .map((item) => ListTile(
+                  title: Text(item.text,style: TextStyle(fontSize: 16)),
+                  leading: Transform.scale(
+                    scale: 1.5,
+                    child: Theme(
+                      data: ThemeData(unselectedWidgetColor: Color(0xffFB9C26)),
+                        child: Checkbox(
+                      shape: CircleBorder(),
+                      checkColor: Colors.white,
+                      activeColor: Color(0xffFB9C26),
+                      onChanged: (checked) {
+                        item.checked = checked!;
+                        setState(() {});
+                      },
+                      value: item.checked,
+                    )),
+                  )))
+              .toList());
     } else {
       return Padding(padding: EdgeInsets.all(10));
     }
@@ -79,8 +97,7 @@ class _TaskDetailState extends State<TaskDetail> {
           // show the confirm dialog
           await showDialog(
               context: context,
-              builder: (_) =>
-                  AlertDialog(
+              builder: (_) => AlertDialog(
                     title: Text('Go back to Homepage?'),
                     actions: [
                       ElevatedButton(
@@ -96,63 +113,96 @@ class _TaskDetailState extends State<TaskDetail> {
                     ],
                   ));
           return willLeave;
-        }, child: Scaffold(
-        appBar: AppBar(title: const Text('Aufgaben')
-            , leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
-              Navigator.pop(context);
-            })),
-        body: Container(
-            margin: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.title, style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 24)),
-                Padding(padding: EdgeInsets.all(10)),
-                Text(widget.description),
-                getSubtasks(),
-                Text('XP: ' + widget.xp.toString()),
-                Padding(padding: EdgeInsets.all(10)),
-                Row(children: [
-                  Icon(Icons.access_time_outlined),
-                  Text(' Hochgeladen am '),
-                  Text(widget.time)
-                ],),
-                Padding(padding: EdgeInsets.all(10)),
-                if(widget.finished && widget.userId == getUid())
-                  SizedBox()
-                else if(widget.accepted && widget.userId == getUid())
-                  Row(children: [
-                    ElevatedButton(onPressed: () => finishTask(widget.id), child: Text('Abschließen')),
-                    Padding(padding: EdgeInsets.all(10)),
-                    ElevatedButton(onPressed: () => cancelTask(widget.id), child: Text('Abbrechen'))
-                  ],)
-                else if (!widget.accepted)
-                  ElevatedButton(
-                    onPressed: () => acceptTask(widget.id), child: Text('Annehmen'))
-              ],
-            )
-        ),
-      bottomNavigationBar: NavigationBar(0),
-    ));
+        },
+        child: Scaffold(
+          appBar: AppBar(
+              title: const Text('Aufgaben'),
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  })),
+          body: Container(
+              margin: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.title,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                  Padding(padding: EdgeInsets.all(10)),
+                  Text(widget.description, style: TextStyle(fontSize: 16)),
+                  getSubtasks(),
+                  Text('XP: ' + widget.xp.toString()),
+                  Padding(padding: EdgeInsets.all(10)),
+                  Row(
+                    children: [
+                      Icon(Icons.access_time_outlined),
+                      Text(' Hochgeladen am '),
+                      Text(widget.time)
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(10)),
+                  if (widget.finished && widget.userId == getUid())
+                    SizedBox()
+                  else if (widget.accepted && widget.userId == getUid())
+                    Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () => finishTask(widget.id),
+                            child: Text('Abschließen')),
+                        Padding(padding: EdgeInsets.all(10)),
+                        ElevatedButton(
+                            onPressed: () => cancelTask(widget.id),
+                            child: Text('Abbrechen'))
+                      ],
+                    )
+                  else if (!widget.accepted)
+                    ElevatedButton(
+                        onPressed: () => acceptTask(widget.id),
+                        child: Text('Annehmen'))
+                ],
+              )),
+          bottomNavigationBar: NavigationBar(0),
+        ));
   }
 
   void acceptTask(String id) {
-    FirebaseFirestore.instance.collection('tasks').doc(id).update({'accepted': true, 'user': getUid()});
+    FirebaseFirestore.instance
+        .collection('tasks')
+        .doc(id)
+        .update({'accepted': true, 'user': getUid()});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }
+
   Future<void> finishTask(String id) async {
-    var task = await FirebaseFirestore.instance.collection('tasks').where('id', isEqualTo: id).get();
+    var task = await FirebaseFirestore.instance
+        .collection('tasks')
+        .where('id', isEqualTo: id)
+        .get();
     var taskXp = task.docs[0].data()['xp'];
-    FirebaseFirestore.instance.collection('tasks').doc(id).update({'finished': true});
-    FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'finishedTasksCount': FieldValue.increment(1)});
-    FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'xp': FieldValue.increment(taskXp)});
+    FirebaseFirestore.instance
+        .collection('tasks')
+        .doc(id)
+        .update({'finished': true});
+    FirebaseFirestore.instance
+        .collection('user')
+        .doc(widget.userId)
+        .update({'finishedTasksCount': FieldValue.increment(1)});
+    FirebaseFirestore.instance
+        .collection('user')
+        .doc(widget.userId)
+        .update({'xp': FieldValue.increment(taskXp)});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }
+
   void cancelTask(String id) {
-    FirebaseFirestore.instance.collection('tasks').doc(id).update({'accepted': false, 'user': ''});
+    FirebaseFirestore.instance
+        .collection('tasks')
+        .doc(id)
+        .update({'accepted': false, 'user': ''});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }
