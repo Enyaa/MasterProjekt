@@ -90,10 +90,12 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
   void finishChallenge(String id, String userId) async {
     var challenge = await FirebaseFirestore.instance.collection('challenges').where('id', isEqualTo: id).get();
     var finishedArr = challenge.docs[0].data()['finished'];
+    var challengeXp = challenge.docs[0].data()['xp'];
     finishedArr.add(userId);
     FirebaseFirestore.instance.collection('challenges').doc(id).update({'finished': finishedArr});
     FirebaseFirestore.instance.collection('user').doc(userId).update({'finishedChallengesCount': FieldValue.increment(1)});
     FirebaseFirestore.instance.collection('user').doc(userId).update({'finishedChallenges': FieldValue.arrayUnion([id])});
+    FirebaseFirestore.instance.collection('user').doc(userId).update({'xp': FieldValue.increment(challengeXp)});
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'challenges');
   }
