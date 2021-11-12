@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/level/methods.dart';
-
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
@@ -106,13 +105,15 @@ class Profil extends StatelessWidget {
                 TabBar(tabs: [
                   Tab(
                       icon: Icon(Icons.star),
-                      child: Text('Punkte', textAlign: TextAlign.center)),
+                      child: Text('Punkte', textAlign: TextAlign.center,style: TextStyle(
+                        color: Colors.black))),
                   Tab(
                       icon: Icon(Icons.task),
-                      child: Text('Aufgaben', textAlign: TextAlign.center)),
+                      child: Text('Aufgaben', textAlign: TextAlign.center,style: TextStyle(
+                          color: Colors.black))),
                 ]),
                 SizedBox(
-                  height: 200,
+                  height: 10,
                   //child: StreamBuilder<QuerySnapshot>(
                   //    stream: snapshots,
                   //    builder: (BuildContext context,

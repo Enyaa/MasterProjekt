@@ -149,7 +149,7 @@ class _TaskDetailState extends State<TaskDetail> {
     FirebaseFirestore.instance.collection('tasks').doc(id).update({'finished': true});
     FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'finishedTasksCount': FieldValue.increment(1)});
     FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'xp': FieldValue.increment(taskXp)});
-    Methods(mode: 'checkLevel');
+    Methods(mode:'checkLevel');
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }

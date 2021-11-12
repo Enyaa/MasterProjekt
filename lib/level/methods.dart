@@ -20,9 +20,10 @@ class _MethodsState extends State<Methods> {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('user').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData)
-            return Text('Error, keine Daten von User gefunden!');
+          if (!snapshot.hasData){
+            return Text('Error, keine Daten von User gefunden!');}
           else {
+            print('Vergleich gestartet. Mode  ='+ widget.mode);
             //level als String
             if (widget.mode == 'level.s') {
               var level = snapshot.data!.docs
@@ -46,10 +47,13 @@ class _MethodsState extends State<Methods> {
             }
             //check for Level up and set ned Pointsneeded
             else if (widget.mode == 'checkLevel') {
-              if ((snapshot.data!.docs
-                      .firstWhere((user) => user['uid'] == getUid())['xp']) >=(
-                  snapshot.data!.docs.firstWhere(
-                      (user) => user['uid'] == getUid())['pointsNeeded'])) {
+              var currentXp = snapshot.data!.docs
+                  .firstWhere((user) => user['uid'] == getUid())['xp'];
+              var pointsNeeded =snapshot.data!.docs.firstWhere(
+                      (user) => user['uid'] == getUid())['pointsNeeded'];
+              print('check auf Level');
+              if ( currentXp >=pointsNeeded){
+                print('Vergleich war true ');
                 //Update Level +1
                 FirebaseFirestore.instance
                     .collection('user')
