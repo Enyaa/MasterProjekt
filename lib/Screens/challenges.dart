@@ -79,8 +79,25 @@ class ChallengesState extends State<Challenges> {
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/challenge-create');
             },
-            child: const Icon(Icons.add_circle),
-            backgroundColor: Colors.deepOrange,
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            child: Ink(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    // 10% of the width, so there are ten blinds.
+                    colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
+                    // red to yellow
+                    tileMode: TileMode
+                        .repeated, // repeats the gradient over the canvas
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
+                child: const Icon(Icons.add),
+              ),
+            ),
           ),
           bottomNavigationBar: NavigationBar(3),
         ));
@@ -92,7 +109,18 @@ class ChallengesState extends State<Challenges> {
         child: ListTile(
             title: new Text(doc['title']),
             subtitle: new Text(doc['description']),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
+            trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border:
+                        Border.all(width: 2, color: Color(0xffFB9C26))),
+                    child: Icon(Icons.keyboard_arrow_right_outlined,
+                        color: Color(0xffFB9C26)),
+                  )
+                ]),
             onTap: () {
               Navigator.push(
                   context,
