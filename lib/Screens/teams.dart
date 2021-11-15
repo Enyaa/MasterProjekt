@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
@@ -46,7 +47,7 @@ class Teams extends StatelessWidget {
               ));
           return willLeave;
         },child: Scaffold(
-        appBar: AppBar(title: const Text('Teams')),
+        appBar: MyAppbar(title: 'Teams'),
         drawer: MyDrawer(),
       body: StreamBuilder<QuerySnapshot>(
         stream: snapshots,

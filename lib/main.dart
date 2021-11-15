@@ -86,6 +86,7 @@ class _MyAppState extends State<MyApp> {
             shape: StadiumBorder(),
           ),
         ),
+        inputDecorationTheme: InputDecorationTheme(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white))),
         canvasColor: darkGrey,
       ),
       initialRoute:

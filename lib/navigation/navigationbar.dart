@@ -13,8 +13,18 @@ class NavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-        child: Row(
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+              color: Colors.black54,
+              blurRadius: 15.0,
+              offset: Offset(0.0, 0.75)
+          )
+        ],
+      ),
+        child: BottomAppBar(
+            child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         IconButton(
@@ -40,7 +50,6 @@ class NavigationBar extends StatelessWidget {
             onPressed: () {
               activeIndex = 0;
               Navigator.pushReplacementNamed(context, '/task-create');
-
             }),
         IconButton(
             icon: Icon(Icons.emoji_events,
@@ -61,6 +70,6 @@ class NavigationBar extends StatelessWidget {
               }
             }),
       ],
-    ));
+    )));
   }
 }

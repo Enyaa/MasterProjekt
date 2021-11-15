@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:intl/intl.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
@@ -16,6 +17,7 @@ class TaskCreate extends StatefulWidget {
 
 class _TaskCreateState extends State<TaskCreate> {
   List<dynamic> subTasks = [];
+
   @override
   Widget build(BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -69,6 +71,11 @@ class _TaskCreateState extends State<TaskCreate> {
                     title: Text('Go back to Homepage?'),
                     actions: [
                       ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.transparent),
+                              shadowColor: MaterialStateProperty.all(
+                                  Colors.transparent)),
                           onPressed: () {
                             willLeave = false;
                             Navigator.of(context).pop();
@@ -83,7 +90,7 @@ class _TaskCreateState extends State<TaskCreate> {
           return willLeave;
         },
         child: Scaffold(
-            appBar: AppBar(title: const Text('Aufgaben')),
+            appBar: MyAppbar(title: 'Aufgaben'),
             drawer: MyDrawer(),
             body: Form(
                 key: _formKey,
@@ -141,14 +148,37 @@ class _TaskCreateState extends State<TaskCreate> {
                               ),
                             ),
                             Padding(padding: EdgeInsets.all(10)),
-                            ElevatedButton(
-                                onPressed: () {
-                                  addSubTask(subTaskController.text);
-                                  subTaskController.text = '';
-                                },
-                                child: Icon(Icons.add),
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder()))
+                            Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      // 10% of the width, so there are ten blinds.
+                                      colors: <Color>[
+                                        Color(0xffE53147),
+                                        Color(0xffFB9C26)
+                                      ],
+                                      // red to yellow
+                                      tileMode: TileMode
+                                          .repeated, // repeats the gradient over the canvas
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50))),
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      addSubTask(subTaskController.text);
+                                      subTaskController.text = '';
+                                    },
+                                    child: Icon(Icons.add, size: 25),
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.transparent),
+                                      shadowColor: MaterialStateProperty.all(
+                                          Colors.transparent),
+                                    )))
                           ]),
                       Padding(
                         padding: EdgeInsets.all(5),
@@ -217,18 +247,42 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(10),
                       ),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              addTask(
-                                  titleController.text,
-                                  descriptionController.text,
-                                  xpController.text);
-                              Navigator.pushReplacementNamed(context, '/tasks');
-                            }
-                          },
-                          child: Text('Speichern'))
+                      Container(
+                          width: 300,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                // 10% of the width, so there are ten blinds.
+                                colors: <Color>[
+                                  Color(0xffE53147),
+                                  Color(0xffFB9C26)
+                                ],
+                                // red to yellow
+                                tileMode: TileMode
+                                    .repeated, // repeats the gradient over the canvas
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50))),
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  shadowColor: MaterialStateProperty.all(
+                                      Colors.transparent)),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  addTask(
+                                      titleController.text,
+                                      descriptionController.text,
+                                      xpController.text);
+                                  Navigator.pushReplacementNamed(
+                                      context, '/tasks');
+                                }
+                              },
+                              child: Text('Speichern')))
                     ],
                   ),
                 )),

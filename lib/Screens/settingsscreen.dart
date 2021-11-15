@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'dart:io';
@@ -217,7 +218,7 @@ Widget build(BuildContext context) {
         return willLeave;
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Einstellungen')),
+        appBar: MyAppbar(title: 'Einstellungen'),
         drawer: MyDrawer(),
         body: SingleChildScrollView(
           child: Column(
