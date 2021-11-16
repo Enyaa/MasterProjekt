@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
+import 'package:uuid/uuid.dart';
 
 class addTeam extends StatefulWidget {
   const addTeam({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _addTeamState extends State<addTeam> {
   TextEditingController editingController = TextEditingController();
   List<dynamic> toAddList = [];
   List<dynamic> uidList = [];
+  List<dynamic> memberList = [];
 
   String getUid() {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -42,19 +44,23 @@ class _addTeamState extends State<addTeam> {
     final nameController = TextEditingController();
 
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
+    var uuid = Uuid().v4();
+    memberList = uidList;
+    memberList.remove(getUid());
 
     Future<void> addTeam() async {
-      return teams
-          .add({
-            'name': nameController.text,
-            'member': getList(uidList),
-            'creator': getUid(),
-            'queryOperator': getQueryList(uidList),
-            'admins': <String>[],
-            'mods': <String>[],
-            'tasks': <dynamic>[],
-            'challenges': <dynamic>[]
-          })
+      return teams.doc(uuid)
+          .set({
+        'name': nameController.text,
+        'member': getList(memberList),
+        'creator': getUid(),
+        'queryOperator': getQueryList(uidList),
+        'admins': <String>[],
+        'mods': <String>[],
+        'tasks': <dynamic>[],
+        'challenges': <dynamic>[],
+        'id': uuid,
+      })
           .then((value) => print("Team Added"))
           .catchError((error) => print("Failed to add team"));
     }
@@ -250,13 +256,4 @@ class _addTeamState extends State<addTeam> {
             )))
         .toList();
   }
-}
-
-String? validateName(String? formName) {
-  CollectionReference teams = FirebaseFirestore.instance.collection('teams');
-  if (formName == null || formName.isEmpty) return 'Bitte gib einen Namen ein.';
-
-  if (formName.length < 2) return 'Das Name muss mind. 2 Zeichen haben';
-
-  return null;
 }
