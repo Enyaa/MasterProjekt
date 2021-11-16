@@ -92,8 +92,8 @@ class Teams extends StatelessWidget {
       child: ListTile(
         title: new Text(doc['name']),
         subtitle: new Text((doc['member'].length + doc['admins'].length + 1).toString() + ' Mitglieder'),
-        leading: Icon(Icons.theater_comedy, size: 40,),
-        trailing: Icon(Icons.arrow_forward),
+        leading: Icon(Icons.theater_comedy, size: 40, color: Color(0xffFB9C26)),
+        trailing: Icon(Icons.arrow_forward, color: Color(0xffFB9C26)),
         onTap: () {
           Navigator.push(
               context,

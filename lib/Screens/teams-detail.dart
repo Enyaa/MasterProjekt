@@ -74,12 +74,14 @@ class _TeamsDetailState extends State<TeamsDetail> {
               Container(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(widget.teamName),
+                  child: Text(widget.teamName, style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24)),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Creator", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text("Creator", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               ),
               StreamBuilder(
                   stream: snapshots,
@@ -93,7 +95,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Admins", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text("Admins", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               ),
               StreamBuilder(
                   stream: snapshots,
@@ -117,7 +119,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Member", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text("Member", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               ),
               StreamBuilder(
                   stream: snapshots,
@@ -142,10 +144,10 @@ class _TeamsDetailState extends State<TeamsDetail> {
     return snapshot.data!.docs.where((DocumentSnapshot documentSnapshot) => list.contains(documentSnapshot['uid']))
         .map((doc) => Card(
         child: ListTile(
-          leading: Icon(Icons.account_circle_outlined, size: 45,),
-          title: new Text(doc['name'], style: TextStyle(fontSize: 17),),
+          leading: Icon(Icons.account_circle_outlined, size: 45,color: Color(0xffFB9C26)),
+          title: new Text(doc['name'], style: TextStyle(fontSize: 17)),
           subtitle: new Text('Level ' + doc['level'].toString()),
-          trailing: Icon( (doc['uid'] == widget.creator) ? Icons.star : (widget.admins.contains(doc['uid'])) ? Icons.star_half_rounded : Icons.star_border),
+          trailing: Icon((doc['uid'] == widget.creator) ? Icons.star : (widget.admins.contains(doc['uid'])) ? Icons.star_half_rounded : Icons.star_border, color: Color(0xffFB9C26)),
           dense: true,
           onTap: () {
             setState(() {
