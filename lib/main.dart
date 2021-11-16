@@ -15,7 +15,7 @@ import 'package:master_projekt/Screens/welcomeScreen.dart';
 import 'package:master_projekt/Screens/register.dart';
 import 'package:master_projekt/Screens/passwortVergessen.dart';
 import 'package:master_projekt/Screens/teams.dart';
-import 'package:master_projekt/Screens/addTeam.dart';
+import 'package:master_projekt/Screens/teams-add.dart';
 import 'Screens/homepage.dart';
 
 void main() async {

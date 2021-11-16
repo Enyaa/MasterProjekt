@@ -171,10 +171,36 @@ class _addTeamState extends State<addTeam> {
                   );
                 }
               ),
-              ElevatedButton(onPressed: () {
+          Padding(padding: EdgeInsets.all(10),),
+          Container(
+            width: 300,
+            height: 50,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  // 10% of the width, so there are ten blinds.
+                  colors: <Color>[
+                    Color(0xffE53147),
+                    Color(0xffFB9C26)
+                  ],
+                  // red to yellow
+                  tileMode: TileMode
+                      .repeated, // repeats the gradient over the canvas
+                ),
+                borderRadius: BorderRadius.all(
+                    Radius.circular(50))),
+            child: ElevatedButton(onPressed: () {
                   addTeam();
                   Navigator.pushReplacementNamed(context, '/teams');
-                }, child: Text('Team erstellen'))
+                }, style: ButtonStyle(
+                backgroundColor:
+                MaterialStateProperty.all(
+                    Colors.transparent),
+                shadowColor:
+                MaterialStateProperty.all(
+                    Colors.transparent)),
+                child: Text('Team erstellen')))
             ],
           )
         ),
