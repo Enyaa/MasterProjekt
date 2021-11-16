@@ -41,6 +41,7 @@ class _RegisterState extends State<Register> {
         'finishedChallengesCount': finishedChallengesCount,
         'finishedChallenges': finishedChallenges,
         'uid': FirebaseAuth.instance.currentUser!.uid,
+        'imgUrl': ''
       })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user"));
