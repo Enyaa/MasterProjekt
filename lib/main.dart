@@ -64,8 +64,7 @@ class _MyAppState extends State<MyApp> {
     MaterialColor grey = MaterialColor(0xff393939, color);
     Color lightOrange = Color(0xffFB9C26);
     Color darkOrange = Color(0xffE53147);
-    LinearGradient gradient =
-        LinearGradient(colors: <Color>[darkOrange, lightOrange]);
+    LinearGradient gradient = LinearGradient(colors: <Color>[darkOrange, lightOrange]);
 
     return MaterialApp(
       title: 'TeamRad',
@@ -89,6 +88,8 @@ class _MyAppState extends State<MyApp> {
         ),
         inputDecorationTheme: InputDecorationTheme(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white))),
         canvasColor: darkGrey,
+        hintColor: Colors.white,
+        snackBarTheme: SnackBarThemeData(backgroundColor: lightOrange),
       ),
       initialRoute:
           FirebaseAuth.instance.currentUser == null ? '/' : '/homepage',

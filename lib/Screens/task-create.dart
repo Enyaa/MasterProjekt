@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:master_projekt/navigation/GradientIcon.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:intl/intl.dart';
@@ -98,12 +99,20 @@ class _TaskCreateState extends State<TaskCreate> {
                   margin: const EdgeInsets.all(10),
                   child: ListView(
                     children: [
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                      ),
                       TextFormField(
                         controller: titleController,
                         maxLength: 20,
                         decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Titel',
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            ),
+                            labelStyle: TextStyle(color: Color(0xffFB9C26)),
                             labelText: 'Titel'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -120,8 +129,13 @@ class _TaskCreateState extends State<TaskCreate> {
                         maxLines: 5,
                         maxLength: 200,
                         decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Beschreibung',
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            ),
+                            labelStyle: TextStyle(color: Color(0xffFB9C26)),
                             labelText: 'Beschreibung'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -141,18 +155,24 @@ class _TaskCreateState extends State<TaskCreate> {
                               child: TextFormField(
                                 controller: subTaskController,
                                 decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Hier Teilaufgaben hinzufügen',
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                                  ),
+                                  labelStyle: TextStyle(color: Color(0xffFB9C26)),
                                   labelText: 'Teilaufgabe',
                                 ),
                               ),
                             ),
                             Padding(padding: EdgeInsets.all(10)),
-                            Container(
-                                width: 50,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
+                            ElevatedButton(
+                                    onPressed: () {
+                                      addSubTask(subTaskController.text);
+                                      subTaskController.text = '';
+                                    },
+                                    child: GradientIcon(Icons.add_circle, 45, LinearGradient(
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
                                       // 10% of the width, so there are ten blinds.
@@ -163,22 +183,16 @@ class _TaskCreateState extends State<TaskCreate> {
                                       // red to yellow
                                       tileMode: TileMode
                                           .repeated, // repeats the gradient over the canvas
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50))),
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      addSubTask(subTaskController.text);
-                                      subTaskController.text = '';
-                                    },
-                                    child: Icon(Icons.add, size: 25),
-                                    style: ButtonStyle(
+                                    )),
+                                  style: ButtonStyle(
+                                    padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(0)),
                                       backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.transparent),
-                                      shadowColor: MaterialStateProperty.all(
+                                      MaterialStateProperty.all(
                                           Colors.transparent),
-                                    )))
+                                      shadowColor:
+                                      MaterialStateProperty.all(
+                                          Colors.transparent)),
+                                )
                           ]),
                       Padding(
                         padding: EdgeInsets.all(5),
@@ -196,19 +210,13 @@ class _TaskCreateState extends State<TaskCreate> {
                               });
                             },
                             child: Container(
-                                margin: EdgeInsets.all(7.0),
+                                margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
                                 height: 10,
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Colors.transparent,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 0.5,
-                                          blurRadius: 0.5,
-                                          offset: Offset(1, 1))
-                                    ]),
+                                    border:  Border.all(color: Colors.white, width: 0)),
                                 child: Center(
                                   child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -222,7 +230,7 @@ class _TaskCreateState extends State<TaskCreate> {
                                               size: 17,
                                             ),
                                           ),
-                                          Text(subTasks[index]),
+                                          Text(subTasks[index], style: TextStyle(color: Colors.white),),
                                         ],
                                       )),
                                 )),
@@ -235,8 +243,13 @@ class _TaskCreateState extends State<TaskCreate> {
                       TextFormField(
                         controller: xpController,
                         decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Punkte',
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            ),
+                            labelStyle: TextStyle(color: Color(0xffFB9C26)),
                             labelText: 'Punkte'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {

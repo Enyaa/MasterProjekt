@@ -44,13 +44,13 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
       return challenges
           .doc(uid)
           .set({
-        'title': title,
-        'id': uid,
-        'description': description,
-        'xp': int.parse(xp),
-        'finished': <String>[],
-        'imgUrl': imgUrl
-      })
+            'title': title,
+            'id': uid,
+            'description': description,
+            'xp': int.parse(xp),
+            'finished': <String>[],
+            'imgUrl': imgUrl
+          })
           .then((value) => print("Challenge added"))
           .catchError((error) => print("Failed to add challenge: $error"));
     }
@@ -64,19 +64,21 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
 
       if (image != null) {
         var file = File(image.path);
-        UploadTask task = storage.ref().child(
-            'challenges/' + uid).putFile(file);
+        UploadTask task =
+            storage.ref().child('challenges/' + uid).putFile(file);
 
         task.snapshotEvents.listen((event) {
           setState(() {
             progress = ((event.bytesTransferred.toDouble() /
-                event.totalBytes.toDouble()) * 100)
+                        event.totalBytes.toDouble()) *
+                    100)
                 .roundToDouble();
           });
           if (event.bytesTransferred == event.totalBytes) {
             setState(() {
               finished = true;
             });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload finished!')));
           }
         });
         var downloadUrl = await (await task).ref.getDownloadURL();
@@ -92,8 +94,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
           // show the confirm dialog
           await showDialog(
               context: context,
-              builder: (_) =>
-                  AlertDialog(
+              builder: (_) => AlertDialog(
                     title: Text('Go back to Homepage?'),
                     actions: [
                       ElevatedButton(
@@ -111,92 +112,146 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: MyAppbar(title: 'Herausfoderungen', leading: true,),
+          appBar: MyAppbar(
+            title: 'Herausfoderungen',
+            leading: true,
+          ),
           drawer: MyDrawer(),
           body: Form(
-            key: _formKey,
-            child: Container(
+              key: _formKey,
+              child: Container(
                 margin: const EdgeInsets.all(10),
                 child: ListView(
                   children: [
-                  TextFormField(
-                  controller: titleController,
-                  maxLength: 20,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Titel',
-                      labelText: 'Titel'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Bitte geben Sie einen Titel an.';
-                    }
-                    return null;
-                  },
+                    TextFormField(
+                      controller: titleController,
+                      maxLength: 20,
+                      decoration: const InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 0.0),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 0.0),
+                          ),
+                          labelStyle: TextStyle(color: Color(0xffFB9C26)),
+                          labelText: 'Titel'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Bitte geben Sie einen Titel an.';
+                        }
+                        return null;
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    TextFormField(
+                      controller: descriptionController,
+                      maxLines: 5,
+                      maxLength: 200,
+                      decoration: const InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 0.0),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 0.0),
+                          ),
+                          labelStyle: TextStyle(color: Color(0xffFB9C26)),
+                          labelText: 'Beschreibung'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Bitte geben Sie eine Beschreibung an.';
+                        }
+                        return null;
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    TextFormField(
+                      controller: xpController,
+                      decoration: const InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 0.0),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white, width: 0.0),
+                          ),
+                          labelStyle: TextStyle(color: Color(0xffFB9C26)),
+                          labelText: 'Punkte'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Bitte geben Sie eine Punktzahl an.';
+                        }
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    Container(
+                        height: 50,
+                        width: 300,
+                        child: OutlinedButton.icon(
+                            label: Text('Bild hochladen'),
+                            icon: Icon(Icons.image),
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                shadowColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
+                            onPressed: _imgFromGallery)),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    Container(
+                        width: 300,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              // 10% of the width, so there are ten blinds.
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                shadowColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
+                            onPressed: finished
+                                ? () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      addChallenge(
+                                          titleController.text,
+                                          descriptionController.text,
+                                          xpController.text,
+                                          imgUrl);
+                                      Navigator.pushReplacementNamed(
+                                          context, '/challenges');
+                                    }
+                                  }
+                                : null,
+                            child: Text('Speichern')))
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                ),
-                TextFormField(
-                  controller: descriptionController,
-                  maxLines: 5,
-                  maxLength: 200,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Beschreibung',
-                      labelText: 'Beschreibung'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Bitte geben Sie eine Beschreibung an.';
-                    }
-                    return null;
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                ),
-                TextFormField(
-                  controller: xpController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Punkte',
-                      labelText: 'Punkte'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Bitte geben Sie eine Punktzahl an.';
-                    }
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                ),
-                ElevatedButton.icon(
-                    onPressed: _imgFromGallery,
-                    icon: Icon(Icons.image),
-                    label: Text('Bild hochladen')),
-                LinearProgressIndicator(value: progress/100, valueColor: AlwaysStoppedAnimation(Colors.deepOrange), backgroundColor: Colors.white,),
-                if(progress == 100) Text('Upload finished!'),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                ),
-                ElevatedButton(
-                    onPressed: finished
-                        ? () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        addChallenge(
-                            titleController.text,
-                            descriptionController.text,
-                            xpController.text,
-                            imgUrl);
-                        Navigator.pushReplacementNamed(
-                            context, '/challenges');
-                      }
-                    }
-                        : null,
-                    child: Text('Speichern'))
-            ],
-          ),
-        )),
-          bottomNavigationBar: NavigationBar(0),));
+              )),
+          bottomNavigationBar: NavigationBar(0),
+        ));
   }
 }
