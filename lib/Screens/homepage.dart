@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
@@ -33,7 +34,7 @@ class Homepage extends StatelessWidget {
       ));
     return willLeave;
     },child: Scaffold(
-        appBar: AppBar(title: const Text('Home')),
+        appBar: MyAppbar(title: 'Home', actions: false, bottom: false, leading: false),
         drawer: MyDrawer(),
         body: Center(child: new Text('Homepage')),
       bottomNavigationBar: NavigationBar(1),

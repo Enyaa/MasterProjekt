@@ -47,7 +47,7 @@ class Teams extends StatelessWidget {
               ));
           return willLeave;
         },child: Scaffold(
-        appBar: MyAppbar(title: 'Teams'),
+        appBar: MyAppbar(title: 'Teams', leading: false, actions: false, bottom: false,),
         drawer: MyDrawer(),
       body: StreamBuilder<QuerySnapshot>(
         stream: snapshots,

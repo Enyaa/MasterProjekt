@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/task-detail.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
@@ -50,19 +51,7 @@ class TasksState extends State<Tasks> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Aufgaben'),
-            actions: <Widget>[
-              PopupMenuButton(
-                  itemBuilder: (context) => [
-                        PopupMenuItem(child: Text('Alle'), value: 1),
-                        PopupMenuItem(child: Text('Offen'), value: 2),
-                        PopupMenuItem(child: Text('Angenommen'), value: 3),
-                        PopupMenuItem(child: Text('Abgeschlossen'), value: 4)
-                      ],
-                  onSelected: getFiltered)
-            ],
-          ),
+          appBar: MyAppbar(title: 'Aufgaben', bottom: false, leading: false, actions: true, getFiltered: getFiltered),
           drawer: MyDrawer(),
           body: StreamBuilder<QuerySnapshot>(
             stream: snapshots,

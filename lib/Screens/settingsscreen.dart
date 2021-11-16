@@ -218,7 +218,7 @@ Widget build(BuildContext context) {
         return willLeave;
       },
       child: Scaffold(
-        appBar: MyAppbar(title: 'Einstellungen'),
+        appBar: MyAppbar(title: 'Einstellungen', actions: false, bottom: false, leading: false),
         drawer: MyDrawer(),
         body: SingleChildScrollView(
           child: Column(
