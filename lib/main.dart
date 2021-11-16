@@ -6,7 +6,7 @@ import 'package:master_projekt/Screens/challenge-create.dart';
 import 'package:master_projekt/Screens/login.dart';
 import 'package:master_projekt/Screens/challenges.dart';
 import 'package:master_projekt/Screens/help.dart';
-
+import 'package:master_projekt/Screens/teams-detail.dart';
 import 'package:master_projekt/Screens/leaderboards.dart';
 import 'package:master_projekt/Screens/settingsscreen.dart';
 import 'package:master_projekt/Screens/task-create.dart';
@@ -101,6 +101,7 @@ class _MyAppState extends State<MyApp> {
         '/homepage': (context) => const Homepage(),
         '/teams': (context) => const Teams(),
         '/addTeam': (context) => const addTeam(),
+        '/teamDetail': (context) => const TeamsDetail(teamID: '', admins: [], member: [], creator: '', teamName: '',),
         '/tasks': (context) => const Tasks(),
         '/challenges': (context) => const Challenges(),
         '/leaderboards': (context) => const Leaderboards(),
