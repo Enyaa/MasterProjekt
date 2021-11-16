@@ -75,6 +75,7 @@ class _MyAppState extends State<MyApp> {
         bottomAppBarColor: darkGrey,
         cardColor: grey,
         textTheme: Typography.whiteCupertino,
+        fontFamily: 'Roboto',
         iconTheme: IconThemeData(color: lightOrange),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(primary: lightOrange),

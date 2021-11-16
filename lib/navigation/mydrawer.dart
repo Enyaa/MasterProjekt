@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
+  Color lightOrange = Color(0xffFB9C26);
+
   @override
   Widget build(BuildContext context) {
     return new Drawer(
@@ -15,15 +17,15 @@ class MyDrawer extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.home),
-                title: const Text('Startseite'),
+                leading: Icon(Icons.home_outlined, color: lightOrange),
+                title: const Text('Startseite', style: TextStyle(fontFamily: 'Roboto'),),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushReplacementNamed(context, '/homepage');
                 },
               ),
               ListTile(
-                leading: Icon(Icons.note_alt),
+                leading: Icon(Icons.note_alt_outlined, color: lightOrange),
                 title: const Text('Aufgaben'),
                 onTap: () {
                   Navigator.pop(context);
@@ -31,7 +33,7 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.emoji_events),
+                leading: Icon(Icons.emoji_events_outlined, color: lightOrange),
                 title: const Text('Herausforderungen'),
                 onTap: () {
                   Navigator.pop(context);
@@ -39,7 +41,7 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.leaderboard),
+                leading: Icon(Icons.leaderboard_outlined, color: lightOrange),
                 title: const Text('Bestenlisten'),
                 onTap: () {
                   Navigator.pop(context);
@@ -47,7 +49,7 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.group),
+                leading: Icon(Icons.group_outlined, color: lightOrange),
                 title: const Text('Teams'),
                 onTap: () {
                   Navigator.pop(context);
@@ -58,7 +60,7 @@ class MyDrawer extends StatelessWidget {
           )),
           Divider(),
           ListTile(
-            leading: Icon(Icons.settings),
+            leading: Icon(Icons.settings_outlined, color: lightOrange),
             title: const Text('Einstellungen'),
             onTap: () {
               Navigator.pop(context);
@@ -66,7 +68,7 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.help),
+            leading: Icon(Icons.help_outline, color: lightOrange),
             title: const Text('Hilfe'),
             onTap: () {
               Navigator.pop(context);
@@ -74,7 +76,7 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.input),
+            leading: Icon(Icons.input_outlined, color: lightOrange),
             title: const Text('Logout'),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
