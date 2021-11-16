@@ -173,7 +173,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                     onPressed: _imgFromGallery,
                     icon: Icon(Icons.image),
                     label: Text('Bild hochladen')),
-                LinearProgressIndicator(value: progress/100,valueColor: AlwaysStoppedAnimation(Colors.deepOrange), backgroundColor: Colors.white,),
+                LinearProgressIndicator(value: progress/100, valueColor: AlwaysStoppedAnimation(Colors.deepOrange), backgroundColor: Colors.white,),
                 if(progress == 100) Text('Upload finished!'),
                 Padding(
                   padding: EdgeInsets.all(10),
