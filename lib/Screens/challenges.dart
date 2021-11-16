@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/Screens/challenge-detail.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
@@ -50,19 +51,7 @@ class ChallengesState extends State<Challenges> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Herausforderungen'),
-            actions: <Widget>[
-              PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(child: Text('Alle'), value: 1),
-                    PopupMenuItem(child: Text('Offen'), value: 2),
-                    PopupMenuItem(child: Text('Abgeschlossen'), value: 3)
-                  ],
-                  onSelected: getFiltered
-              )
-            ],
-          ),
+          appBar: MyAppbar(title: 'Herausforderungen', actions: true, getFiltered: getFiltered),
           drawer: MyDrawer(),
           body: StreamBuilder<QuerySnapshot>(
             stream: snapshots,
@@ -77,7 +66,7 @@ class ChallengesState extends State<Challenges> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/challenge-create');
+              Navigator.pushNamed(context, '/challenge-create');
             },
             shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -149,7 +138,7 @@ class ChallengesState extends State<Challenges> {
     } else if (value == 2) {
       if(finishedChallenges.isNotEmpty) setSnapshots(challenges.where('id', whereNotIn: finishedChallenges).snapshots());
       else setSnapshots(challenges.snapshots());
-    } else if (value == 3) {
+    } else if (value == 4) {
       setSnapshots(challenges.where('finished', arrayContains: getUid()).snapshots());
     }
   }

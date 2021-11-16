@@ -90,7 +90,7 @@ class _TaskCreateState extends State<TaskCreate> {
           return willLeave;
         },
         child: Scaffold(
-            appBar: MyAppbar(title: 'Aufgaben', actions: false, bottom: false, leading: false,),
+            appBar: MyAppbar(title: 'Aufgaben', leading: true,),
             drawer: MyDrawer(),
             body: Form(
                 key: _formKey,

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:uuid/uuid.dart';
@@ -110,7 +111,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: AppBar(title: const Text('Herausfoderungen')),
+          appBar: MyAppbar(title: 'Herausfoderungen', leading: true,),
           drawer: MyDrawer(),
           body: Form(
             key: _formKey,

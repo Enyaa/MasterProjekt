@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
 class ChallengeDetail extends StatefulWidget {
@@ -64,13 +65,7 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: AppBar(
-              title: const Text('Herausforderungen'),
-              leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  })),
+          appBar: MyAppbar(title: 'Herausforderungen', leading: true,),
           body: Container(
               width: double.infinity,
               margin: EdgeInsets.all(20),

@@ -62,7 +62,7 @@ class Teams extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushReplacementNamed(context, '/addTeam');
+          Navigator.pushNamed(context, '/addTeam');
         },
         child: const Icon(Icons.add_circle),
         backgroundColor: Colors.deepOrange,

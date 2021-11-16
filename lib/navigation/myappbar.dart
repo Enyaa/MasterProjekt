@@ -5,14 +5,16 @@ class MyAppbar extends StatefulWidget implements PreferredSizeWidget {
   MyAppbar(
       {Key? key,
       required this.title,
-      required this.bottom,
-      required this.actions,
-      required this.leading,
+      this.bottom = false,
+      this.actions = false,
+      this.accepted = false,
+      this.leading = false,
       this.getFiltered})
       : super(key: key);
   final String title;
   final bool bottom;
   final bool actions;
+  bool accepted;
   final bool leading;
   var getFiltered;
 
@@ -49,30 +51,32 @@ class _MyAppbarState extends State<MyAppbar> {
                     icon: Icon(Icons.emoji_events),
                     child: Text('Achievements', textAlign: TextAlign.center))
               ])));
-    } else if(widget.actions) {
+    } else if (widget.actions) {
       return new Container(
-          decoration: BoxDecoration(
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.black54,
-                  blurRadius: 15.0,
-                  offset: Offset(0.0, 0.75))
-            ],
-          ),
-          child: AppBar(
-            title: const Text('Aufgaben'),
-            actions: <Widget>[
-              PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(child: Text('Alle'), value: 1),
-                    PopupMenuItem(child: Text('Offen'), value: 2),
-                    PopupMenuItem(child: Text('Angenommen'), value: 3),
-                    PopupMenuItem(child: Text('Abgeschlossen'), value: 4)
-                  ],
-                  onSelected: widget.getFiltered)
-            ],
-          ),);
-    } else if(widget.leading) {
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.black54,
+                blurRadius: 15.0,
+                offset: Offset(0.0, 0.75))
+          ],
+        ),
+        child: AppBar(
+          title: Text(widget.title),
+          actions: <Widget>[
+            PopupMenuButton(
+                itemBuilder: (context) => [
+                      PopupMenuItem(child: Text('Alle'), value: 1),
+                      PopupMenuItem(child: Text('Offen'), value: 2),
+                      if (widget.accepted)
+                        PopupMenuItem(child: Text('Angenommen'), value: 3),
+                      PopupMenuItem(child: Text('Abgeschlossen'), value: 4)
+                    ],
+                onSelected: widget.getFiltered)
+          ],
+        ),
+      );
+    } else if (widget.leading) {
       return new Container(
           decoration: BoxDecoration(
             boxShadow: <BoxShadow>[
@@ -86,8 +90,7 @@ class _MyAppbarState extends State<MyAppbar> {
               title: Text(widget.title),
               leading: IconButton(
                   icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  onPressed: () {Navigator.pop(context);
                   })));
     } else {
       return new Container(

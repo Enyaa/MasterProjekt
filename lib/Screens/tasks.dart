@@ -51,7 +51,7 @@ class TasksState extends State<Tasks> {
           return willLeave;
         },
         child: Scaffold(
-          appBar: MyAppbar(title: 'Aufgaben', bottom: false, leading: false, actions: true, getFiltered: getFiltered),
+          appBar: MyAppbar(title: 'Aufgaben', actions: true, accepted: true, getFiltered: getFiltered),
           drawer: MyDrawer(),
           body: StreamBuilder<QuerySnapshot>(
             stream: snapshots,
@@ -67,7 +67,7 @@ class TasksState extends State<Tasks> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/task-create');
+              Navigator.pushNamed(context, '/task-create');
             },
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),

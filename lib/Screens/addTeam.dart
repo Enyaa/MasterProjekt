@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
 
@@ -82,13 +83,7 @@ class _addTeamState extends State<addTeam> {
               ));
           return willLeave;
         },child: Scaffold(
-      appBar: AppBar(
-          title: const Text('Team erstellen'),
-          automaticallyImplyLeading: true,
-          leading: IconButton(icon: Icon(Icons.arrow_back),
-          onPressed:() =>  Navigator.pushReplacementNamed(context, '/teams')
-            ,)
-      ),
+      appBar: MyAppbar(title: 'Team erstellen', leading: true),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
