@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
+import 'package:master_projekt/Screens/teams-detail.dart';
 
 
 class Teams extends StatelessWidget {
@@ -12,16 +13,13 @@ class Teams extends StatelessWidget {
   @override
   Widget build (BuildContext context) {
 
-    CollectionReference users = FirebaseFirestore.instance.collection('user');
-    CollectionReference teams = FirebaseFirestore.instance.collection('teams');
-
     String getUid() {
       final User? user = FirebaseAuth.instance.currentUser;
       final uid = user!.uid;
       return uid.toString();
     }
 
-    var snapshots = FirebaseFirestore.instance.collection('teams').where('creator', isEqualTo: getUid()).snapshots();
+    var snapshots = FirebaseFirestore.instance.collection('teams').where('queryOperator', arrayContains: getUid()).snapshots();
 
     return WillPopScope(
         onWillPop: () async {
@@ -75,12 +73,20 @@ class Teams extends StatelessWidget {
         .map((doc) => Card(
       child: ListTile(
         title: new Text(doc['name']),
-        subtitle: new Text(doc['member'].length.toString() + ' Mitglieder'),
+        subtitle: new Text((doc['member'].length + doc['admins'].length + 1).toString() + ' Mitglieder'),
         leading: Icon(Icons.theater_comedy, size: 40,),
         trailing: Icon(Icons.arrow_forward),
         onTap: () {
-          //Navigator.push(context, MaterialPageRoute(builder: (context) => ))
-          print("Go to Detail");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TeamsDetail(
+                    teamID: doc['id'],
+                    member: doc['member'],
+                    admins: doc['admins'],
+                    creator: doc['creator'],
+                    teamName: doc['name'],
+              )));
         },
       ),
     )).toList();
