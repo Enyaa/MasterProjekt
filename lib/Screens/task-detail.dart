@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/level/methods.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
 class ListTileModel {
@@ -149,7 +148,6 @@ class _TaskDetailState extends State<TaskDetail> {
     FirebaseFirestore.instance.collection('tasks').doc(id).update({'finished': true});
     FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'finishedTasksCount': FieldValue.increment(1)});
     FirebaseFirestore.instance.collection('user').doc(widget.userId).update({'xp': FieldValue.increment(taskXp)});
-    Methods(mode:'checkLevel');
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
   }

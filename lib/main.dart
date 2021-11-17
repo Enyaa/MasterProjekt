@@ -18,6 +18,7 @@ import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/addTeam.dart';
 import 'Screens/homepage.dart';
 import 'Screens/profil.dart';
+import 'level/listener.dart';
 
 
 void main() async {
@@ -49,6 +50,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+      checkLevel();
     return MaterialApp(
       title: 'TeamRad',
       theme: ThemeData(

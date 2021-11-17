@@ -12,15 +12,13 @@ class Profil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
-
     return DefaultTabController(
         length: 2,
         child: Scaffold(
             appBar: AppBar(title: const Text('Profil')),
             drawer: MyDrawer(),
             body: SafeArea(
-              child: SingleChildScrollView(
-                  child: Column(children: [
+              child: Column(children: [
                 Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
@@ -67,10 +65,7 @@ class Profil extends StatelessWidget {
                   Methods(mode: 'level.s'),
                 ])),
 
-                SizedBox(
-                    height: 50,
-                    width: 300,
-                    child: Container(
+                Container(
                         child: StreamBuilder<QuerySnapshot>(
                             stream: snapshots,
                             builder: (BuildContext context,
@@ -79,7 +74,7 @@ class Profil extends StatelessWidget {
                                 return new Text('Loading...');
                               } else {
                                 return new Column(children: [
-                                  new Container(
+                                  Container(
                                       child: LinearProgressIndicator(
                                     value: snapshotuid.data!.docs.firstWhere(
                                             (user) =>
@@ -92,56 +87,51 @@ class Profil extends StatelessWidget {
                                         Colors.deepOrange),
                                     backgroundColor: Colors.grey,
                                   )),
-                                  new Container(
+                                  Container(
                                       child: Column(children: [
+
                                     Methods(mode: 'currentXp.s'),
-                                    Methods(mode: 'pointsNeeded.s'),
-                                    Methods(mode: 'checkLevel')
+                                    Methods(mode: 'pointsNeeded.s')
                                   ]))
                                 ]);
                               }
-                            }))),
-                SizedBox(
-                  height: 20,
-                ),
+                            })),
                 TabBar(tabs: [
                   Tab(
-                      icon: Icon(Icons.star),
                       child: Text('Punkte',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.black))),
                   Tab(
-                      icon: Icon(Icons.task),
                       child: Text('Aufgaben',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.black))),
                 ]),
                 SizedBox(
-                  height: 20,
-                  //child: StreamBuilder<QuerySnapshot>(
-                  //    stream: snapshots,
-                  //    builder: (BuildContext context,
-                  //        AsyncSnapshot<QuerySnapshot> snapshot) {
-                  //      if (!snapshot.hasData) {
-                  //        return TabBarView(
-                  //          children: [
-                  //            ListView(
-                  //                children: [Text('Keine Daten gefunden!')]),
-                  //            ListView(
-                  //              children: [Text('Keine Daten gefunden!')],
-                  //            )
-                  //          ],
-                  //        );
-                  //      } else {
-                  //        return TabBarView(children: [
-                  //          ListView(children: []),
-                  //          ListView(children: [])
-                  //        ]);
-                  //     }
-                  //}
+                height: 20,
+                //child: StreamBuilder<QuerySnapshot>(
+                //    stream: snapshots,
+                //    builder: (BuildContext context,
+                //        AsyncSnapshot<QuerySnapshot> snapshot) {
+                //      if (!snapshot.hasData) {
+                //        return TabBarView(
+                //          children: [
+                //            ListView(
+                //                children: [Text('Keine Daten gefunden!')]),
+                //            ListView(
+                //              children: [Text('Keine Daten gefunden!')],
+                //            )
+                //          ],
+                //        );
+                //      } else {
+                //        return TabBarView(children: [
+                //          ListView(children: []),
+                //          ListView(children: [])
+                //        ]);
+                //     }
+                //}
+               // )
                 )
-                //)
-              ])),
+              ]),
             ),
             bottomNavigationBar: NavigationBar(0)));
   }

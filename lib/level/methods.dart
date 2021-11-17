@@ -20,10 +20,10 @@ class _MethodsState extends State<Methods> {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('user').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData){
-            return Text('Error, keine Daten von User gefunden!');}
-          else {
-            print('Vergleich gestartet. Mode  ='+ widget.mode);
+          if (!snapshot.hasData) {
+            return Text('Error, keine Daten von User gefunden!');
+          } else {
+            print('Vergleich gestartet. Mode  =' + widget.mode);
             //level als String
             if (widget.mode == 'level.s') {
               var level = snapshot.data!.docs
@@ -45,38 +45,7 @@ class _MethodsState extends State<Methods> {
 
               return Text(pointsNeeded.toString());
             }
-            //check for Level up and set ned Pointsneeded
-            else if (widget.mode == 'checkLevel') {
-              var currentXp = snapshot.data!.docs
-                  .firstWhere((user) => user['uid'] == getUid())['xp'];
-              var pointsNeeded =snapshot.data!.docs.firstWhere(
-                      (user) => user['uid'] == getUid())['pointsNeeded'];
-              print('check auf Level');
-              if ( currentXp >=pointsNeeded){
-                print('Vergleich war true ');
-                //Update Level +1
-                FirebaseFirestore.instance
-                    .collection('user')
-                    .doc(getUid())
-                    .update({'level': FieldValue.increment(1)});
-                //sets&update pointsNeeded
-                FirebaseFirestore.instance
-                    .collection('user')
-                    .doc(getUid())
-                    .update({
-                  'pointsNeeded': (snapshot.data!.docs.firstWhere(
-                              (user) => user['uid'] == getUid())['xp'] +
-                          1) *
-                      1000
-                });
-                print('Level Up');
-                return Text('Level Up');
-              } else {
-                print('Kein Level Up');
-                return Text('Kein Level Up');
-              }
-            }
-            else {
+          else {
               return Text('Keine Daten gefunden!');
             }
           }
