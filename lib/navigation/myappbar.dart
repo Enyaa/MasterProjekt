@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'mytabbar.dart';
+
 class MyAppbar extends StatefulWidget implements PreferredSizeWidget {
   MyAppbar(
       {Key? key,
@@ -9,6 +11,7 @@ class MyAppbar extends StatefulWidget implements PreferredSizeWidget {
       this.actions = false,
       this.accepted = false,
       this.leading = false,
+      this.leaderboards = false,
       this.getFiltered})
       : super(key: key);
   final String title;
@@ -17,12 +20,13 @@ class MyAppbar extends StatefulWidget implements PreferredSizeWidget {
   bool accepted;
   final bool leading;
   var getFiltered;
+  final bool leaderboards;
 
   @override
   _MyAppbarState createState() => _MyAppbarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(50);
+  Size get preferredSize => bottom ? Size.fromHeight(120): Size.fromHeight(50);
 }
 
 class _MyAppbarState extends State<MyAppbar> {
@@ -31,26 +35,21 @@ class _MyAppbarState extends State<MyAppbar> {
     if (widget.bottom) {
       return new Container(
           decoration: BoxDecoration(
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.black54,
-                  blurRadius: 15.0,
-                  offset: Offset(0.0, 0.75))
-            ],
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              // 10% of the width, so there are ten blinds.
+              colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
+              // red to yellow
+              tileMode: TileMode.repeated, // repeats the gradient over the canvas
+            ),
           ),
           child: AppBar(
+            backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
               title: Text(widget.title),
-              bottom: const TabBar(tabs: [
-                Tab(
-                    icon: Icon(Icons.star),
-                    child: Text('Punkte', textAlign: TextAlign.center)),
-                Tab(
-                    icon: Icon(Icons.task),
-                    child: Text('Aufgaben', textAlign: TextAlign.center)),
-                Tab(
-                    icon: Icon(Icons.emoji_events),
-                    child: Text('Achievements', textAlign: TextAlign.center))
-              ])));
+              bottom: MyTabbar()
+      ));
     } else if (widget.actions) {
       return new Container(
         decoration: BoxDecoration(
@@ -90,7 +89,8 @@ class _MyAppbarState extends State<MyAppbar> {
               title: Text(widget.title),
               leading: IconButton(
                   icon: Icon(Icons.arrow_back),
-                  onPressed: () {Navigator.pop(context);
+                  onPressed: () {
+                    Navigator.pop(context);
                   })));
     } else {
       return new Container(

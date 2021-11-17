@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'GradientIcon.dart';
+import '../GradientIcon.dart';
 
 class NavigationBar extends StatelessWidget {
   int activeIndex = 0;

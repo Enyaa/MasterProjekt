@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
-
-
+import 'package:master_projekt/navigation/mytabbar.dart';
 
 class Leaderboards extends StatelessWidget {
   const Leaderboards({Key? key}) : super(key: key);
@@ -39,19 +39,10 @@ class Leaderboards extends StatelessWidget {
         child: DefaultTabController(
           length: 3,
           child: Scaffold(
-            appBar: AppBar(
-                title: const Text('Bestenlisten'),
-                bottom: const TabBar(tabs: [
-                  Tab(
-                      icon: Icon(Icons.star),
-                      child: Text('Punkte', textAlign: TextAlign.center)),
-                  Tab(
-                      icon: Icon(Icons.task),
-                      child: Text('Aufgaben', textAlign: TextAlign.center)),
-                  Tab(
-                      icon: Icon(Icons.emoji_events),
-                      child: Text('Achievements', textAlign: TextAlign.center))
-                ])),
+            appBar: MyAppbar(
+                title: 'Bestenlisten',
+                bottom: true,
+            ),
             drawer: MyDrawer(),
             body: StreamBuilder<QuerySnapshot>(
               stream: snapshots,
@@ -100,7 +91,10 @@ class Leaderboards extends StatelessWidget {
           .map<Widget>((user) => Card(
               child: ListTile(
                   title: new Text(user.name),
-                  leading: new Text((sort(_users, 0).indexOf(user)+1).toString() + '.', style: TextStyle(fontSize: 40), textAlign: TextAlign.center),
+                  leading: new Text(
+                      (sort(_users, 0).indexOf(user) + 1).toString() + '.',
+                      style: TextStyle(fontSize: 40),
+                      textAlign: TextAlign.center),
                   subtitle: new Text('XP: ' + user.xp.toString()),
                   onTap: () {})))
           .toList();
@@ -109,9 +103,12 @@ class Leaderboards extends StatelessWidget {
           .map<Widget>((user) => Card(
               child: ListTile(
                   title: new Text(user.name),
-                  leading: new Text((sort(_users, 1).indexOf(user)+1).toString() + '.', style: TextStyle(fontSize: 40), textAlign: TextAlign.center),
-                  subtitle: new Text('Abgeschlossene Aufgaben: ' +
-                      user.tasks.toString()),
+                  leading: new Text(
+                      (sort(_users, 1).indexOf(user) + 1).toString() + '.',
+                      style: TextStyle(fontSize: 40),
+                      textAlign: TextAlign.center),
+                  subtitle: new Text(
+                      'Abgeschlossene Aufgaben: ' + user.tasks.toString()),
                   onTap: () {})))
           .toList();
     } else if (mode == 'achievements') {
@@ -119,7 +116,10 @@ class Leaderboards extends StatelessWidget {
           .map<Widget>((user) => Card(
               child: ListTile(
                   title: new Text(user.name),
-                  leading: new Text((sort(_users, 2).indexOf(user)+1).toString() + '.', style: TextStyle(fontSize: 40), textAlign: TextAlign.center),
+                  leading: new Text(
+                      (sort(_users, 2).indexOf(user) + 1).toString() + '.',
+                      style: TextStyle(fontSize: 40),
+                      textAlign: TextAlign.center),
                   subtitle: new Text('Abgeschlossene Achievements: ' +
                       user.challenges.toString()),
                   onTap: () {})))
