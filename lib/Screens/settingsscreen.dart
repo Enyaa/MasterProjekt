@@ -8,6 +8,7 @@ import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'dart:io';
+import 'package:gradient_widgets/gradient_widgets.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -76,13 +77,13 @@ class SettingsScreenState extends State<SettingsScreen> {
     if (image != null) {
       var file = File(image.path);
       UploadTask task =
-      storage.ref().child('profilePictures/' + getUid()).putFile(file);
+          storage.ref().child('profilePictures/' + getUid()).putFile(file);
 
       task.snapshotEvents.listen((event) {
         setState(() {
           progress = ((event.bytesTransferred.toDouble() /
-              event.totalBytes.toDouble()) *
-              100)
+                      event.totalBytes.toDouble()) *
+                  100)
               .roundToDouble();
         });
         if (event.bytesTransferred == event.totalBytes) {
@@ -114,8 +115,8 @@ class SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  _savePassword(String oldPassword, String newPassword,
-      String newPasswordCheck) {
+  _savePassword(
+      String oldPassword, String newPassword, String newPasswordCheck) {
     if (newPassword == newPasswordCheck) {
       final user = FirebaseAuth.instance.currentUser;
       final cred = EmailAuthProvider.credential(
@@ -134,19 +135,19 @@ class SettingsScreenState extends State<SettingsScreen> {
           // error show something
           print('Password could not be changed 1.');
           final snackBar =
-          SnackBar(content: Text('Passwort konnte nicht geändert werden.'));
+              SnackBar(content: Text('Passwort konnte nicht geändert werden.'));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         });
       }).catchError((error) {
         // error do something
         print('Current password was not correct.');
         final snackBar =
-        SnackBar(content: Text('Das aktuelle Passwort ist nicht korrekt.'));
+            SnackBar(content: Text('Das aktuelle Passwort ist nicht korrekt.'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     } else {
       final snackBar =
-      SnackBar(content: Text('Die Passwörter stimmen nicht überein.'));
+          SnackBar(content: Text('Die Passwörter stimmen nicht überein.'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -178,271 +179,365 @@ class SettingsScreenState extends State<SettingsScreen> {
         // error show something
         print('Email could not be changed.');
         final snackBar =
-        SnackBar(content: Text('Email konnte nicht geändert werden.'));
+            SnackBar(content: Text('Email konnte nicht geändert werden.'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }).catchError((error) {
       // error do something
       print('Current password was not correct.');
       final snackBar =
-      SnackBar(content: Text('Das Passwort ist nicht korrekt.'));
+          SnackBar(content: Text('Das Passwort ist nicht korrekt.'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
-}
+  }
 
-@override
-Widget build(BuildContext context) {
-  getCurrentUrl();
-  return WillPopScope(
-      onWillPop: () async {
-        bool willLeave = false;
-        // show the confirm dialog
-        await showDialog(
-            context: context,
-            builder: (_) =>
-                AlertDialog(
-                  title: Text('Go back to Homepage?'),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () {
-                          willLeave = false;
-                          Navigator.of(context).pop();
-                          Navigator.pushReplacementNamed(context, '/');
-                        },
-                        child: Text('Yes')),
-                    TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text('No'))
-                  ],
-                ));
-        return willLeave;
-      },
-      child: Scaffold(
-        appBar: MyAppbar(title: 'Einstellungen', actions: false, bottom: false, leading: false),
-        drawer: MyDrawer(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              StreamBuilder<QuerySnapshot>(
-                stream: users,
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData)
-                    return new Text("Keine Nutzerdaten gefunden.");
-                  else {
-                    nameController = TextEditingController(
-                        text: snapshot.data!.docs.firstWhere(
-                                (user) => user['uid'] == getUid())['name']);
-                    oldPasswordController = TextEditingController();
-                    passwordController = TextEditingController();
-                    passwordCheckController = TextEditingController();
-                    emailController = TextEditingController(
-                        text: snapshot.data!.docs.firstWhere(
-                                (user) => user['uid'] == getUid())['email']
-                    );
-                    emailPasswordController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    getCurrentUrl();
+    return WillPopScope(
+        onWillPop: () async {
+          bool willLeave = false;
+          // show the confirm dialog
+          await showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                    title: Text('Go back to Homepage?'),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () {
+                            willLeave = false;
+                            Navigator.of(context).pop();
+                            Navigator.pushReplacementNamed(context, '/');
+                          },
+                          child: Text('Yes')),
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('No'))
+                    ],
+                  ));
+          return willLeave;
+        },
+        child: Scaffold(
+          appBar: MyAppbar(
+              title: 'Einstellungen',
+              actions: false,
+              bottom: false,
+              leading: false),
+          drawer: MyDrawer(),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                StreamBuilder<QuerySnapshot>(
+                  stream: users,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData)
+                      return new Text("Keine Nutzerdaten gefunden.");
+                    else {
+                      nameController = TextEditingController(
+                          text: snapshot.data!.docs.firstWhere(
+                              (user) => user['uid'] == getUid())['name']);
+                      oldPasswordController = TextEditingController();
+                      passwordController = TextEditingController();
+                      passwordCheckController = TextEditingController();
+                      emailController = TextEditingController(
+                          text: snapshot.data!.docs.firstWhere(
+                              (user) => user['uid'] == getUid())['email']);
+                      emailPasswordController = TextEditingController();
 
-                    imgUrl = snapshot.data!.docs.firstWhere(
-                            (user) => user['uid'] == getUid())['imgUrl'];
-                    var placeholder =
-                        'https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e';
-                    return new Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                        ),
-                        if (imgUrl != '')
+                      imgUrl = snapshot.data!.docs.firstWhere(
+                          (user) => user['uid'] == getUid())['imgUrl'];
+                      var placeholder =
+                          'https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e';
+                      return new Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                          ),
+                          if (imgUrl != '')
+                            Container(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.network(imgUrl!,
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.fill)),
+                                decoration: BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black,
+                                      blurRadius: 5,
+                                      spreadRadius: 0.5)
+                                ], borderRadius: BorderRadius.circular(50)))
+                          else
+                            Container(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.network(placeholder,
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.fill)),
+                                decoration: BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black,
+                                      blurRadius: 5,
+                                      spreadRadius: 0.5)
+                                ], borderRadius: BorderRadius.circular(50))),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                          ),
                           Container(
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(imgUrl!,
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.fill)),
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black,
-                                    blurRadius: 5,
-                                    spreadRadius: 0.5)
-                              ], borderRadius: BorderRadius.circular(50)))
-                        else
+                              height: 50,
+                              width: 300,
+                              child: OutlinedButton.icon(
+                                  label: Text('Bild hochladen'),
+                                  icon: Icon(Icons.image),
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(
+                                          Colors.transparent),
+                                      shadowColor: MaterialStateProperty.all(
+                                          Colors.transparent)),
+                                  onPressed: _imgFromGallery)),
+                          Padding(padding: EdgeInsets.all(5)),
+                          GradientProgressIndicator(
+                            value: progress / 100,
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              // 10% of the width, so there are ten blinds.
+                              colors: <Color>[
+                                Color(0xffFB9C26),
+                                Color(0xffE53147)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.all(5)),
+                          if (progress == 100) Text('Upload abgeschlossen!'),
                           Container(
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(placeholder,
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.fill)),
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black,
-                                    blurRadius: 5,
-                                    spreadRadius: 0.5)
-                              ], borderRadius: BorderRadius.circular(50))),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                        ),
-                        ElevatedButton.icon(
-                          // style: ,
-                            onPressed: _imgFromGallery,
-                            icon: Icon(Icons.image),
-                            label: Text('Bild hochladen')),
-                        LinearProgressIndicator(
-                          value: progress / 100,
-                          valueColor:
-                          AlwaysStoppedAnimation(Colors.deepOrange),
-                          backgroundColor: Colors.white,
-                        ),
-                        if (progress == 100) Text('Upload abgeschlossen!'),
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          child: ExpansionPanelList(
-                            expansionCallback: (int index, bool isExpanded) {
-                              setState(() {
-                                _isExpanded[index] = !isExpanded;
-                              });
-                            },
-                            animationDuration: Duration(milliseconds: 1000),
-                            children: [
-                              ExpansionPanel(
-                                headerBuilder: (context, isExpanded) {
-                                  return ListTile(
-                                    title: Text(
-                                      'Name ändern',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  );
-                                },
-                                body: Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Column(children: [
-                                      Padding(padding: EdgeInsets.all(5)),
-                                      TextFormField(
-                                        controller: nameController,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Name ändern',
-                                          labelText: 'Name *',
-                                        ),
-                                      ),
-                                      Padding(padding: EdgeInsets.all(5)),
-                                      ElevatedButton(
-                                          child: Text('Speichern'),
-                                          onPressed: () =>
-                                              _nameChanged(
-                                                  nameController.text))
-                                    ])),
-                                isExpanded: _isExpanded[0],
-                                canTapOnHeader: true,
-                              ),
-                              ExpansionPanel(
-                                headerBuilder: (context, isExpanded) {
-                                  return ListTile(
-                                    title: Text(
-                                      'Email ändern',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  );
-                                },
-                                body: Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Column(children: [
-                                      Padding(padding: EdgeInsets.all(5)),
-                                      TextFormField(
-                                        controller: emailController,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Email ändern',
-                                          labelText: 'Email *',
-                                        ),
-                                      ),
-                                      Padding(padding: EdgeInsets.all(5)),
-                                      TextFormField(
-                                        controller: emailPasswordController,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Aktuelles Passwort eingeben',
-                                          labelText: 'Passwort *',
-                                        ),
-                                        obscureText: true,
-                                      ),
-                                      ElevatedButton(
-                                          child: Text('Speichern'),
-                                          onPressed: () =>
-                                              _changeEmail(emailController.text, emailPasswordController.text))
-                                    ])),
-                                isExpanded: _isExpanded[1],
-                                canTapOnHeader: true,
-                              ),
-                              ExpansionPanel(
-                                headerBuilder: (context, isExpanded) {
-                                  return ListTile(
+                              margin: EdgeInsets.all(10),
+                              child: Column(children: [
+                                ExpansionTile(
+                                  title: Text('Name ändern',
+                                      style: TextStyle(color: Colors.white)),
+                                  iconColor: Colors.white,
+                                  collapsedIconColor: Colors.white,
+                                  children: <Widget>[
+                                    Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Column(children: [
+                                          Padding(padding: EdgeInsets.all(5)),
+                                          TextFormField(
+                                            controller: nameController,
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              hintText: 'Name ändern',
+                                              labelText: 'Name *',
+                                            ),
+                                          ),
+                                          Padding(padding: EdgeInsets.all(5)),
+                                          Container(
+                                              width: 300,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.centerLeft,
+                                                    end: Alignment.centerRight,
+                                                    // 10% of the width, so there are ten blinds.
+                                                    colors: <Color>[
+                                                      Color(0xffE53147),
+                                                      Color(0xffFB9C26)
+                                                    ],
+                                                    // red to yellow
+                                                    tileMode: TileMode
+                                                        .repeated, // repeats the gradient over the canvas
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(50))),
+                                              child: ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty.all(
+                                                              Colors
+                                                                  .transparent),
+                                                      shadowColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .transparent)),
+                                                  child: Text('Speichern'),
+                                                  onPressed: () => _nameChanged(
+                                                      nameController.text)))
+                                        ])),
+                                  ],
+                                ),
+                                ExpansionTile(
+                                  title: Text(
+                                    'Email ändern',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  iconColor: Colors.white,
+                                  collapsedIconColor: Colors.white,
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Column(children: [
+                                          Padding(padding: EdgeInsets.all(5)),
+                                          TextFormField(
+                                            controller: emailController,
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              hintText: 'Email ändern',
+                                              labelText: 'Email *',
+                                            ),
+                                          ),
+                                          Padding(padding: EdgeInsets.all(5)),
+                                          TextFormField(
+                                            controller: emailPasswordController,
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              hintText:
+                                                  'Aktuelles Passwort eingeben',
+                                              labelText: 'Passwort *',
+                                            ),
+                                            obscureText: true,
+                                          ),
+                                          Padding(padding: EdgeInsets.all(5)),
+                                          Container(
+                                              width: 300,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.centerLeft,
+                                                    end: Alignment.centerRight,
+                                                    // 10% of the width, so there are ten blinds.
+                                                    colors: <Color>[
+                                                      Color(0xffE53147),
+                                                      Color(0xffFB9C26)
+                                                    ],
+                                                    // red to yellow
+                                                    tileMode: TileMode
+                                                        .repeated, // repeats the gradient over the canvas
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(50))),
+                                              child: ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty.all(
+                                                              Colors
+                                                                  .transparent),
+                                                      shadowColor:
+                                                          MaterialStateProperty.all(
+                                                              Colors
+                                                                  .transparent)),
+                                                  child: Text('Speichern'),
+                                                  onPressed: () => _changeEmail(
+                                                      emailController.text,
+                                                      emailPasswordController
+                                                          .text)))
+                                        ])),
+                                  ],
+                                ),
+                                ExpansionTile(
                                     title: Text(
                                       'Passwort ändern',
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                  );
-                                },
-                                body: Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Column(children: [
-                                      TextFormField(
-                                        controller: oldPasswordController,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText:
-                                          'Aktuelles Passwort eingeben',
-                                          labelText: 'Aktuelles Passwort',
-                                        ),
-                                        obscureText: true,
-                                      ),
-                                      Padding(padding: EdgeInsets.all(10)),
-                                      TextFormField(
-                                        controller: passwordController,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Neues Passwort eingeben',
-                                          labelText: 'Neues Passwort',
-                                        ),
-                                        obscureText: true,
-                                      ),
-                                      Padding(padding: EdgeInsets.all(10)),
-                                      TextFormField(
-                                        controller: passwordCheckController,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Passwort wiederholen',
-                                          labelText: 'Passwort wiederholen',
-                                        ),
-                                        obscureText: true,
-                                      ),
+                                    iconColor: Colors.white,
+                                    collapsedIconColor: Colors.white,
+                                    children: [
                                       Padding(
-                                        padding: EdgeInsets.all(5),
-                                      ),
-                                      ElevatedButton(
-                                          child: Text('Speichern'),
-                                          onPressed: () =>
-                                              _savePassword(
-                                                  oldPasswordController.text,
-                                                  passwordController.text,
-                                                  passwordCheckController
-                                                      .text)),
-                                    ])),
-                                isExpanded: _isExpanded[2],
-                                canTapOnHeader: true,
-                              ),
-                            ],
-                            dividerColor: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ],
+                                          padding: EdgeInsets.all(5),
+                                          child: Column(children: [
+                                            TextFormField(
+                                              controller: oldPasswordController,
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText:
+                                                    'Aktuelles Passwort eingeben',
+                                                labelText: 'Aktuelles Passwort',
+                                              ),
+                                              obscureText: true,
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.all(10)),
+                                            TextFormField(
+                                              controller: passwordController,
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText:
+                                                    'Neues Passwort eingeben',
+                                                labelText: 'Neues Passwort',
+                                              ),
+                                              obscureText: true,
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.all(10)),
+                                            TextFormField(
+                                              controller:
+                                                  passwordCheckController,
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText:
+                                                    'Passwort wiederholen',
+                                                labelText:
+                                                    'Passwort wiederholen',
+                                              ),
+                                              obscureText: true,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(5),
+                                            ),
+                                          Container(
+                                              width: 300,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.centerLeft,
+                                                    end: Alignment.centerRight,
+                                                    // 10% of the width, so there are ten blinds.
+                                                    colors: <Color>[
+                                                      Color(0xffE53147),
+                                                      Color(0xffFB9C26)
+                                                    ],
+                                                    // red to yellow
+                                                    tileMode: TileMode
+                                                        .repeated, // repeats the gradient over the canvas
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.all(
+                                                      Radius.circular(50))),
+                                              child:ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors
+                                                              .transparent),
+                                                      shadowColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors
+                                                              .transparent)),
+                                                child: Text('Speichern'),
+                                                onPressed: () => _savePassword(
+                                                    oldPasswordController.text,
+                                                    passwordController.text,
+                                                    passwordCheckController
+                                                        .text)),
+                                          )])),
+                                    ]),
+                              ])),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-        bottomNavigationBar: NavigationBar(0),
-      ));
-}}
+          bottomNavigationBar: NavigationBar(0),
+        ));
+  }
+}
