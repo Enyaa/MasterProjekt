@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
@@ -78,7 +79,8 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
             setState(() {
               finished = true;
             });
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload finished!')));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Upload finished!')));
           }
         });
         var downloadUrl = await (await task).ref.getDownloadURL();
@@ -120,81 +122,102 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
           body: Form(
               key: _formKey,
               child: Container(
-                margin: const EdgeInsets.all(10),
                 child: ListView(
                   children: [
-                    TextFormField(
-                      controller: titleController,
-                      maxLength: 20,
-                      decoration: const InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 0.0),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 0.0),
-                          ),
-                          labelStyle: TextStyle(color: Color(0xffFB9C26)),
-                          labelText: 'Titel'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Bitte geben Sie einen Titel an.';
-                        }
-                        return null;
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                    ),
-                    TextFormField(
-                      controller: descriptionController,
-                      maxLines: 5,
-                      maxLength: 200,
-                      decoration: const InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 0.0),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 0.0),
-                          ),
-                          labelStyle: TextStyle(color: Color(0xffFB9C26)),
-                          labelText: 'Beschreibung'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Bitte geben Sie eine Beschreibung an.';
-                        }
-                        return null;
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                    ),
-                    TextFormField(
-                      controller: xpController,
-                      decoration: const InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 0.0),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 0.0),
-                          ),
-                          labelStyle: TextStyle(color: Color(0xffFB9C26)),
-                          labelText: 'Punkte'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Bitte geben Sie eine Punktzahl an.';
-                        }
-                      },
-                    ),
+                    Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextFormField(
+                          controller: titleController,
+                          maxLength: 20,
+                          decoration: const InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 0.0),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 0.0),
+                              ),
+                              labelStyle: TextStyle(color: Color(0xffFB9C26)),
+                              labelText: 'Titel'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Bitte geben Sie einen Titel an.';
+                            }
+                            return null;
+                          },
+                        )),
                     Padding(
                       padding: EdgeInsets.all(10),
                     ),
                     Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextFormField(
+                          controller: descriptionController,
+                          maxLines: 5,
+                          maxLength: 200,
+                          decoration: const InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 0.0),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 0.0),
+                              ),
+                              labelStyle: TextStyle(color: Color(0xffFB9C26)),
+                              labelText: 'Beschreibung'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Bitte geben Sie eine Beschreibung an.';
+                            }
+                            return null;
+                          },
+                        )),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextFormField(
+                          controller: xpController,
+                          decoration: const InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 0.0),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 0.0),
+                              ),
+                              labelStyle: TextStyle(color: Color(0xffFB9C26)),
+                              labelText: 'Punkte'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Bitte geben Sie eine Punktzahl an.';
+                            }
+                          },
+                        )),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    if(progress != 0) GradientProgressIndicator(
+                      value: progress/100,
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        // 10% of the width, so there are ten blinds.
+                        colors: <Color>[
+                          Color(0xffE53147),
+                          Color(0xffFB9C26)
+                        ],
+                        // red to yellow
+                        tileMode: TileMode
+                            .repeated, // repeats the gradient over the canvas
+                      ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.all(10),
                         height: 50,
                         width: 300,
                         child: OutlinedButton.icon(
@@ -206,10 +229,9 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                                 shadowColor: MaterialStateProperty.all(
                                     Colors.transparent)),
                             onPressed: _imgFromGallery)),
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                    ),
+                    if(progress == 100) Container(child: Text('Upload abgeschlossen!'), alignment: Alignment.center,),
                     Container(
+                        margin: EdgeInsets.all(10),
                         width: 300,
                         height: 50,
                         decoration: const BoxDecoration(

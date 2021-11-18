@@ -299,22 +299,22 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           Colors.transparent)),
                                   onPressed: _imgFromGallery)),
                           Padding(padding: EdgeInsets.all(5)),
-                          GradientProgressIndicator(
+                          if(progress != 0) GradientProgressIndicator(
                             value: progress / 100,
                             gradient: LinearGradient(
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                               // 10% of the width, so there are ten blinds.
                               colors: <Color>[
-                                Color(0xffFB9C26),
-                                Color(0xffE53147)
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
                               ],
                               // red to yellow
                               tileMode: TileMode
                                   .repeated, // repeats the gradient over the canvas
                             ),
                           ),
-                          Padding(padding: EdgeInsets.all(5)),
+                          if(progress != 0) Padding(padding: EdgeInsets.all(5)),
                           if (progress == 100) Text('Upload abgeschlossen!'),
                           Container(
                               margin: EdgeInsets.all(10),
