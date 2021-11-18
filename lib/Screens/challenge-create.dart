@@ -79,8 +79,6 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
             setState(() {
               finished = true;
             });
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Upload finished!')));
           }
         });
         var downloadUrl = await (await task).ref.getDownloadURL();
@@ -159,8 +157,8 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                         margin: EdgeInsets.only(left: 20, right:20),
                         child: TextFormField(
                           controller: descriptionController,
-                          maxLines: 5,
-                          maxLength: 200,
+                          maxLines: 10,
+                          maxLength: 500,
                           decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
