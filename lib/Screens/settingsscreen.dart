@@ -314,7 +314,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                   .repeated, // repeats the gradient over the canvas
                             ),
                           ),
-                          if(progress != 0) Padding(padding: EdgeInsets.all(5)),
+                          if(progress != 0 && progress != 100) Padding(padding: EdgeInsets.all(5)),
                           if (progress == 100) Text('Upload abgeschlossen!'),
                           Container(
                               margin: EdgeInsets.all(10),

@@ -124,19 +124,24 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
               child: Container(
                 child: ListView(
                   children: [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
                     Container(
-                        margin: const EdgeInsets.all(10),
+                        margin: EdgeInsets.only(left: 20, right:20),
                         child: TextFormField(
                           controller: titleController,
                           maxLength: 20,
-                          decoration: const InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: const BorderSide(
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                     color: Colors.white, width: 0.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: const BorderSide(
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                     color: Colors.white, width: 0.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
                               labelStyle: TextStyle(color: Color(0xffFB9C26)),
                               labelText: 'Titel'),
@@ -151,19 +156,21 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                       padding: EdgeInsets.all(10),
                     ),
                     Container(
-                        margin: const EdgeInsets.all(10),
+                        margin: EdgeInsets.only(left: 20, right:20),
                         child: TextFormField(
                           controller: descriptionController,
                           maxLines: 5,
                           maxLength: 200,
-                          decoration: const InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: const BorderSide(
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                     color: Colors.white, width: 0.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: const BorderSide(
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                     color: Colors.white, width: 0.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
                               labelStyle: TextStyle(color: Color(0xffFB9C26)),
                               labelText: 'Beschreibung'),
@@ -178,17 +185,19 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                       padding: EdgeInsets.all(10),
                     ),
                     Container(
-                        margin: const EdgeInsets.all(10),
+                        margin: EdgeInsets.only(left: 20, right:20),
                         child: TextFormField(
                           controller: xpController,
-                          decoration: const InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: const BorderSide(
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                     color: Colors.white, width: 0.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: const BorderSide(
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                     color: Colors.white, width: 0.0),
+                                  borderRadius: BorderRadius.circular(25.0),
                               ),
                               labelStyle: TextStyle(color: Color(0xffFB9C26)),
                               labelText: 'Punkte'),
@@ -201,7 +210,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                     Padding(
                       padding: EdgeInsets.all(10),
                     ),
-                    if(progress != 0) GradientProgressIndicator(
+                    if(progress != 0 && progress != 100) Container(margin: EdgeInsets.only(bottom: 20), child: GradientProgressIndicator(
                       value: progress/100,
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,
@@ -215,9 +224,9 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                         tileMode: TileMode
                             .repeated, // repeats the gradient over the canvas
                       ),
-                    ),
+                    )),
                     Container(
-                        margin: EdgeInsets.all(10),
+                        margin: EdgeInsets.only(left: 20, right:20),
                         height: 50,
                         width: 300,
                         child: OutlinedButton.icon(
@@ -229,9 +238,12 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                                 shadowColor: MaterialStateProperty.all(
                                     Colors.transparent)),
                             onPressed: _imgFromGallery)),
-                    if(progress == 100) Container(child: Text('Upload abgeschlossen!'), alignment: Alignment.center,),
+                    if(progress == 100) Container(margin: EdgeInsets.only(top: 10), child: Text('Upload abgeschlossen!'), alignment: Alignment.center,),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
                     Container(
-                        margin: EdgeInsets.all(10),
+                        margin: EdgeInsets.only(left: 20, right:20),
                         width: 300,
                         height: 50,
                         decoration: const BoxDecoration(

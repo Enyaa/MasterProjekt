@@ -96,7 +96,7 @@ class _TaskCreateState extends State<TaskCreate> {
             body: Form(
                 key: _formKey,
                 child: Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(20),
                   child: ListView(
                     children: [
                       Padding(
@@ -105,12 +105,17 @@ class _TaskCreateState extends State<TaskCreate> {
                       TextFormField(
                         controller: titleController,
                         maxLength: 20,
-                        decoration: const InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25)
+                          ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
                             ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
                             ),
                             labelStyle: TextStyle(color: Color(0xffFB9C26)),
                             labelText: 'Titel'),
@@ -126,14 +131,16 @@ class _TaskCreateState extends State<TaskCreate> {
                       ),
                       TextFormField(
                         controller: descriptionController,
-                        maxLines: 5,
-                        maxLength: 200,
-                        decoration: const InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                        maxLines: 10,
+                        maxLength: 500,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
                             ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
                             ),
                             labelStyle: TextStyle(color: Color(0xffFB9C26)),
                             labelText: 'Beschreibung'),
@@ -142,6 +149,28 @@ class _TaskCreateState extends State<TaskCreate> {
                             return 'Bitte geben Sie eine Beschreibung an.';
                           }
                           return null;
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                      ),
+                      TextFormField(
+                        controller: xpController,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            labelStyle: TextStyle(color: Color(0xffFB9C26)),
+                            labelText: 'Punkte'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Bitte geben Sie eine Punktzahl an.';
+                          }
                         },
                       ),
                       Padding(
@@ -154,19 +183,21 @@ class _TaskCreateState extends State<TaskCreate> {
                               width: 250,
                               child: TextFormField(
                                 controller: subTaskController,
-                                decoration: const InputDecoration(
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white, width: 0.0),
+                                    borderRadius: BorderRadius.circular(25.0),
                                   ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.white, width: 0.0),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white, width: 0.0),
+                                    borderRadius: BorderRadius.circular(25.0),
                                   ),
                                   labelStyle: TextStyle(color: Color(0xffFB9C26)),
                                   labelText: 'Teilaufgabe',
                                 ),
                               ),
                             ),
-                            Padding(padding: EdgeInsets.all(10)),
+                            Padding(padding: EdgeInsets.all(2)),
                             ElevatedButton(
                                     onPressed: () {
                                       addSubTask(subTaskController.text);
@@ -197,7 +228,7 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(5),
                       ),
-                      SizedBox(
+                      if(subTasks.isNotEmpty) SizedBox(
                         height: 50,
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -215,7 +246,7 @@ class _TaskCreateState extends State<TaskCreate> {
                                 decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
+                                        BorderRadius.all(Radius.circular(25)),
                                     border:  Border.all(color: Colors.white, width: 0)),
                                 child: Center(
                                   child: Padding(
@@ -236,26 +267,6 @@ class _TaskCreateState extends State<TaskCreate> {
                                 )),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                      ),
-                      TextFormField(
-                        controller: xpController,
-                        decoration: const InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white, width: 0.0),
-                            ),
-                            labelStyle: TextStyle(color: Color(0xffFB9C26)),
-                            labelText: 'Punkte'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Bitte geben Sie eine Punktzahl an.';
-                          }
-                        },
                       ),
                       Padding(
                         padding: EdgeInsets.all(10),
