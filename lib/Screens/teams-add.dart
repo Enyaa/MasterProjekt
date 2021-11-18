@@ -100,21 +100,21 @@ class _addTeamState extends State<addTeam> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 0.0),
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white, width: 0.0),
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 0.0),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white, width: 0.0),
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
                         labelStyle: TextStyle(color: Color(0xffFB9C26)),
                         labelText: 'Name *'),
                     controller: nameController,
                   ),
                 ),
-                SizedBox(
+                if(toAddList.isNotEmpty) SizedBox(
                   height: 50,
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -133,7 +133,7 @@ class _addTeamState extends State<addTeam> {
                           decoration: BoxDecoration(
                               color: Colors.transparent,
                               borderRadius:
-                              BorderRadius.all(Radius.circular(5)),
+                              BorderRadius.all(Radius.circular(25)),
                               border:  Border.all(color: Colors.white, width: 0)),
                           child: Center(
                             child: Padding(
