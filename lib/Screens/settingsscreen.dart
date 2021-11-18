@@ -292,8 +292,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                   label: Text('Bild hochladen'),
                                   icon: Icon(Icons.image),
                                   style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all(
-                                          Colors.transparent),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.transparent),
                                       shadowColor: MaterialStateProperty.all(
                                           Colors.transparent)),
                                   onPressed: _imgFromGallery)),
@@ -331,7 +332,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           TextFormField(
                                             controller: nameController,
                                             decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
+                                              enabledBorder:
+                                                  const OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 0.0),
+                                              ),
+                                              focusedBorder:
+                                                  const OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 0.0),
+                                              ),
+                                              labelStyle: TextStyle(
+                                                  color: Color(0xffFB9C26)),
                                               hintText: 'Name ändern',
                                               labelText: 'Name *',
                                             ),
@@ -387,7 +401,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           TextFormField(
                                             controller: emailController,
                                             decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
+                                              enabledBorder:
+                                              const OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 0.0),
+                                              ),
+                                              focusedBorder:
+                                              const OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 0.0),
+                                              ),
+                                              labelStyle: TextStyle(
+                                                  color: Color(0xffFB9C26)),
                                               hintText: 'Email ändern',
                                               labelText: 'Email *',
                                             ),
@@ -396,7 +423,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           TextFormField(
                                             controller: emailPasswordController,
                                             decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
+                                              enabledBorder:
+                                              const OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 0.0),
+                                              ),
+                                              focusedBorder:
+                                              const OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 0.0),
+                                              ),
+                                              labelStyle: TextStyle(
+                                                  color: Color(0xffFB9C26)),
                                               hintText:
                                                   'Aktuelles Passwort eingeben',
                                               labelText: 'Passwort *',
@@ -455,7 +495,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                                             TextFormField(
                                               controller: oldPasswordController,
                                               decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
+                                                enabledBorder:
+                                                const OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 0.0),
+                                                ),
+                                                focusedBorder:
+                                                const OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 0.0),
+                                                ),
+                                                labelStyle: TextStyle(
+                                                    color: Color(0xffFB9C26)),
                                                 hintText:
                                                     'Aktuelles Passwort eingeben',
                                                 labelText: 'Aktuelles Passwort',
@@ -467,7 +520,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                                             TextFormField(
                                               controller: passwordController,
                                               decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
+                                                enabledBorder:
+                                                const OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 0.0),
+                                                ),
+                                                focusedBorder:
+                                                const OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 0.0),
+                                                ),
+                                                labelStyle: TextStyle(
+                                                    color: Color(0xffFB9C26)),
                                                 hintText:
                                                     'Neues Passwort eingeben',
                                                 labelText: 'Neues Passwort',
@@ -480,7 +546,20 @@ class SettingsScreenState extends State<SettingsScreen> {
                                               controller:
                                                   passwordCheckController,
                                               decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
+                                                enabledBorder:
+                                                const OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 0.0),
+                                                ),
+                                                focusedBorder:
+                                                const OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 0.0),
+                                                ),
+                                                labelStyle: TextStyle(
+                                                    color: Color(0xffFB9C26)),
                                                 hintText:
                                                     'Passwort wiederholen',
                                                 labelText:
@@ -491,7 +570,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                             Padding(
                                               padding: EdgeInsets.all(5),
                                             ),
-                                          Container(
+                                            Container(
                                               width: 300,
                                               height: 50,
                                               decoration: const BoxDecoration(
@@ -508,25 +587,27 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                         .repeated, // repeats the gradient over the canvas
                                                   ),
                                                   borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(50))),
-                                              child:ElevatedButton(
+                                                      BorderRadius.all(
+                                                          Radius.circular(50))),
+                                              child: ElevatedButton(
                                                   style: ButtonStyle(
                                                       backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors
-                                                              .transparent),
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .transparent),
                                                       shadowColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors
-                                                              .transparent)),
-                                                child: Text('Speichern'),
-                                                onPressed: () => _savePassword(
-                                                    oldPasswordController.text,
-                                                    passwordController.text,
-                                                    passwordCheckController
-                                                        .text)),
-                                          )])),
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .transparent)),
+                                                  child: Text('Speichern'),
+                                                  onPressed: () => _savePassword(
+                                                      oldPasswordController
+                                                          .text,
+                                                      passwordController.text,
+                                                      passwordCheckController
+                                                          .text)),
+                                            )
+                                          ])),
                                     ]),
                               ])),
                         ],
