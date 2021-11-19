@@ -24,6 +24,7 @@ import 'level/listener.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await startListenerForLevelUp();
   runApp(MyApp());
 }
 
@@ -50,7 +51,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-      checkLevel();
+
     return MaterialApp(
       title: 'TeamRad',
       theme: ThemeData(

@@ -64,38 +64,35 @@ class Profil extends StatelessWidget {
                   Text('   Level: '),
                   Methods(mode: 'level.s'),
                 ])),
-
                 Container(
-                        child: StreamBuilder<QuerySnapshot>(
-                            stream: snapshots,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshotuid) {
-                              if (!snapshotuid.hasData) {
-                                return new Text('Loading...');
-                              } else {
-                                return new Column(children: [
-                                  Container(
-                                      child: LinearProgressIndicator(
-                                    value: snapshotuid.data!.docs.firstWhere(
-                                            (user) =>
-                                                user['uid'] == getUid())['xp'] /
-                                        snapshotuid.data!.docs.firstWhere(
-                                            (user) =>
-                                                user['uid'] ==
-                                                getUid())['pointsNeeded'],
-                                    valueColor: AlwaysStoppedAnimation(
-                                        Colors.deepOrange),
-                                    backgroundColor: Colors.grey,
-                                  )),
-                                  Container(
-                                      child: Column(children: [
-
-                                    Methods(mode: 'currentXp.s'),
-                                    Methods(mode: 'pointsNeeded.s')
-                                  ]))
-                                ]);
-                              }
-                            })),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: snapshots,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshotuid) {
+                          if (!snapshotuid.hasData) {
+                            return new Text('Loading...');
+                          } else {
+                            return new Column(children: [
+                              Container(
+                                  child: LinearProgressIndicator(
+                                value: snapshotuid.data!.docs.firstWhere(
+                                        (user) =>
+                                            user['uid'] == getUid())['xp'] /
+                                    snapshotuid.data!.docs.firstWhere((user) =>
+                                        user['uid'] ==
+                                        getUid())['pointsNeeded'],
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.deepOrange),
+                                backgroundColor: Colors.grey,
+                              )),
+                              Container(
+                                  child: Column(children: [
+                                Methods(mode: 'currentXp.s'),
+                                Methods(mode: 'pointsNeeded.s')
+                              ]))
+                            ]);
+                          }
+                        })),
                 TabBar(tabs: [
                   Tab(
                       child: Text('Punkte',
@@ -107,29 +104,29 @@ class Profil extends StatelessWidget {
                           style: TextStyle(color: Colors.black))),
                 ]),
                 SizedBox(
-                height: 20,
-                //child: StreamBuilder<QuerySnapshot>(
-                //    stream: snapshots,
-                //    builder: (BuildContext context,
-                //        AsyncSnapshot<QuerySnapshot> snapshot) {
-                //      if (!snapshot.hasData) {
-                //        return TabBarView(
-                //          children: [
-                //            ListView(
-                //                children: [Text('Keine Daten gefunden!')]),
-                //            ListView(
-                //              children: [Text('Keine Daten gefunden!')],
-                //            )
-                //          ],
-                //        );
-                //      } else {
-                //        return TabBarView(children: [
-                //          ListView(children: []),
-                //          ListView(children: [])
-                //        ]);
-                //     }
-                //}
-               // )
+                  height: 20,
+                  //child: StreamBuilder<QuerySnapshot>(
+                  //    stream: snapshots,
+                  //    builder: (BuildContext context,
+                  //        AsyncSnapshot<QuerySnapshot> snapshot) {
+                  //      if (!snapshot.hasData) {
+                  //        return TabBarView(
+                  //          children: [
+                  //            ListView(
+                  //                children: [Text('Keine Daten gefunden!')]),
+                  //            ListView(
+                  //              children: [Text('Keine Daten gefunden!')],
+                  //            )
+                  //          ],
+                  //        );
+                  //      } else {
+                  //        return TabBarView(children: [
+                  //          ListView(children: []),
+                  //          ListView(children: [])
+                  //        ]);
+                  //     }
+                  //}
+                  // )
                 )
               ]),
             ),

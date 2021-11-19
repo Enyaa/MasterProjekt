@@ -15,6 +15,7 @@ class _MethodsState extends State<Methods> {
     return FirebaseAuth.instance.currentUser!.uid.toString();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -23,29 +24,25 @@ class _MethodsState extends State<Methods> {
           if (!snapshot.hasData) {
             return Text('Error, keine Daten von User gefunden!');
           } else {
-            print('Vergleich gestartet. Mode  =' + widget.mode);
+            var level = snapshot.data!.docs
+                .firstWhere((user) => user['uid'] == getUid())['level'];
+            var currentXp = snapshot.data!.docs
+                .firstWhere((user) => user['uid'] == getUid())['xp'];
+            var pointsNeeded = snapshot.data!.docs
+                .firstWhere((user) => user['uid'] == getUid())['pointsNeeded'];
             //level als String
             if (widget.mode == 'level.s') {
-              var level = snapshot.data!.docs
-                  .firstWhere((user) => user['uid'] == getUid())['level'];
-
               return Text(level.toString());
             }
             //CurrentXP als String
             else if (widget.mode == 'currentXp.s') {
-              var currentXp = snapshot.data!.docs
-                  .firstWhere((user) => user['uid'] == getUid())['xp'];
-
               return Text(currentXp.toString());
             }
             //pointsNeeded als String
             else if (widget.mode == 'pointsNeeded.s') {
-              var pointsNeeded = snapshot.data!.docs.firstWhere(
-                  (user) => user['uid'] == getUid())['pointsNeeded'];
-
               return Text(pointsNeeded.toString());
             }
-          else {
+            else {
               return Text('Keine Daten gefunden!');
             }
           }
