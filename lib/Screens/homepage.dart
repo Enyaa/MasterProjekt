@@ -17,6 +17,9 @@ class Homepage extends StatelessWidget {
       drawer: MyDrawer(),
       body: Center(child: new Text('Homepage')),
       bottomNavigationBar: NavigationBar(1),
-    ), text: "Wollen Sie die App schließen?");
+    ),
+      text: "App schließen?",
+      close: true,
+    );
   }
 }

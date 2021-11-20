@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 
 
 class TeamsDetail extends StatefulWidget {
@@ -37,30 +38,10 @@ class _TeamsDetailState extends State<TeamsDetail> {
     List<String> creatorList = [];
     creatorList.add(widget.creator);
 
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) =>
-                  AlertDialog(
-                    title: Text('Go back to Homepage?'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            willLeave = false;
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          child: Text('Yes')),
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('No'))
-                    ],
-                  ));
-          return willLeave;
-        }, child: Scaffold(
+    return MyWillPopScope(
+        text: 'Zur Teams-Übersicht zurückkehren?',
+        destination: '/teams',
+        child: Scaffold(
       appBar: AppBar(title: const Text('Team verwalten')
           , leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
             Navigator.pop(context);

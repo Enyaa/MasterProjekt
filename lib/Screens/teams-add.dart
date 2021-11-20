@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 import 'package:uuid/uuid.dart';
 
 class addTeam extends StatefulWidget {
@@ -65,29 +66,9 @@ class _addTeamState extends State<addTeam> {
           .catchError((error) => print("Failed to add team"));
     }
 
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                    title: Text('Go back to Homepage?'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            willLeave = false;
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          child: Text('Yes')),
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('No'))
-                    ],
-                  ));
-          return willLeave;
-        },
+    return MyWillPopScope(
+        text: 'Zur Teams-Übersicht zurückkehren?',
+        destination: '/teams',
         child: Scaffold(
           appBar: MyAppbar(title: 'Team erstellen', leading: true),
           body: Padding(

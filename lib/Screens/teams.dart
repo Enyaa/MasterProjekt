@@ -6,6 +6,7 @@ import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/Screens/teams-detail.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 
 
 class Teams extends StatelessWidget {
@@ -22,29 +23,9 @@ class Teams extends StatelessWidget {
 
     var snapshots = FirebaseFirestore.instance.collection('teams').where('queryOperator', arrayContains: getUid()).snapshots();
 
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: Text('Go back to Homepage?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () {
-                        willLeave = false;
-                        Navigator.of(context).pop();
-                        Navigator.pushReplacementNamed(context, '/');
-                      },
-                      child: Text('Yes')),
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('No'))
-                ],
-              ));
-          return willLeave;
-        },child: Scaffold(
+    return MyWillPopScope(
+        text: 'Zur Homepage zurückkehren?',
+        child: Scaffold(
         appBar: MyAppbar(title: 'Teams', leading: false, actions: false, bottom: false,),
         drawer: MyDrawer(),
       body: StreamBuilder<QuerySnapshot>(

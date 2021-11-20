@@ -9,6 +9,7 @@ import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'dart:io';
 import 'package:gradient_widgets/gradient_widgets.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -194,29 +195,8 @@ class SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     getCurrentUrl();
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                    title: Text('Go back to Homepage?'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            willLeave = false;
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          child: Text('Yes')),
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('No'))
-                    ],
-                  ));
-          return willLeave;
-        },
+    return MyWillPopScope(
+        text: 'Zur Homepage zurückkehren?',
         child: Scaffold(
           appBar: MyAppbar(
               title: 'Einstellungen',

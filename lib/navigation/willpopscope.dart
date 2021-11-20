@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MyWillPopScope extends StatefulWidget {
-  const MyWillPopScope({Key? key, required this.child, required this.text})
+  const MyWillPopScope({Key? key, required this.child, required this.text, this.destination = '/homepage', this.close = false})
       : super(key: key);
 
   final Widget child;
   final String text;
+  final String destination;
+  final bool close;
 
   @override
   _MyWillPopScopeState createState() => _MyWillPopScopeState();
@@ -52,7 +54,11 @@ class _MyWillPopScopeState extends State<MyWillPopScope> {
                                     Colors.transparent)),
                             onPressed: () {
                               willLeave = false;
-                              SystemNavigator.pop(); // might not work with iOS
+                              if(widget.close) SystemNavigator.pop();
+                              else {
+                                Navigator.of(context).pop();
+                                Navigator.pushReplacementNamed(context, widget.destination);
+                              }// might not work with iOS
                             },
                             child: Text('Ja'))),
                     Container(

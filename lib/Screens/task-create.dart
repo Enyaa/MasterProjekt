@@ -7,6 +7,7 @@ import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:intl/intl.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 import 'package:uuid/uuid.dart';
 
 class TaskCreate extends StatefulWidget {
@@ -64,34 +65,9 @@ class _TaskCreateState extends State<TaskCreate> {
       }
     }
 
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                    title: Text('Go back to Homepage?'),
-                    actions: [
-                      ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.transparent),
-                              shadowColor: MaterialStateProperty.all(
-                                  Colors.transparent)),
-                          onPressed: () {
-                            willLeave = false;
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          child: Text('Yes')),
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('No'))
-                    ],
-                  ));
-          return willLeave;
-        },
+    return MyWillPopScope(
+      text: 'Zur Aufgaben-Übersicht zurückkehren?',
+        destination: '/tasks',
         child: Scaffold(
             appBar: MyAppbar(title: 'Aufgaben', leading: true,),
             drawer: MyDrawer(),

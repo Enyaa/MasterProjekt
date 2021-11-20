@@ -6,6 +6,7 @@ import 'package:master_projekt/Screens/task-detail.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 
 class Tasks extends StatefulWidget {
   const Tasks({Key? key}) : super(key: key);
@@ -27,29 +28,7 @@ class TasksState extends State<Tasks> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                    title: Text('Go back to Homepage?'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            willLeave = false;
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          child: Text('Yes')),
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('No'))
-                    ],
-                  ));
-          return willLeave;
-        },
+    return MyWillPopScope(
         child: Scaffold(
           appBar: MyAppbar(title: 'Aufgaben', actions: true, accepted: true, getFiltered: getFiltered),
           drawer: MyDrawer(),
@@ -89,8 +68,9 @@ class TasksState extends State<Tasks> {
               ),
             ),
           ),
-          bottomNavigationBar: NavigationBar(2),
-        ));
+          bottomNavigationBar: NavigationBar(2)),
+        text: 'Zur Homepage zurückkehren?',
+    );
   }
 
   getTasks(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {

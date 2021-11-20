@@ -9,6 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 import 'package:uuid/uuid.dart';
 
 class ChallengeCreate extends StatefulWidget {
@@ -88,29 +89,9 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
       }
     }
 
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                    title: Text('Go back to Homepage?'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            willLeave = false;
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          child: Text('Yes')),
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('No'))
-                    ],
-                  ));
-          return willLeave;
-        },
+    return MyWillPopScope(
+      text: 'Zur Herausforderungen-Übersicht zurückkehren?',
+        destination: '/challenges',
         child: Scaffold(
           appBar: MyAppbar(
             title: 'Herausfoderungen',
