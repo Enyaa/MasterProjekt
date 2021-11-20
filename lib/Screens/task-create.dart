@@ -19,16 +19,18 @@ class TaskCreate extends StatefulWidget {
 class _TaskCreateState extends State<TaskCreate> {
   List<dynamic> subTasks = [];
 
+  var uid = Uuid().v4();
+
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final xpController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference tasks = firestore.collection('tasks');
-    var uid = Uuid().v4();
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final xpController = TextEditingController();
     final subTaskController = TextEditingController();
 
     Future<void> addTask(title, description, xp) {
