@@ -40,8 +40,8 @@ class Leaderboards extends StatelessWidget {
           length: 3,
           child: Scaffold(
             appBar: MyAppbar(
-                title: 'Bestenlisten',
-                bottom: true,
+              title: 'Bestenlisten',
+              bottom: true,
             ),
             drawer: MyDrawer(),
             body: StreamBuilder<QuerySnapshot>(
@@ -56,10 +56,15 @@ class Leaderboards extends StatelessWidget {
                   ]);
                 } else {
                   return TabBarView(children: [
-                    ListView(children: getList('xp', snapshot, context)),
-                    ListView(children: getList('tasks', snapshot, context)),
                     ListView(
-                        children: getList('achievements', snapshot, context)),
+                        children: getList('xp', snapshot, context),
+                        padding: EdgeInsets.all(10)),
+                    ListView(
+                        children: getList('tasks', snapshot, context),
+                        padding: EdgeInsets.all(10)),
+                    ListView(
+                        children: getList('achievements', snapshot, context),
+                        padding: EdgeInsets.all(10)),
                   ]);
                 }
               },
@@ -77,52 +82,131 @@ class Leaderboards extends StatelessWidget {
       int xp = doc['xp'];
       int finishedTasks = doc['finishedTasksCount'];
       int finishedChallenges = doc['finishedChallengesCount'];
+      String image = doc['imgUrl'];
+
+      if (image == '') {
+        image =
+            'https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e';
+      }
 
       MyUser _user = new MyUser(
           name: name,
           xp: xp,
           tasks: finishedTasks,
-          challenges: finishedChallenges);
+          challenges: finishedChallenges,
+          image: image);
       _users.add(_user);
     });
 
     if (mode == 'xp') {
       return sort(_users, 0)
-          .map<Widget>((user) => Card(
-              child: ListTile(
-                  title: new Text(user.name),
-                  leading: new Text(
-                      (sort(_users, 0).indexOf(user) + 1).toString() + '.',
-                      style: TextStyle(fontSize: 40),
-                      textAlign: TextAlign.center),
-                  subtitle: new Text('XP: ' + user.xp.toString()),
-                  onTap: () {})))
+          .map<Widget>((user) => Row(children: [
+                new Text((sort(_users, 0).indexOf(user) + 1).toString() + '.',
+                    style: TextStyle(fontSize: 40),
+                    textAlign: TextAlign.center),
+                SizedBox(
+                    height: 80,
+                    width: 310,
+                    child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(50),
+                                topLeft: Radius.circular(50))),
+                        child: ListTile(
+                            title: new Text(user.name),
+                            leading: Ink(
+                              height: 40,
+                              width: 40,
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                  border: Border.all(
+                                      width: 0.5, color: Colors.white)),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    user.image,
+                                    fit: BoxFit.fill,
+                                  )),
+                            ),
+                            subtitle: new Text('XP: ' + user.xp.toString()),
+                            onTap: () {})))
+              ]))
           .toList();
     } else if (mode == 'tasks') {
       return sort(_users, 1)
-          .map<Widget>((user) => Card(
-              child: ListTile(
-                  title: new Text(user.name),
-                  leading: new Text(
-                      (sort(_users, 1).indexOf(user) + 1).toString() + '.',
-                      style: TextStyle(fontSize: 40),
-                      textAlign: TextAlign.center),
-                  subtitle: new Text(
-                      'Abgeschlossene Aufgaben: ' + user.tasks.toString()),
-                  onTap: () {})))
+          .map<Widget>((user) => Row(children: [
+                new Text((sort(_users, 0).indexOf(user) + 1).toString() + '.',
+                    style: TextStyle(fontSize: 40),
+                    textAlign: TextAlign.center),
+                SizedBox(
+                    height: 80,
+                    width: 310,
+                    child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(50),
+                                topLeft: Radius.circular(50))),
+                        child: ListTile(
+                            title: new Text(user.name),
+                            leading: Ink(
+                              height: 40,
+                              width: 40,
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                  border: Border.all(
+                                      width: 0.5, color: Colors.white)),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    user.image,
+                                    fit: BoxFit.fill,
+                                  )),
+                            ),
+                            subtitle: new Text('Abgeschlossene Aufgaben: ' +
+                                user.tasks.toString()),
+                            onTap: () {})))
+              ]))
           .toList();
     } else if (mode == 'achievements') {
       return sort(_users, 2)
-          .map<Widget>((user) => Card(
-              child: ListTile(
-                  title: new Text(user.name),
-                  leading: new Text(
-                      (sort(_users, 2).indexOf(user) + 1).toString() + '.',
-                      style: TextStyle(fontSize: 40),
-                      textAlign: TextAlign.center),
-                  subtitle: new Text('Abgeschlossene Achievements: ' +
-                      user.challenges.toString()),
-                  onTap: () {})))
+          .map<Widget>((user) => Row(children: [
+                new Text((sort(_users, 0).indexOf(user) + 1).toString() + '.',
+                    style: TextStyle(fontSize: 40),
+                    textAlign: TextAlign.center),
+                SizedBox(
+                    height: 80,
+                    width: 310,
+                    child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(50),
+                                topLeft: Radius.circular(50))),
+                        child: ListTile(
+                            title: new Text(user.name),
+                            leading: Ink(
+                              height: 40,
+                              width: 40,
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                  border: Border.all(
+                                      width: 0.5, color: Colors.white)),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    user.image,
+                                    fit: BoxFit.fill,
+                                  )),
+                            ),
+                            subtitle: new Text('Abgeschlossene Achievements: ' +
+                                user.challenges.toString()),
+                            onTap: () {})))
+              ]))
           .toList();
     }
   }
@@ -146,10 +230,12 @@ class MyUser {
       {required this.name,
       required this.xp,
       required this.tasks,
-      required this.challenges});
+      required this.challenges,
+      required this.image});
 
   String name;
   int xp;
   int tasks;
   int challenges;
+  String image;
 }
