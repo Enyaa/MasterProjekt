@@ -137,7 +137,7 @@ class Leaderboards extends StatelessWidget {
     } else if (mode == 'tasks') {
       return sort(_users, 1)
           .map<Widget>((user) => Row(children: [
-                new Text((sort(_users, 0).indexOf(user) + 1).toString() + '.',
+                new Text((sort(_users, 1).indexOf(user) + 1).toString() + '.',
                     style: TextStyle(fontSize: 40),
                     textAlign: TextAlign.center),
                 SizedBox(
@@ -174,7 +174,7 @@ class Leaderboards extends StatelessWidget {
     } else if (mode == 'achievements') {
       return sort(_users, 2)
           .map<Widget>((user) => Row(children: [
-                new Text((sort(_users, 0).indexOf(user) + 1).toString() + '.',
+                new Text((sort(_users, 2).indexOf(user) + 1).toString() + '.',
                     style: TextStyle(fontSize: 40),
                     textAlign: TextAlign.center),
                 SizedBox(
