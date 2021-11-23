@@ -1,17 +1,46 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/level/methods.dart';
 
-class MyDrawer extends StatelessWidget {
+
+
+class MyDrawer extends StatefulWidget {
+  const MyDrawer({Key? key}) : super (key: key);
+
+
+  @override
+  _MyDrawerState createState() => _MyDrawerState();
+
+}
+
+class _MyDrawerState extends State<MyDrawer>{
   Color lightOrange = Color(0xffFB9C26);
 
   @override
   Widget build(BuildContext context) {
     return new Drawer(
       child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          const DrawerHeader(child: Text('Header')),
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/profil');
+            },
+            child: DrawerHeader(
+              child: Column(
+                children: <Widget>[
+                  Methods(mode:'level.s'),
+                ],
+              ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('lib/Graphics/rettich.png'),
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ),
+          ),
           Expanded(
               child: ListView(
             padding: EdgeInsets.zero,

@@ -17,10 +17,13 @@ import 'package:master_projekt/Screens/passwortVergessen.dart';
 import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/teams-add.dart';
 import 'Screens/homepage.dart';
+import 'Screens/profil.dart';
+//import 'level/listener.dart'; //ToDo Import
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+ // startListenerForLevelUp(); //TODO Start Listener
   runApp(MyApp());
 }
 
@@ -108,7 +111,8 @@ class _MyAppState extends State<MyApp> {
         '/settings': (context) => const SettingsScreen(),
         '/help': (context) => const Help(),
         '/task-create': (context) => const TaskCreate(),
-        '/challenge-create': (context) => const ChallengeCreate()
+        '/challenge-create': (context) => const ChallengeCreate(),
+        '/profil' : (context) => const Profil()
       },
     );
   }
