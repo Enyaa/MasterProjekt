@@ -144,7 +144,9 @@ class _addTeamState extends State<addTeam> {
                   height: 2.5),
             ),
             TextField(
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {});
+              },
               controller: editingController,
               decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
@@ -212,29 +214,32 @@ class _addTeamState extends State<addTeam> {
 
   getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
-        .map((doc) => Card(
-                child: ListTile(
-              leading: Icon(Icons.account_circle_outlined,
-                  size: 45, color: Color(0xffFB9C26)),
-              title: new Text(
-                doc['name'],
-                style: TextStyle(fontSize: 17),
-              ),
-              subtitle: new Text('Level ' + doc['level'].toString()),
-              trailing: Icon(Icons.add, color: Color(0xffFB9C26)),
-              dense: true,
-              onTap: () {
-                setState(() {
-                  if (toAddList.contains(doc['name'])) {
-                    toAddList.remove(doc['name']);
-                    uidList.remove(doc['uid']);
-                  } else {
-                    toAddList.add(doc['name']);
-                    uidList.add(doc['uid']);
-                  }
-                });
-              },
-            )))
+        .map((doc) => Visibility(
+          visible: !(uidList.contains(doc['uid']) || !doc['name'].toString().contains(editingController.text)),
+          child: Card(
+                  child: ListTile(
+                leading: Icon(Icons.account_circle_outlined,
+                    size: 45, color: Color(0xffFB9C26)),
+                title: new Text(
+                  doc['name'],
+                  style: TextStyle(fontSize: 17),
+                ),
+                subtitle: new Text('Level ' + doc['level'].toString()),
+                trailing: Icon(Icons.add, color: Color(0xffFB9C26)),
+                dense: true,
+                onTap: () {
+                  setState(() {
+                    if (toAddList.contains(doc['name'])) {
+                      toAddList.remove(doc['name']);
+                      uidList.remove(doc['uid']);
+                    } else {
+                      toAddList.add(doc['name']);
+                      uidList.add(doc['uid']);
+                    }
+                  });
+                },
+              )),
+        ))
         .toList();
   }
 }
