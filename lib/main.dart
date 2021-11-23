@@ -18,12 +18,10 @@ import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/teams-add.dart';
 import 'Screens/homepage.dart';
 import 'Screens/profil.dart';
-//import 'level/listener.dart'; //ToDo Import
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
- // startListenerForLevelUp(); //TODO Start Listener
   runApp(MyApp());
 }
 
