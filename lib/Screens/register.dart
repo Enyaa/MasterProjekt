@@ -19,7 +19,8 @@ class _RegisterState extends State<Register> {
     final nameController = TextEditingController();
     final GlobalKey<FormState> _key = GlobalKey<FormState>();
     int xp = 0;
-    int level = 1;
+    int level = 0;
+    int pointsNeeded = 1000;
     int finishedTaskCount = 0;
     int finishedChallengesCount = 0;
     List<dynamic> finishedChallenges = [];
@@ -36,6 +37,7 @@ class _RegisterState extends State<Register> {
         'name': nameController.text,
         'identifier':identifier,
         'xp': xp,
+        'pointsNeeded': pointsNeeded,
         'level': level,
         'finishedTasksCount': finishedTaskCount,
         'finishedChallengesCount': finishedChallengesCount,

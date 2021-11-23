@@ -18,13 +18,13 @@ class _MyTabbarState extends State<MyTabbar> {
       tabs: [
         Tab(
             icon: Icon(Icons.star),
-            child: Text('Punkte', textAlign: TextAlign.center)),
+            child: Text('Punkte', textAlign: TextAlign.center, style: TextStyle(fontSize: 11))),
         Tab(
             icon: Icon(Icons.task),
-            child: Text('Aufgaben', textAlign: TextAlign.center)),
+            child: Text('Aufgaben', textAlign: TextAlign.center, style: TextStyle(fontSize: 11))),
         Tab(
             icon: Icon(Icons.emoji_events),
-            child: Text('Achievements', textAlign: TextAlign.center))
+            child: Text('Herausforderungen', textAlign: TextAlign.center, style: TextStyle(fontSize: 11)))
       ],
       unselectedLabelColor: Colors.white,
       indicatorSize: TabBarIndicatorSize.tab,
