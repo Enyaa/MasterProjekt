@@ -24,6 +24,8 @@ class TeamsDetail extends StatefulWidget {
 class _TeamsDetailState extends State<TeamsDetail> {
 
   final FirebaseAuth auth = FirebaseAuth.instance;
+  List<dynamic> changeList = [];
+  bool changed = false;
 
   String getUid() {
     final User? user = auth.currentUser;
@@ -38,6 +40,24 @@ class _TeamsDetailState extends State<TeamsDetail> {
     List<String> creatorList = [];
     creatorList.add(widget.creator);
 
+    Future<void> updateAdmins() async {
+      return FirebaseFirestore.instance
+          .collection('teams')
+          .doc(widget.teamID)
+          .update({'admins': widget.admins})
+          .then((value) => print("Admins updated"))
+          .catchError((error) => print("Failed to update admins: $error"));
+    }
+
+    Future<void> updateMember() async {
+      return FirebaseFirestore.instance
+          .collection('teams')
+          .doc(widget.teamID)
+          .update({'member': widget.member})
+          .then((value) => print("Member updated"))
+          .catchError((error) => print("Failed to update member: $error"));
+    }
+
     return MyWillPopScope(
         text: 'Zur Teams-Übersicht zurückkehren?',
         destination: '/teams',
@@ -47,78 +67,134 @@ class _TeamsDetailState extends State<TeamsDetail> {
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, '/teams');
           })),
-      body: Container(
-          margin: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(widget.teamName, style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24)),
+      body: SingleChildScrollView(
+        child: Container(
+            margin: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(widget.teamName, style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24)),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Creator", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              ),
-              StreamBuilder(
-                  stream: snapshots,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    return new ListView(
-                      shrinkWrap: true,
-                      children: getUsers(snapshot, context, creatorList),
-                    );
-                  }
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Admins", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              ),
-              StreamBuilder(
-                  stream: snapshots,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (widget.admins.isEmpty)
-                      return Container(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: new Text("Es gibt in diesem Team keine Admins", textAlign: TextAlign.center, style: TextStyle(
-                            color: Colors.grey, fontStyle: FontStyle.italic
-                          ),),
-                        ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Creator", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ),
+                StreamBuilder(
+                    stream: snapshots,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      return new ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: getUsers(snapshot, context, creatorList),
                       );
-                    return new ListView(
-                      shrinkWrap: true,
-                      children: getUsers(snapshot, context, widget.admins),
-                    );
-                  }
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Member", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              ),
-              StreamBuilder(
-                  stream: snapshots,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData)
-                      return new Text("Du kennst leider keine User");
-                    return new ListView(
-                      shrinkWrap: true,
-                      children: getUsers(snapshot, context, widget.member),
-                    );
-                  }
-              ),
-            ],
-          )
-      ),
-      bottomNavigationBar: NavigationBar(0),
-    ));
+                    }
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Admins", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ),
+                StreamBuilder(
+                    stream: snapshots,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (widget.admins.isEmpty)
+                        return Container(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: new Text("Es gibt in diesem Team keine Admins", textAlign: TextAlign.center, style: TextStyle(
+                              color: Colors.grey, fontStyle: FontStyle.italic
+                            ),),
+                          ),
+                        );
+                      return new ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: getUsers(snapshot, context, widget.admins),
+                      );
+                    }
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Member", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ),
+                StreamBuilder(
+                    stream: snapshots,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (widget.member.isEmpty)
+                        return Container(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: new Text("Es gibt in diesem Team keine Member", textAlign: TextAlign.center, style: TextStyle(
+                                color: Colors.grey, fontStyle: FontStyle.italic
+                            ),),
+                          ),
+                        );
+                      return new ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: getUsers(snapshot, context, widget.member),
+                      );
+                    }
+                ),
+                    new Container(
+                      margin: EdgeInsets.only(top: 20.0),
+                      child: Visibility(
+                        visible: changed,
+                        child: Container(
+                          width: 370,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                // 10% of the width, so there are ten blinds.
+                                colors: <Color>[
+                                  Color(0xffE53147),
+                                  Color(0xffFB9C26)
+                                ],
+                                // red to yellow
+                                tileMode: TileMode
+                                    .repeated, // repeats the gradient over the canvas
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50))),
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  shadowColor: MaterialStateProperty.all(
+                                      Colors.transparent)),
+                              onPressed: () {
+                                updateAdmins();
+                                updateMember();
+                                setState(() {
+                                  changed = false;
+                                  changeList.clear();
+                                });
+                                final snackBar =
+                                    SnackBar(content: Text('Team angepasst.'));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              },
+                              child: Text("Speichern")),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          ),
+          bottomNavigationBar: NavigationBar(0),
+        ));
   }
 
   getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context, List list) {
@@ -132,14 +208,29 @@ class _TeamsDetailState extends State<TeamsDetail> {
           dense: true,
           onTap: () {
             setState(() {
+              if (doc['uid'] != widget.creator) {
+                if (!widget.admins.contains(doc['uid'])
+                ){
+                  widget.admins.add(doc['uid']);
+                  widget.member.remove(doc['uid']);
+                } else {
+                  widget.member.add(doc['uid']);
+                  widget.admins.remove(doc['uid']);
+                }
+
+                if (changeList.contains(doc['uid']))
+                  changeList.remove(doc['uid']);
+                else
+                  changeList.add(doc['uid']);
+
+                if (changeList.isEmpty)
+                  changed = false;
+                else
+                  changed = true;
               }
-            );
+            });
           },
         )))
         .toList();
-  }
-
-  promoteUser(){
-
   }
 }

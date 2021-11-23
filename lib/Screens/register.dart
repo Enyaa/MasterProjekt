@@ -118,7 +118,8 @@ class _RegisterState extends State<Register> {
                               } catch (signUpError) {
                                 if(signUpError is PlatformException){
                                   if(signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Es existiert bereits ein Account mit dieser Adresse')));
+                                    final snackBar = SnackBar(content: Text('Es existiert bereits ein Account mit dieser Adresse.'));
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                   }
                                 }
                               }
