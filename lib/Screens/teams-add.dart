@@ -80,6 +80,7 @@ class _addTeamState extends State<addTeam> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: TextFormField(
+                cursorColor: Colors.white,
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white, width: 0.0),

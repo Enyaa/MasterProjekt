@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:master_projekt/navigation/willpopscope.dart';
 
 
 class Password extends StatelessWidget {
@@ -13,28 +13,10 @@ class Password extends StatelessWidget {
     final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
 
-    return WillPopScope(
-        onWillPop: () async {
-          bool willLeave = false;
-          // show the confirm dialog
-          await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: Text('Are you sure want to leave?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () {
-                        willLeave = false;
-                        SystemNavigator.pop(); // might not work with iOS
-                      },
-                      child: Text('Yes')),
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('No'))
-                ],
-              ));
-          return willLeave;
-        },child: Scaffold(
+    return MyWillPopScope(
+        text: 'App verlassen?',
+        close: true,
+        child: Scaffold(
         body: SingleChildScrollView(
           child: Form(
             key: _key,
@@ -45,25 +27,63 @@ class Password extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(icon: Icon(Icons.arrow_back_rounded),
+                      Padding(padding: EdgeInsets.all(10)),
+                      IconButton(
+                          icon: Icon(Icons.close, color: Colors.white),
                           onPressed:() =>  Navigator.pushReplacementNamed(context, '/'),
-                          alignment: Alignment.topLeft
+                          alignment: Alignment.topRight
                       ),
                       Image.asset('lib/Graphics/rettich.png', height: 350, width: 350,),
                       Text("Wenn du dein Passwort vergessen hast, kannst du hier ein neues Passwort beantragen indem du deine Mailadresse angibst!",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontWeight: FontWeight.bold),),
+                      Padding(padding: EdgeInsets.all(20)),
                       TextFormField(
-                        decoration: const InputDecoration(
-                            icon: Icon(Icons.email),
+                        cursorColor: Colors.white,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.white, width: 0.0),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            labelStyle: TextStyle(color: Colors.white),
+                            icon: Icon(Icons.email, color: Colors.white),
                             labelText: 'Email *'
                         ),
                         controller: emailController,
                         validator: validateEmail,
                       ),
+                      Padding(padding: EdgeInsets.all(20)),
                       Container(
-                        margin: EdgeInsets.only(top: 20.0),
-                        child: ElevatedButton(onPressed: () {
+                        width: 370,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              // 10% of the width, so there are ten blinds.
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(50))),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                shadowColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
+                            onPressed: () {
                           if (_key.currentState!.validate()){
                             passwordReset(emailController.text);
                             Navigator.pushReplacementNamed(context, '/login');

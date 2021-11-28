@@ -109,6 +109,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                     Container(
                         margin: EdgeInsets.only(left: 20, right:20),
                         child: TextFormField(
+                          cursorColor: Colors.white,
                           controller: titleController,
                           maxLength: 20,
                           decoration: InputDecoration(
@@ -137,6 +138,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                     Container(
                         margin: EdgeInsets.only(left: 20, right:20),
                         child: TextFormField(
+                          cursorColor: Colors.white,
                           controller: descriptionController,
                           maxLines: 10,
                           maxLength: 500,
@@ -166,6 +168,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
                     Container(
                         margin: EdgeInsets.only(left: 20, right:20),
                         child: TextFormField(
+                          cursorColor: Colors.white,
                           controller: xpController,
                           decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
