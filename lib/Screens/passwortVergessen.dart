@@ -28,11 +28,17 @@ class Password extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(padding: EdgeInsets.all(10)),
-                      IconButton(
-                          icon: Icon(Icons.close, color: Colors.white),
-                          onPressed:() =>  Navigator.pushReplacementNamed(context, '/'),
-                          alignment: Alignment.topRight
-                      ),
+                      Container(
+                          alignment: Alignment.topRight,
+                          child: OutlinedButton(
+                            onPressed: () {Navigator.pushReplacementNamed(context, '/');},
+                            child: Icon(Icons.close, color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(),
+                              shadowColor: Colors.transparent,
+                              primary: Colors.transparent
+                            ),
+                          )),
                       Image.asset('lib/Graphics/rettich.png', height: 350, width: 350,),
                       Text("Wenn du dein Passwort vergessen hast, kannst du hier ein neues Passwort beantragen indem du deine Mailadresse angibst!",
                         textAlign: TextAlign.center,
