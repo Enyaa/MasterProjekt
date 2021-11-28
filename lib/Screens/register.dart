@@ -105,34 +105,56 @@ class _RegisterState extends State<Register> {
                         controller: nameController,
                         validator: validateName,
                       ),
-                      Text('Hier noch Bild upload hin?', textAlign: TextAlign.center),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: ElevatedButton(onPressed: () async {
-                            if (_key.currentState!.validate()) {
-                              try {
-                                await FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text);
-                              } catch (signUpError) {
-                                if(signUpError is PlatformException){
-                                  if(signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-                                    final snackBar = SnackBar(content: Text('Es existiert bereits ein Account mit dieser Adresse.'));
-                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Container(
+                        width: 370,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              // 10% of the width, so there are ten blinds.
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(50))),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                shadowColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              if (_key.currentState!.validate()) {
+                                try {
+                                  await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                      email: emailController.text,
+                                      password: passwordController.text);
+                                } catch (signUpError) {
+                                  if(signUpError is PlatformException){
+                                    if(signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+                                      final snackBar = SnackBar(content: Text('Es existiert bereits ein Account mit dieser Adresse.'));
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    }
                                   }
                                 }
+                                print(FirebaseAuth.instance.currentUser!.uid);
+                                addUser();
+                                User? user = FirebaseAuth.instance.currentUser;
+                                if (user != null && !user.emailVerified) {
+                                  await user.sendEmailVerification();
+                                }
+                                Navigator.pushReplacementNamed(
+                                    context, '/homepage');
                               }
-                              print(FirebaseAuth.instance.currentUser!.uid);
-                              addUser();
-                              User? user = FirebaseAuth.instance.currentUser;
-                              if (user != null && !user.emailVerified) {
-                                await user.sendEmailVerification();
-                              }
-                              Navigator.pushReplacementNamed(
-                                  context, '/homepage');
-                            }
-                        }, child: Text("Registrieren")),
+                            },
+                            child: Text("Login")),
                       ),
                       TextButton( onPressed: () {
                         Navigator.pushReplacementNamed(context, '/login');

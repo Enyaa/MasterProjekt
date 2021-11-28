@@ -23,6 +23,7 @@ class TeamsDetail extends StatefulWidget {
 
 class _TeamsDetailState extends State<TeamsDetail> {
 
+  final gradient = LinearGradient(colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)]);
   final FirebaseAuth auth = FirebaseAuth.instance;
   List<dynamic> changeList = [];
   bool changed = false;
@@ -76,9 +77,17 @@ class _TeamsDetailState extends State<TeamsDetail> {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(widget.teamName, style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24)),
+                    child: ShaderMask(
+                      shaderCallback: (Rect bounds){
+                        return gradient.createShader(Offset.zero & bounds.size);
+                      },
+                      child: Center(
+                        child: Text(widget.teamName, style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24)),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
@@ -201,7 +210,22 @@ class _TeamsDetailState extends State<TeamsDetail> {
     return snapshot.data!.docs.where((DocumentSnapshot documentSnapshot) => list.contains(documentSnapshot['uid']))
         .map((doc) => Card(
         child: ListTile(
-          leading: Icon(Icons.account_circle_outlined, size: 45,color: Color(0xffFB9C26)),
+          leading: Ink(
+            height: 40,
+            width: 40,
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+                borderRadius:
+                BorderRadius.all(Radius.circular(50)),
+                border: Border.all(
+                    width: 0.5, color: Colors.white)),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.network(
+                  (doc['imgUrl'] == "") ? 'https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e' : doc['imgUrl'],
+                  fit: BoxFit.fill,
+                )),
+          ),
           title: new Text(doc['name'], style: TextStyle(fontSize: 17)),
           subtitle: new Text('Level ' + doc['level'].toString()),
           trailing: Icon((doc['uid'] == widget.creator) ? Icons.star : (widget.admins.contains(doc['uid'])) ? Icons.star_half_rounded : Icons.star_border, color: Color(0xffFB9C26)),
