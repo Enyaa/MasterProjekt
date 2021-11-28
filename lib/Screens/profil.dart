@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:master_projekt/level/methods.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
@@ -61,7 +62,22 @@ class ProfilState extends State<Profil>{
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (!snapshot.hasData) {
-                          return new Text('Kein Namen gefunden ');
+                          return
+                            Container(
+                              alignment: Alignment.center,
+                              child: GradientCircularProgressIndicator(
+                                  value: null,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: <Color>[
+                                      Color(0xffE53147),
+                                      Color(0xffFB9C26)
+                                    ],
+                                    // red to yellow
+                                    tileMode: TileMode
+                                        .repeated, // repeats the gradient over the canvas
+                                  )));
                         } else {
                           return (new Text(
                             snapshot.data!.docs.firstWhere(
@@ -88,7 +104,21 @@ class ProfilState extends State<Profil>{
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshotuid) {
                           if (!snapshotuid.hasData) {
-                            return new Text('Loading...');
+                            return Container(
+                                alignment: Alignment.center,
+                                child: GradientCircularProgressIndicator(
+                                    value: null,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: <Color>[
+                                        Color(0xffE53147),
+                                        Color(0xffFB9C26)
+                                      ],
+                                      // red to yellow
+                                      tileMode: TileMode
+                                          .repeated, // repeats the gradient over the canvas
+                                    )));
                           } else {
                             return new Column(children: [
                               Container(

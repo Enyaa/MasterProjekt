@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,7 +34,18 @@ class Teams extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData)
-            return new Text("Du bist im moment in keinem Team.");
+            return Container(
+                alignment: Alignment.center,
+                child: GradientCircularProgressIndicator(
+                    value: null,
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
+                      // red to yellow
+                      tileMode: TileMode
+                          .repeated, // repeats the gradient over the canvas
+                    )));
           return new ListView(
             children: getTeams(snapshot, context),
           );
