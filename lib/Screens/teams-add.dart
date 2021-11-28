@@ -58,7 +58,6 @@ class _addTeamState extends State<addTeam> {
         'creator': getUid(),
         'queryOperator': getQueryList(uidList),
         'admins': <String>[],
-        'mods': <String>[],
         'tasks': <dynamic>[],
         'challenges': <dynamic>[],
         'id': uuid,

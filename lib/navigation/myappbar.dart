@@ -69,7 +69,8 @@ class _MyAppbarState extends State<MyAppbar> {
                       PopupMenuItem(child: Text('Offen'), value: 2),
                       if (widget.accepted)
                         PopupMenuItem(child: Text('Angenommen'), value: 3),
-                      PopupMenuItem(child: Text('Abgeschlossen'), value: 4)
+                      PopupMenuItem(child: Text('Abgeschlossen'), value: 4),
+                      PopupMenuItem(child: Text('Aktives Team'), value: 5)
                     ],
                 onSelected: widget.getFiltered)
           ],
