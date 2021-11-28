@@ -35,8 +35,6 @@ class SettingsScreenState extends State<SettingsScreen> {
   late TextEditingController emailController;
   late TextEditingController emailPasswordController;
 
-  List<bool> _isExpanded = List.generate(3, (index) => false);
-
   String getUid() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
@@ -212,7 +210,21 @@ class SettingsScreenState extends State<SettingsScreen> {
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData)
-                      return new Text("Keine Nutzerdaten gefunden.");
+                      return Container(
+                          alignment: Alignment.center,
+                          child: GradientCircularProgressIndicator(
+                              value: null,
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: <Color>[
+                                  Color(0xffE53147),
+                                  Color(0xffFB9C26)
+                                ],
+                                // red to yellow
+                                tileMode: TileMode
+                                    .repeated, // repeats the gradient over the canvas
+                              )));
                     else {
                       nameController = TextEditingController(
                           text: snapshot.data!.docs.firstWhere(

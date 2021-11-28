@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
@@ -171,7 +172,21 @@ class _addTeamState extends State<addTeam> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData)
-                    return new Text("Du kennst leider keine User");
+                    return Container(
+                        alignment: Alignment.center,
+                        child: GradientCircularProgressIndicator(
+                            value: null,
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            )));
                   return new ListView(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
