@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,19 +16,9 @@ class _MyDrawerState extends State<MyDrawer> {
   Color lightOrange = Color(0xffFB9C26);
   var placeholder =
       "https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/rettich.png?alt=media&token=8c7277fe-f352-4757-8038-70b008b55d77";
-  var userName = '';
-  var identifier = '';
-
-  getUserInfo() async {
-    var uid = FirebaseAuth.instance.currentUser!.uid.toString();
-    var user = FirebaseFirestore.instance.collection('user').doc(uid);
-    await user.get().then(
-            (value) => {userName = value['name'], identifier = value['identifier']});
-  }
 
   @override
   Widget build(BuildContext context) {
-    getUserInfo();
     return new Drawer(
       child: Column(
         children: [
@@ -78,12 +67,9 @@ class _MyDrawerState extends State<MyDrawer> {
                                     fit: BoxFit.fitHeight))),
                       ),
                       Padding(padding: EdgeInsets.all(3)),
-                      Text(userName, style: TextStyle(fontSize: 18)),
+                      Methods(mode: 'name'),
                       Padding(padding: EdgeInsets.all(2)),
-                      Text(identifier,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xffFB9C26))),
+                      Methods(mode: 'identifier'),
                       Padding(padding: EdgeInsets.all(2)),
                       Row(children: [Text('Level: '), Methods(mode: 'level.s')])
                     ],
