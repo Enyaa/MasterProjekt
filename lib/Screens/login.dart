@@ -25,6 +25,7 @@ class Login extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      Padding(padding: EdgeInsets.all(20)),
                       Image.asset('lib/Graphics/rettich.png', height: 350, width: 350),
                     Padding(padding: EdgeInsets.all(10)),
                       TextFormField(

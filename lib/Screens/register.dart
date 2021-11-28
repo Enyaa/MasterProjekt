@@ -78,6 +78,7 @@ class _RegisterState extends State<Register> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Padding(padding: EdgeInsets.all(20)),
                       Image.asset(
                         'lib/Graphics/rettichShadow.png',
                         height: 350,

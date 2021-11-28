@@ -18,6 +18,7 @@ class Welcome extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Padding(padding: EdgeInsets.all(20)),
                   Image.asset('lib/Graphics/rettich.png', height: 350, width: 350,),
                   ShaderMask(
                     shaderCallback: (Rect bounds){
