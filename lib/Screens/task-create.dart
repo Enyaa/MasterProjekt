@@ -89,6 +89,7 @@ class _TaskCreateState extends State<TaskCreate> {
                         padding: EdgeInsets.all(5),
                       ),
                       TextFormField(
+                        cursorColor: Colors.white,
                         controller: titleController,
                         maxLength: 20,
                         decoration: InputDecoration(
@@ -116,6 +117,7 @@ class _TaskCreateState extends State<TaskCreate> {
                         padding: EdgeInsets.all(10),
                       ),
                       TextFormField(
+                        cursorColor: Colors.white,
                         controller: descriptionController,
                         maxLines: 10,
                         maxLength: 500,
@@ -141,6 +143,7 @@ class _TaskCreateState extends State<TaskCreate> {
                         padding: EdgeInsets.all(5),
                       ),
                       TextFormField(
+                        cursorColor: Colors.white,
                         controller: xpController,
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
@@ -168,6 +171,7 @@ class _TaskCreateState extends State<TaskCreate> {
                             Container(
                               width: 250,
                               child: TextFormField(
+                                cursorColor: Colors.white,
                                 controller: subTaskController,
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
