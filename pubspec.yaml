@@ -55,6 +55,7 @@ flutter:
   assets:
     - lib/Graphics/rettich.png
     - lib/Graphics/profil-background.jpg
+    - lib/Graphics/rettichShadow.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

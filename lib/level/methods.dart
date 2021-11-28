@@ -30,6 +30,9 @@ class _MethodsState extends State<Methods> {
                 .firstWhere((user) => user['uid'] == getUid())['xp'];
             var pointsNeeded = snapshot.data!.docs
                 .firstWhere((user) => user['uid'] == getUid())['pointsNeeded'];
+            var userName = snapshot.data!.docs.firstWhere((user) => user['uid'] == getUid())['name'];
+            var identifier = snapshot.data!.docs.firstWhere((user) => user['uid'] == getUid())['identifier'];
+
             //level als String
             if (widget.mode == 'level.s') {
               return Text(level.toString());
@@ -41,6 +44,14 @@ class _MethodsState extends State<Methods> {
             //pointsNeeded als String
             else if (widget.mode == 'pointsNeeded.s') {
               return Text(pointsNeeded.toString());
+            }
+            else if (widget.mode == 'name') {
+              return Text(userName.toString(), style: TextStyle(fontSize: 18));
+            }
+            else if (widget.mode == 'identifier') {
+              return Text(identifier.toString(), style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xffFB9C26)));
             }
             else {
               return Text('Keine Daten gefunden!');

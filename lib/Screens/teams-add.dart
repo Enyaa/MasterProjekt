@@ -35,6 +35,7 @@ class _addTeamState extends State<addTeam> {
     list.add(getUid());
     return list;
   }
+  final nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,6 @@ class _addTeamState extends State<addTeam> {
         .collection('user')
         .where('uid', isNotEqualTo: getUid())
         .snapshots();
-    final nameController = TextEditingController();
 
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
     var uuid = Uuid().v4();
@@ -57,7 +57,6 @@ class _addTeamState extends State<addTeam> {
         'creator': getUid(),
         'queryOperator': getQueryList(uidList),
         'admins': <String>[],
-        'mods': <String>[],
         'tasks': <dynamic>[],
         'challenges': <dynamic>[],
         'id': uuid,
@@ -80,6 +79,7 @@ class _addTeamState extends State<addTeam> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: TextFormField(
+                cursorColor: Colors.white,
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white, width: 0.0),
@@ -218,8 +218,22 @@ class _addTeamState extends State<addTeam> {
           visible: !(uidList.contains(doc['uid']) || !doc['name'].toString().contains(editingController.text)),
           child: Card(
                   child: ListTile(
-                leading: Icon(Icons.account_circle_outlined,
-                    size: 45, color: Color(0xffFB9C26)),
+                leading: Ink(
+                    height: 40,
+                    width: 40,
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(50)),
+                        border: Border.all(
+                            width: 0.5, color: Colors.white)),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          (doc['imgUrl'] == "") ? 'https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e' : doc['imgUrl'],
+                          fit: BoxFit.fill,
+                        )),
+                  ),
                 title: new Text(
                   doc['name'],
                   style: TextStyle(fontSize: 17),

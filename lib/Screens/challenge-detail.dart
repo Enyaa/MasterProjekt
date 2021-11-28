@@ -138,18 +138,20 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     var user = FirebaseFirestore.instance
         .collection('user')
         .doc(userId);
+    var challengeSnap = await FirebaseFirestore.instance
+        .collection('challenges')
+        .doc(id);
 
     final CalculateLevel logic = new CalculateLevel();
     logic.levelUp(user);
 
     finishedArr.add(userId);
-    user.update({'finished': finishedArr});
+    challengeSnap.update({'finished': finishedArr});
     user.update({'finishedChallengesCount': FieldValue.increment(1)});
     user.update({'finishedChallenges': FieldValue.arrayUnion([id])});
     user.update({'xp': FieldValue.increment(challengeXp)});
 
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'challenges');
-
   }
 }
