@@ -111,7 +111,16 @@ class TasksState extends State<Tasks> {
         .toList();
   }
 
-  getFiltered(int value) {
+  getFiltered(int value) async {
+    // Get active Team
+    String activeTeam = '';
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(getUid())
+        .get()
+        .then((value) => activeTeam = value['activeTeam']);
+
+    //Get Tasklists depending on context
     var tasks = FirebaseFirestore.instance.collection('tasks');
     if (value == 1) {
       setSnapshots(tasks.snapshots());
@@ -131,9 +140,14 @@ class TasksState extends State<Tasks> {
           .where('finished', isEqualTo: true)
           .where('user', isEqualTo: getUid())
           .snapshots());
+    } else if (value == 5) {
+      setSnapshots(tasks
+      .where('teamID', isEqualTo: activeTeam)
+      .snapshots());
     }
   }
 
+  //Update Widgets with new SnapshotFilter
   setSnapshots(var value) {
     setState(() {
       snapshots = value;
