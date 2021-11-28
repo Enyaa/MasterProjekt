@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
 
@@ -19,6 +20,12 @@ class TeamsDetail extends StatefulWidget {
 
   @override
   _TeamsDetailState createState() => _TeamsDetailState();
+}
+
+String getUid() {
+  final User? user = FirebaseAuth.instance.currentUser;
+  final uid = user!.uid;
+  return uid.toString();
 }
 
 class _TeamsDetailState extends State<TeamsDetail> {
@@ -59,6 +66,25 @@ class _TeamsDetailState extends State<TeamsDetail> {
           .catchError((error) => print("Failed to update member: $error"));
     }
 
+    Future<void> setTeamActive() async {
+      return FirebaseFirestore.instance
+          .collection('user')
+          .doc(getUid())
+          .update({'activeTeam': widget.teamID})
+          .then((value) => print("Active Team updated"))
+          .catchError((error) => print("Failed to update active Team: $error"));
+    }
+
+    Future<String> getActiveTeam() async {
+      String activeTeam = '';
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(getUid())
+          .get()
+          .then((value) => activeTeam = value['activeTeam']);
+      return activeTeam;
+    }
+
     return MyWillPopScope(
         text: 'Zur Teams-Übersicht zurückkehren?',
         destination: '/teams',
@@ -77,19 +103,58 @@ class _TeamsDetailState extends State<TeamsDetail> {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ShaderMask(
-                      shaderCallback: (Rect bounds){
-                        return gradient.createShader(Offset.zero & bounds.size);
-                      },
                       child: Center(
-                        child: Text(widget.teamName, style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24)),
+                        child: Column(
+                          children: [
+                            ShaderMask(
+                              shaderCallback: (Rect bounds){
+                              return gradient.createShader(Offset.zero & bounds.size);
+                              },
+                              child: Text(widget.teamName, style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24)),
+                            ),
+                            FutureBuilder(
+                                future: getActiveTeam(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<String> snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Visibility(
+                                      visible: (snapshot.requireData == widget.teamID) ? false : true,
+                                      child: Container(
+                                        width: 100,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.orange),
+                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                        child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                                              shadowColor: MaterialStateProperty.all(Colors.transparent),
+                                            ),
+                                            onPressed: () {
+                                              setTeamActive();
+                                              setState(() {});
+                                              final snackBar =
+                                              SnackBar(content: Text("\"" + widget.teamName + "\"" + ' als aktives Team eingestellt.'));
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            },
+                                            child: ShaderMask(
+                                                shaderCallback: (Rect bounds){
+                                                  return gradient.createShader(Offset.zero & bounds.size);
+                                                },
+                                                child: Text('Aktivieren'))),
+                                      ),
+                                    );
+                                  } return Text('No data');
+                                }),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text("Creator", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
@@ -204,6 +269,10 @@ class _TeamsDetailState extends State<TeamsDetail> {
           ),
           bottomNavigationBar: NavigationBar(0),
         ));
+  }
+
+  getActiveTeam(AsyncSnapshot<QuerySnapshot> snapshot){
+    return snapshot.data!.docs.map((doc) => doc['activeTeam']);
   }
 
   getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context, List list) {

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:master_projekt/GradientIcon.dart';
+import 'package:master_projekt/Screens/teams-detail.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +35,13 @@ class _TaskCreateState extends State<TaskCreate> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final subTaskController = TextEditingController();
 
-    Future<void> addTask(title, description, xp) {
+    Future<void> addTask(title, description, xp) async {
+      String activeTeam = '';
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(getUid())
+          .get()
+          .then((value) => activeTeam = value['activeTeam']);
       initializeDateFormatting('de', null);
       return tasks
           .doc(uid)
@@ -47,7 +54,8 @@ class _TaskCreateState extends State<TaskCreate> {
             'accepted': false,
             'finished': false,
             'user': '',
-            'id': uid
+            'id': uid,
+            'teamID': activeTeam
           })
           .then((value) => print("Task added"))
           .catchError((error) => print("Failed to add task: $error"));
