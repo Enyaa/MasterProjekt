@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
+import 'package:master_projekt/level/calculateLevel.dart';
 
 class ChallengeDetail extends StatefulWidget {
   const ChallengeDetail(
@@ -133,22 +134,23 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
         .get();
     var finishedArr = challenge.docs[0].data()['finished'];
     var challengeXp = challenge.docs[0].data()['xp'];
-    finishedArr.add(userId);
-    FirebaseFirestore.instance
+
+    var user = FirebaseFirestore.instance
+        .collection('user')
+        .doc(userId);
+    var challengeSnap = await FirebaseFirestore.instance
         .collection('challenges')
-        .doc(id)
-        .update({'finished': finishedArr});
-    FirebaseFirestore.instance
-        .collection('user')
-        .doc(userId)
-        .update({'finishedChallengesCount': FieldValue.increment(1)});
-    FirebaseFirestore.instance.collection('user').doc(userId).update({
-      'finishedChallenges': FieldValue.arrayUnion([id])
-    });
-    FirebaseFirestore.instance
-        .collection('user')
-        .doc(userId)
-        .update({'xp': FieldValue.increment(challengeXp)});
+        .doc(id);
+
+    final CalculateLevel logic = new CalculateLevel();
+    logic.levelUp(user);
+
+    finishedArr.add(userId);
+    challengeSnap.update({'finished': finishedArr});
+    user.update({'finishedChallengesCount': FieldValue.increment(1)});
+    user.update({'finishedChallenges': FieldValue.arrayUnion([id])});
+    user.update({'xp': FieldValue.increment(challengeXp)});
+
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'challenges');
   }
