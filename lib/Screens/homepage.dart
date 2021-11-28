@@ -41,21 +41,33 @@ class HomepageState extends State<Homepage> {
       return snapshot.data!.docs
           .map((doc) => Card(
               child: ListTile(
-                horizontalTitleGap: 0,
-                contentPadding: EdgeInsets.zero,
-                  title: Transform.translate(offset: Offset(0, -4), child: Container(
-                      height: 50,
-                      child: Container(child: Text(doc['title'], style: TextStyle(fontSize: 16)), alignment: Alignment.center),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                          gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)], // red to yellow
-                        tileMode: TileMode
-                            .repeated, // repeats the gradient over the canvas
-                      )))),
-                  subtitle: new Padding(padding: EdgeInsets.all(10), child: Text(doc['description'])),
+                  horizontalTitleGap: 0,
+                  contentPadding: EdgeInsets.zero,
+                  title: Transform.translate(
+                      offset: Offset(0, -4),
+                      child: Container(
+                          height: 50,
+                          child: Container(
+                              child: Text(doc['title'],
+                                  style: TextStyle(fontSize: 16)),
+                              alignment: Alignment.center),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  topRight: Radius.circular(5)),
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: <Color>[
+                                  Color(0xffE53147),
+                                  Color(0xffFB9C26)
+                                ], // red to yellow
+                                tileMode: TileMode
+                                    .repeated, // repeats the gradient over the canvas
+                              )))),
+                  subtitle: new Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(doc['description'])),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -76,6 +88,69 @@ class HomepageState extends State<Homepage> {
           .toList();
     }
 
+    sort(List<MyUser> users) {
+      users.sort((a, b) => a.xp.compareTo(b.xp));
+      users = users.reversed.toList();
+      users = users.sublist(0,3);
+      return users;
+    }
+
+    getTop3(AsyncSnapshot<QuerySnapshot> snapshot) {
+      List<MyUser> _users = new List.empty(growable: true);
+      snapshot.data!.docs.forEach((doc) {
+        String name = doc['name'];
+        int xp = doc['xp'];
+        int finishedTasks = doc['finishedTasksCount'];
+        int finishedChallenges = doc['finishedChallengesCount'];
+        String image = doc['imgUrl'];
+
+        if (image == '') {
+          image =
+              'https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e';
+        }
+
+        MyUser _user = new MyUser(
+            name: name,
+            xp: xp,
+            tasks: finishedTasks,
+            challenges: finishedChallenges,
+            image: image);
+        _users.add(_user);
+      });
+      return sort(_users)
+          .map<Widget>((user) => Row(children: [
+                SizedBox(
+                    height: 80,
+                    width: 330,
+                    child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(50),
+                                topLeft: Radius.circular(50))),
+                        child: ListTile(
+                            title: new Text(user.name),
+                            leading: Ink(
+                              height: 40,
+                              width: 40,
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                  border: Border.all(
+                                      width: 0.5, color: Colors.white)),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    user.image,
+                                    fit: BoxFit.fill,
+                                  )),
+                            ),
+                            subtitle: new Text('XP: ' + user.xp.toString()),
+                            onTap: () {})))
+              ]))
+          .toList();
+    }
+
     return MyWillPopScope(
         text: "App schließen?",
         close: true,
@@ -86,13 +161,12 @@ class HomepageState extends State<Homepage> {
             bottomNavigationBar: NavigationBar(1),
             body: Center(
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                         padding: EdgeInsets.all(20),
-                        child: Text('Todo:',
+                        child: Text('Todo',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold))),
+                                fontSize: 24, fontWeight: FontWeight.bold))),
                     StreamBuilder(
                         stream: tasks,
                         builder: (BuildContext context,
@@ -133,6 +207,24 @@ class HomepageState extends State<Homepage> {
                                   );
                                 }).toList(),
                               ),
+                              Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Text('Top 3',
+                                      style: TextStyle(
+                                          fontSize: 24, fontWeight: FontWeight.bold))),
+                              StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('user')
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> userSnapshot) {
+                                    return Container(
+                                        height: 280,
+                                        width: 350,
+                                        child: ListView(
+                                        children: getTop3(userSnapshot),
+                                        padding: EdgeInsets.all(10)));
+                                  }),
                             ]);
                           } else
                             return Container(
@@ -154,4 +246,19 @@ class HomepageState extends State<Homepage> {
                   ]),
             )));
   }
+}
+
+class MyUser {
+  MyUser(
+      {required this.name,
+      required this.xp,
+      required this.tasks,
+      required this.challenges,
+      required this.image});
+
+  String name;
+  int xp;
+  int tasks;
+  int challenges;
+  String image;
 }
