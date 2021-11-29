@@ -32,9 +32,21 @@ class HomepageState extends State<Homepage> {
     var activeTeamID = '';
     var activeTeamName = '';
     var activeTeamMembers = [];
-    await FirebaseFirestore.instance.collection('user').doc(getUid()).get().then((value) => activeTeamID = value.get('activeTeam'));
-    await FirebaseFirestore.instance.collection('teams').doc(activeTeamID).get().then((value) => activeTeamName = value.get('name'));
-    await FirebaseFirestore.instance.collection('teams').doc(activeTeamID).get().then((value) => activeTeamMembers = value.get('queryOperator'));
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(getUid())
+        .get()
+        .then((value) => activeTeamID = value.get('activeTeam'));
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeamID)
+        .get()
+        .then((value) => activeTeamName = value.get('name'));
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeamID)
+        .get()
+        .then((value) => activeTeamMembers = value.get('queryOperator'));
     var activeTeam = [];
     activeTeam.add(activeTeamID);
     activeTeam.add(activeTeamName);
@@ -44,7 +56,6 @@ class HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-
     getList(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
       return snapshot.data!.docs
           .map((doc) => Card(
@@ -99,7 +110,7 @@ class HomepageState extends State<Homepage> {
     sort(List<MyUser> users) {
       users.sort((a, b) => a.xp.compareTo(b.xp));
       users = users.reversed.toList();
-      users = users.sublist(0,3);
+      users = users.sublist(0, 3);
       return users;
     }
 
@@ -168,124 +179,163 @@ class HomepageState extends State<Homepage> {
             drawer: MyDrawer(),
             bottomNavigationBar: NavigationBar(1),
             body: Center(
-              child: Column(
-                  children: [
-                    FutureBuilder(future: getActiveTeam(), builder: (context, snapshot) {
+              child: SingleChildScrollView(
+                  child: Column(children: [
+                FutureBuilder(
+                    future: getActiveTeam(),
+                    builder: (context, snapshot) {
                       var activeTeam;
-                      if(snapshot.hasData) {
+                      if (snapshot.hasData) {
                         activeTeam = snapshot.data;
                       }
-                        return snapshot.hasData
-                            ?
-                      StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('tasks')
-                              .where('accepted', isEqualTo: true)
-                              .where('user', isEqualTo: getUid())
-                              .where('finished', isEqualTo: false)
-                              .where('teamID', isEqualTo: activeTeam[0])
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasData) {
-                              return Column(children: [
-                                Container(
-                                  width: 230,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Row(
-                                        children:[
-                                      Text('Todo für Team ',
-                                        style: TextStyle(
-                                            fontSize: 24, fontWeight: FontWeight.bold)),
-                                      ShaderMask(
-                                        shaderCallback: (Rect bounds){
-                                          return LinearGradient(colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)]).createShader(Offset.zero & bounds.size);
-                                        },
-                                        child: Text(activeTeam[1], style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 24)),
-                                      ),
-                                    ])),
-                                  alignment: Alignment.center
-                                ),
-                                CarouselSlider(
-                                  items: getList(snapshot, context),
-                                  carouselController: _controller,
-                                  options: CarouselOptions(
-                                      onPageChanged: (index, reason) {
+                      return snapshot.hasData
+                          ? StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('tasks')
+                                  .where('accepted', isEqualTo: true)
+                                  .where('user', isEqualTo: getUid())
+                                  .where('finished', isEqualTo: false)
+                                  .where('teamID', isEqualTo: activeTeam[0])
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  return Column(children: [
+                                    Container(
+                                        width: 230,
+                                        child: Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Row(children: [
+                                              Text('Todo für Team ',
+                                                  style: TextStyle(
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              ShaderMask(
+                                                shaderCallback: (Rect bounds) {
+                                                  return LinearGradient(
+                                                      colors: <Color>[
+                                                        Color(0xffE53147),
+                                                        Color(0xffFB9C26)
+                                                      ]).createShader(
+                                                      Offset.zero &
+                                                          bounds.size);
+                                                },
+                                                child: Text(activeTeam[1],
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 24)),
+                                              ),
+                                            ])),
+                                        alignment: Alignment.center),
+                                    CarouselSlider(
+                                      items: getList(snapshot, context),
+                                      carouselController: _controller,
+                                      options: CarouselOptions(
+                                          onPageChanged: (index, reason) {
                                         setState(() {
                                           _current = index;
                                         });
                                       }),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: getList(snapshot, context)
-                                      .asMap()
-                                      .entries
-                                      .map((entry) {
-                                    return GestureDetector(
-                                      onTap: () =>
-                                          _controller.animateToPage(entry.key),
-                                      child: Container(
-                                        width: 12.0,
-                                        height: 12.0,
-                                        margin: EdgeInsets.symmetric(
-                                            vertical: 8.0, horizontal: 4.0),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0xffFB9C26).withOpacity(
-                                                _current == entry.key
-                                                    ? 0.9
-                                                    : 0.4)),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                Container(
-                                    child: Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Text('Top 3',
-                                        style: TextStyle(
-                                            fontSize: 24, fontWeight: FontWeight.bold))),
-                                alignment: Alignment.center),
-                                StreamBuilder(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('user')
-                                        .where('uid', whereIn: activeTeam[2])
-                                        .snapshots(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<QuerySnapshot> userSnapshot) {
-                                      return Container(
-                                          height: 280,
-                                          width: 350,
-                                          child: ListView(
-                                              children: getTop3(userSnapshot),
-                                              padding: EdgeInsets.all(10)));
-                                    }),
-                              ]);
-                            } else
-                              return Container(
-                                  alignment: Alignment.center,
-                                  child: GradientCircularProgressIndicator(
-                                      value: null,
-                                      gradient: LinearGradient(
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                        colors: <Color>[
-                                          Color(0xffE53147),
-                                          Color(0xffFB9C26)
-                                        ],
-                                        // red to yellow
-                                        tileMode: TileMode
-                                            .repeated, // repeats the gradient over the canvas
-                                      )));
-                          })
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: getList(snapshot, context)
+                                          .asMap()
+                                          .entries
+                                          .map((entry) {
+                                        return GestureDetector(
+                                          onTap: () => _controller
+                                              .animateToPage(entry.key),
+                                          child: Container(
+                                            width: 12.0,
+                                            height: 12.0,
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 8.0, horizontal: 4.0),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Color(0xffFB9C26)
+                                                    .withOpacity(
+                                                        _current == entry.key
+                                                            ? 0.9
+                                                            : 0.4)),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    Container(
+                                        child: Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Text('Top 3',
+                                                style: TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight:
+                                                        FontWeight.bold))),
+                                        alignment: Alignment.center),
+                                    StreamBuilder(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('user')
+                                            .where('uid',
+                                                whereIn: activeTeam[2])
+                                            .snapshots(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<QuerySnapshot>
+                                                userSnapshot) {
+                                          if (userSnapshot.hasData) {
+                                            return Container(
+                                                height: 280,
+                                                width: 350,
+                                                child: ListView(
+                                                    children:
+                                                        getTop3(userSnapshot),
+                                                    padding:
+                                                        EdgeInsets.all(10)));
+                                          } else {
+                                            return Container(
+                                                alignment: Alignment.center,
+                                                child:
+                                                    GradientCircularProgressIndicator(
+                                                        value: null,
+                                                        gradient:
+                                                            LinearGradient(
+                                                          begin: Alignment
+                                                              .centerLeft,
+                                                          end: Alignment
+                                                              .centerRight,
+                                                          colors: <Color>[
+                                                            Color(0xffE53147),
+                                                            Color(0xffFB9C26)
+                                                          ],
+                                                          // red to yellow
+                                                          tileMode: TileMode
+                                                              .repeated, // repeats the gradient over the canvas
+                                                        )));
+                                          }
+                                        }),
+                                  ]);
+                                } else
+                                  return Container(
+                                      alignment: Alignment.center,
+                                      child: GradientCircularProgressIndicator(
+                                          value: null,
+                                          gradient: LinearGradient(
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                            colors: <Color>[
+                                              Color(0xffE53147),
+                                              Color(0xffFB9C26)
+                                            ],
+                                            // red to yellow
+                                            tileMode: TileMode
+                                                .repeated, // repeats the gradient over the canvas
+                                          )));
+                              })
                           : Text('no data');
                     }),
-                  ]),
+              ])),
             )));
   }
 }
