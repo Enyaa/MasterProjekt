@@ -32,7 +32,7 @@ class NavigationBar extends StatelessWidget {
               children: <Widget>[
                 IconButton(
                     icon: activeIndex == 1
-                        ? GradientIcon(Icons.home, 25, LinearGradient(
+                        ? GradientIcon(Icons.group, 25, LinearGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       // 10% of the width, so there are ten blinds.
@@ -44,11 +44,11 @@ class NavigationBar extends StatelessWidget {
                       tileMode: TileMode
                           .repeated, // repeats the gradient over the canvas
                     ))
-                    : Icon(Icons.home_outlined, color: lightOrange,)
+                    : Icon(Icons.group_outlined, color: lightOrange,)
                     ,
                     onPressed: () {
                       if (activeIndex != 1) {
-                        Navigator.pushReplacementNamed(context, '/homepage');
+                        Navigator.pushReplacementNamed(context, '/teams');
                         activeIndex = 2;
                       }
                     }),
@@ -74,7 +74,7 @@ class NavigationBar extends StatelessWidget {
                       }
                     }),
                 IconButton(
-                    icon: GradientIcon(Icons.add_box, 30, LinearGradient(
+                    icon: GradientIcon(Icons.home, 30, LinearGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       // 10% of the width, so there are ten blinds.
@@ -88,7 +88,7 @@ class NavigationBar extends StatelessWidget {
                     ),),
                     onPressed: () {
                       activeIndex = 0;
-                      Navigator.pushReplacementNamed(context, '/task-create');
+                      Navigator.pushReplacementNamed(context, '/homepage');
                     }),
                 IconButton(
                     icon: activeIndex == 3

@@ -75,7 +75,7 @@ class Teams extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(0),
+      bottomNavigationBar: NavigationBar(1),
     ));
   }
 
