@@ -201,6 +201,7 @@ class HomepageState extends State<Homepage> {
                               builder: (BuildContext context,
                                   AsyncSnapshot<QuerySnapshot> snapshot) {
                                 if (snapshot.hasData) {
+                                  var taskList = getList(snapshot, context);
                                   return Column(children: [
                                     Container(
                                         width: 230,
@@ -234,8 +235,9 @@ class HomepageState extends State<Homepage> {
                                               ),
                                             ])),
                                         alignment: Alignment.center),
-                                    CarouselSlider(
-                                      items: getList(snapshot, context),
+                                    if(taskList.isEmpty) Text('Es gibt nichts zu tun.'),
+                                    if(taskList.isNotEmpty) CarouselSlider(
+                                      items: taskList,
                                       carouselController: _controller,
                                       options: CarouselOptions(
                                           onPageChanged: (index, reason) {
@@ -244,7 +246,7 @@ class HomepageState extends State<Homepage> {
                                         });
                                       }),
                                     ),
-                                    Row(
+                                    if(taskList.isNotEmpty) Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: getList(snapshot, context)
