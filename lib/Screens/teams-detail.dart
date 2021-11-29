@@ -249,16 +249,23 @@ class _TeamsDetailState extends State<TeamsDetail> {
                                   shadowColor: MaterialStateProperty.all(
                                       Colors.transparent)),
                               onPressed: () {
-                                updateAdmins();
-                                updateMember();
-                                setState(() {
-                                  changed = false;
-                                  changeList.clear();
-                                });
-                                final snackBar =
-                                    SnackBar(content: Text('Team angepasst.'));
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
+                                if (widget.admins.contains(getUid()) || widget.creator == getUid()){
+                                  updateAdmins();
+                                  updateMember();
+                                  setState(() {
+                                    changed = false;
+                                    changeList.clear();
+                                  });
+                                  final snackBar =
+                                  SnackBar(content: Text('Team angepasst.'));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                } else {
+                                  final snackBar2 =
+                                  SnackBar(content: Text('Keine Admin rechte zur Rollenvergebung. Kontaktiere einen Admin oder Creator.'));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar2);
+                                }
                               },
                               child: Text("Speichern")),
                         ),
