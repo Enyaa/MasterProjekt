@@ -181,6 +181,7 @@ class HomepageState extends State<Homepage> {
             body: Center(
               child: SingleChildScrollView(
                   child: Column(children: [
+                SizedBox(height: 20),
                 FutureBuilder(
                     future: getActiveTeam(),
                     builder: (context, snapshot) {
@@ -204,7 +205,10 @@ class HomepageState extends State<Homepage> {
                                     Container(
                                         width: 230,
                                         child: Padding(
-                                            padding: EdgeInsets.all(20),
+                                            padding: EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                bottom: 10),
                                             child: Row(children: [
                                               Text('Todo für Team ',
                                                   style: TextStyle(
@@ -266,9 +270,11 @@ class HomepageState extends State<Homepage> {
                                         );
                                       }).toList(),
                                     ),
+                                    SizedBox(height: 20),
                                     Container(
                                         child: Padding(
-                                            padding: EdgeInsets.all(20),
+                                            padding: EdgeInsets.only(
+                                                left: 20, right: 20, top: 20),
                                             child: Text('Top 3',
                                                 style: TextStyle(
                                                     fontSize: 24,
