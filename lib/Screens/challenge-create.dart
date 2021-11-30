@@ -25,6 +25,9 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
   var uid = Uuid().v4();
   var progress = 0.0;
   bool finished = false;
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final xpController = TextEditingController();
 
   @override
   void initState() {
@@ -37,9 +40,6 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
     CollectionReference challenges = firestore.collection('challenges');
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final xpController = TextEditingController();
 
     Future<void> addChallenge(title, description, xp, imgUrl) {
       initializeDateFormatting('de', null);

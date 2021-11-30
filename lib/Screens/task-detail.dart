@@ -103,7 +103,7 @@ class _TaskDetailState extends State<TaskDetail> {
         text: 'Zur Aufgaben-Übersicht zurückkehren?',
         destination: '/tasks',
         child: Scaffold(
-          appBar: MyAppbar(title: 'Aufgaben', leading: true, bottom: false, actions: false),
+          appBar: MyAppbar(title: 'Aufgaben', leading: true, admin: true, doDelete: deleteTask, mode: 'task'),
           body: Container(
             width: double.infinity,
               margin: EdgeInsets.all(20),
@@ -214,13 +214,21 @@ class _TaskDetailState extends State<TaskDetail> {
         ));
   }
 
+  void deleteTask() {
+    FirebaseFirestore.instance
+        .collection('tasks')
+        .doc(widget.id)
+        .delete();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
   void acceptTask(String id) {
     FirebaseFirestore.instance
         .collection('tasks')
         .doc(id)
         .update({'accepted': true, 'user': getUid()});
     Navigator.of(context).pop();
-    Navigator.pushReplacementNamed(context, 'tasks');
   }
 
   Future<void> finishTask(String id) async {

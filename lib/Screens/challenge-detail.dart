@@ -47,7 +47,7 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
         text: 'Zur Herausforderungen-Übersicht zurückkehren?',
         destination: '/challenges',
         child: Scaffold(
-          appBar: MyAppbar(title: 'Herausforderungen', leading: true,),
+          appBar: MyAppbar(title: 'Herausforderungen', leading: true, admin: true, mode: 'challenge', doDelete: deleteChallenge),
           body: Container(
               width: double.infinity,
               margin: EdgeInsets.all(20),
@@ -125,6 +125,15 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
                   ])),
           bottomNavigationBar: NavigationBar(0),
         ));
+  }
+
+  void deleteChallenge() {
+    FirebaseFirestore.instance
+        .collection('challenges')
+        .doc(widget.id)
+        .delete();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   void finishChallenge(String id, String userId) async {

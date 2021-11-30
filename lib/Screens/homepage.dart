@@ -177,7 +177,7 @@ class HomepageState extends State<Homepage> {
             appBar: MyAppbar(
                 title: 'Home', actions: false, bottom: false, leading: false),
             drawer: MyDrawer(),
-            bottomNavigationBar: NavigationBar(2),
+            bottomNavigationBar: NavigationBar(0),
             body: Center(
               child: SingleChildScrollView(
                   child: Column(children: [
