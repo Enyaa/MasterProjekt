@@ -18,9 +18,11 @@ class Homepage extends StatefulWidget {
 }
 
 class HomepageState extends State<Homepage> {
+  // Initialize needed variables
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
+  // Get uid of current logged in user
   String getUid() {
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user!.uid;
@@ -28,25 +30,31 @@ class HomepageState extends State<Homepage> {
     return uid.toString();
   }
 
+  // get the id, name and members of currently active team
   getActiveTeam() async {
     var activeTeamID = '';
     var activeTeamName = '';
     var activeTeamMembers = [];
+
+    // get active team of current user
     await FirebaseFirestore.instance
         .collection('user')
         .doc(getUid())
         .get()
         .then((value) => activeTeamID = value.get('activeTeam'));
+    // get name of active team
     await FirebaseFirestore.instance
         .collection('teams')
         .doc(activeTeamID)
         .get()
         .then((value) => activeTeamName = value.get('name'));
+    // get array of members
     await FirebaseFirestore.instance
         .collection('teams')
         .doc(activeTeamID)
         .get()
         .then((value) => activeTeamMembers = value.get('queryOperator'));
+
     var activeTeam = [];
     activeTeam.add(activeTeamID);
     activeTeam.add(activeTeamName);
@@ -56,6 +64,7 @@ class HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get list of tasks the user has accepted but not finished yet in current active team
     getList(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
       return snapshot.data!.docs
           .map((doc) => Card(
@@ -107,6 +116,7 @@ class HomepageState extends State<Homepage> {
           .toList();
     }
 
+    // sort users by xp
     sort(List<MyUser> users) {
       users.sort((a, b) => a.xp.compareTo(b.xp));
       users = users.reversed.toList();
@@ -114,7 +124,9 @@ class HomepageState extends State<Homepage> {
       return users;
     }
 
+    // set top 3 of current active team
     getTop3(AsyncSnapshot<QuerySnapshot> snapshot) {
+      // get list of members and their info
       List<MyUser> _users = new List.empty(growable: true);
       snapshot.data!.docs.forEach((doc) {
         String name = doc['name'];
@@ -136,6 +148,7 @@ class HomepageState extends State<Homepage> {
             image: image);
         _users.add(_user);
       });
+      // sort users and return as list
       return sort(_users)
           .map<Widget>((user) => Row(children: [
                 SizedBox(
@@ -189,6 +202,7 @@ class HomepageState extends State<Homepage> {
                       if (snapshot.hasData) {
                         activeTeam = snapshot.data;
                       }
+                      // if data has been loaded
                       return snapshot.hasData
                           ? StreamBuilder(
                               stream: FirebaseFirestore.instance
@@ -203,6 +217,7 @@ class HomepageState extends State<Homepage> {
                                 if (snapshot.hasData) {
                                   var taskList = getList(snapshot, context);
                                   return Column(children: [
+                                    // Show Todos Title
                                     Container(
                                         width: 230,
                                         child: Padding(
@@ -235,7 +250,9 @@ class HomepageState extends State<Homepage> {
                                               ),
                                             ])),
                                         alignment: Alignment.center),
+                                    // if no current todos
                                     if(taskList.isEmpty) Text('Es gibt nichts zu tun.'),
+                                    // if there are todos, show as Carousel
                                     if(taskList.isNotEmpty) CarouselSlider(
                                       items: taskList,
                                       carouselController: _controller,
@@ -273,6 +290,7 @@ class HomepageState extends State<Homepage> {
                                       }).toList(),
                                     ),
                                     SizedBox(height: 20),
+                                    // Top 3 Title
                                     Container(
                                         child: Padding(
                                             padding: EdgeInsets.only(
@@ -293,6 +311,7 @@ class HomepageState extends State<Homepage> {
                                             AsyncSnapshot<QuerySnapshot>
                                                 userSnapshot) {
                                           if (userSnapshot.hasData) {
+                                            // if data has been loaded show top 3 of users
                                             return Container(
                                                 height: 280,
                                                 width: 350,
@@ -302,6 +321,7 @@ class HomepageState extends State<Homepage> {
                                                     padding:
                                                         EdgeInsets.all(10)));
                                           } else {
+                                            // if no data loaded show waiting spinner
                                             return Container(
                                                 alignment: Alignment.center,
                                                 child:
@@ -324,7 +344,7 @@ class HomepageState extends State<Homepage> {
                                           }
                                         }),
                                   ]);
-                                } else
+                                } else // if no data loaded show waiting spinner
                                   return Container(
                                       alignment: Alignment.center,
                                       child: GradientCircularProgressIndicator(
@@ -348,6 +368,7 @@ class HomepageState extends State<Homepage> {
   }
 }
 
+// User Info
 class MyUser {
   MyUser(
       {required this.name,

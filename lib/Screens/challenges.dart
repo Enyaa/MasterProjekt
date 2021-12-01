@@ -15,10 +15,14 @@ class Challenges extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new ChallengesState();
 }
+
 class ChallengesState extends State<Challenges> {
+  // Get challenges collection
   var snapshots = FirebaseFirestore.instance.collection('challenges').snapshots();
+  // Get Authentication
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // Get uid of current logged in user
   String getUid() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
@@ -38,6 +42,7 @@ class ChallengesState extends State<Challenges> {
             stream: snapshots,
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              // Show Waiting Spinner if data hasnt loaded
               if (!snapshot.hasData)
                 return Container(
                   alignment: Alignment.center,
@@ -51,11 +56,13 @@ class ChallengesState extends State<Challenges> {
                           tileMode: TileMode
                               .repeated, // repeats the gradient over the canvas
                         )));
+              // Show list of challenges if they have been loaded
               return new ListView(
-                children: getTasks(snapshot, context),
+                children: getChallenges(snapshot, context),
               );
             },
           ),
+          // Floating button to create a challenge
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.pushNamed(context, '/challenge-create');
@@ -84,7 +91,8 @@ class ChallengesState extends State<Challenges> {
         ));
   }
 
-  getTasks(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
+  // get list of challenges as cards with info
+  getChallenges(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
         .map((doc) => Card(
         child: ListTile(
@@ -103,6 +111,7 @@ class ChallengesState extends State<Challenges> {
                   )
                 ]),
             onTap: () {
+              // on tap open challenge detail page
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -120,17 +129,19 @@ class ChallengesState extends State<Challenges> {
         .toList();
   }
 
+  // Filter challenges
   getFiltered(int value) async{
     var challenges = FirebaseFirestore.instance.collection('challenges');
     var user = await FirebaseFirestore.instance.collection('user').where('uid', isEqualTo: getUid()).get();
     var finishedChallenges = user.docs[0].data()['finishedChallenges'];
 
+    // show all
     if(value == 1) {
       setSnapshots(challenges.snapshots());
-    } else if (value == 2) {
+    } else if (value == 2) { // show only challenges that havent been finished by user
       if(finishedChallenges.isNotEmpty) setSnapshots(challenges.where('id', whereNotIn: finishedChallenges).snapshots());
       else setSnapshots(challenges.snapshots());
-    } else if (value == 4) {
+    } else if (value == 4) { // show only challenges that have been finished by user
       setSnapshots(challenges.where('finished', arrayContains: getUid()).snapshots());
     }
   }

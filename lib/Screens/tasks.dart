@@ -17,9 +17,11 @@ class Tasks extends StatefulWidget {
 }
 
 class TasksState extends State<Tasks> {
+  // get tasks collection and authentication
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // get id of current logged in user
   String getUid() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
@@ -38,6 +40,7 @@ class TasksState extends State<Tasks> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData)
+                // if no data loaded show waiting spinner
                 return Container(
                     alignment: Alignment.center,
                     child: GradientCircularProgressIndicator(
@@ -50,12 +53,14 @@ class TasksState extends State<Tasks> {
                           tileMode: TileMode
                               .repeated, // repeats the gradient over the canvas
                         )));
+              // if data is loaded show list of tasks
               return new ListView(
                 padding: EdgeInsets.all(10),
                 children: getTasks(snapshot, context),
               );
             },
           ),
+          // floating button to add a task
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.pushNamed(context, '/task-create');
@@ -85,6 +90,7 @@ class TasksState extends State<Tasks> {
     );
   }
 
+  // get list of tasks as cards
   getTasks(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
         .map((doc) => Card(
@@ -123,6 +129,7 @@ class TasksState extends State<Tasks> {
         .toList();
   }
 
+  // filter tasks
   getFiltered(int value) async {
     // Get active Team
     String activeTeam = '';
@@ -134,25 +141,25 @@ class TasksState extends State<Tasks> {
 
     //Get Tasklists depending on context
     var tasks = FirebaseFirestore.instance.collection('tasks');
-    if (value == 1) {
+    if (value == 1) { // all tasks
       setSnapshots(tasks.snapshots());
-    } else if (value == 2) {
+    } else if (value == 2) { // not accepted or finished
       setSnapshots(tasks
           .where('accepted', isEqualTo: false)
           .where('finished', isEqualTo: false)
           .snapshots());
-    } else if (value == 3) {
+    } else if (value == 3) { // only accepted by user but not finished
       setSnapshots(tasks
           .where('accepted', isEqualTo: true)
           .where('user', isEqualTo: getUid())
           .where('finished', isEqualTo: false)
           .snapshots());
-    } else if (value == 4) {
+    } else if (value == 4) { // only finished by user
       setSnapshots(tasks
           .where('finished', isEqualTo: true)
           .where('user', isEqualTo: getUid())
           .snapshots());
-    } else if (value == 5) {
+    } else if (value == 5) { // only tasks of active team
       setSnapshots(tasks
       .where('teamID', isEqualTo: activeTeam)
       .snapshots());

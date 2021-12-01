@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class GradientIcon extends StatelessWidget {
+  // Icons with gradient as color
   GradientIcon(
       this.icon,
       this.size,
