@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
-import 'package:master_projekt/level/calculateLevel.dart';
+import 'package:master_projekt/globalMethods/calculateLevel.dart';
 
 class ChallengeDetail extends StatefulWidget {
   const ChallengeDetail(
