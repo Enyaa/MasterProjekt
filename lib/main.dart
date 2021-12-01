@@ -71,6 +71,7 @@ class _MyAppState extends State<MyApp> {
       title: 'TeamRad',
       theme: ThemeData(
         primaryColor: darkGrey,
+        accentColor: lightOrange,
         scaffoldBackgroundColor: darkGrey,
         bottomAppBarColor: darkGrey,
         cardColor: grey,
