@@ -19,59 +19,21 @@ String getUid() {
 }
 
 class ProfilState extends State<Profil> with TickerProviderStateMixin {
-
-
   var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
-  var variableSnapshots = FirebaseFirestore.instance
+  var taskSnapshots = FirebaseFirestore.instance
       .collection('tasks')
       .where('user', isEqualTo: getUid())
       .snapshots();
+  var challengeSnapshots =
+      FirebaseFirestore.instance.collection('challenges').snapshots();
+  var achievementSnapshots =
+      FirebaseFirestore.instance.collection('achievements').snapshots();
 
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 3);
-    _tabController.addListener(() async {
-      if (_tabController.indexIsChanging) {
-        switch (_tabController.index) {
-          case 0:
-            setSnapshots(FirebaseFirestore.instance
-                .collection('tasks')
-                .where('user', isEqualTo: getUid())
-                .snapshots());
-
-            break;
-          case 1:
-            var challenges = FirebaseFirestore.instance.collection('challenges');
-            var user = await FirebaseFirestore.instance
-                .collection('user')
-                .where('uid', isEqualTo: getUid())
-                .get();
-            var finishedChallenges = user.docs[0].data()['finishedChallenges'];
-
-            if (finishedChallenges.isNotEmpty)
-              setSnapshots(challenges
-                  .where('id', whereNotIn: finishedChallenges)
-                  .snapshots());
-            else
-              await  setSnapshots(challenges.snapshots());
-            break;
-          case 2:
-            setSnapshots(FirebaseFirestore.instance
-                .collection('achievements')
-                .snapshots());
-            break;
-        }
-      }
-    });
-  }
-
-  setSnapshots(var value) {
-    setState(() {
-      variableSnapshots = value;
-    });
   }
 
   @override
@@ -205,33 +167,39 @@ class ProfilState extends State<Profil> with TickerProviderStateMixin {
                       style: TextStyle(color: Colors.black))),
             ]),
             Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: variableSnapshots,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> variableSnapshot) {
-                      return TabBarView(controller: _tabController, children: [
-                        ListView(
-                          padding: EdgeInsets.all(10),
-                          children: getList(variableSnapshot, context),
-                        ),
-                        ListView(
-                          padding: EdgeInsets.all(10),
-                          children: getList(variableSnapshot, context),
-                        ),
-                        ListView(
-                            padding: EdgeInsets.all(10),
-                            children: getList(variableSnapshot, context))
-                      ]);
-                    }))
+                child:
+                    TabBarView(controller: _tabController, children: <Widget>[
+              StreamBuilder(
+                stream: taskSnapshots,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  return ListView(children: getList('tasks', snapshot, context));
+                },
+              ),
+              StreamBuilder(
+                stream: challengeSnapshots,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  return ListView(children: getList('challenges', snapshot, context));
+                },
+              ),
+              StreamBuilder(
+                stream: achievementSnapshots,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  return ListView(children: getList('achievements', snapshot, context));
+                },
+              ),
+            ]))
           ]),
         ),
         bottomNavigationBar: NavigationBar(0));
   }
 
-getList(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
+  getList(String mode, AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     if (!snapshot.hasData) {
-     return Center(child: CircularProgressIndicator());
-    } else if (_tabController.index == 0) {
+      return [Center(child: CircularProgressIndicator())];
+    } else if (mode == 'tasks') {
       return snapshot.data!.docs
           .map<Widget>((doc) => Card(
                   child: ListTile(
@@ -245,7 +213,7 @@ getList(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
                     ]),
               )))
           .toList();
-    } else if (_tabController.index == 1) {
+    } else if (mode == 'challenges') {
       return snapshot.data!.docs
           .map<Widget>((doc) => Card(
                   child: ListTile(
@@ -258,7 +226,7 @@ getList(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
                     ]),
               )))
           .toList();
-    } else if ((_tabController.index == 2)) {
+    } else if (mode == 'achievements') {
       return snapshot.data!.docs
           .map<Widget>((doc) => Card(
                   child: ListTile(
