@@ -43,9 +43,11 @@ class TaskDetail extends StatefulWidget {
 }
 
 class _TaskDetailState extends State<TaskDetail> {
+  // initialize needed variables
   List<ListTileModel> _items = [];
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // get id of current logged in user
   String getUid() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
@@ -53,17 +55,18 @@ class _TaskDetailState extends State<TaskDetail> {
     return uid.toString();
   }
 
+  // add subtasks to list
   void _add(String input) {
     _items.add(ListTileModel(false, input));
     setState(() {});
   }
-
   void initState() {
     for (int i = 0; i < widget.subTasks.length; i++) {
       _add(widget.subTasks[i]);
     }
   }
 
+  // get all subtasks
   Widget getSubtasks() {
     if (widget.subTasks.length != 0) {
       return new ListView(
@@ -103,7 +106,7 @@ class _TaskDetailState extends State<TaskDetail> {
         text: 'Zur Aufgaben-Übersicht zurückkehren?',
         destination: '/tasks',
         child: Scaffold(
-          appBar: MyAppbar(title: 'Aufgaben', leading: true, bottom: false, actions: false),
+          appBar: MyAppbar(title: 'Aufgaben', leading: true, admin: true, doDelete: deleteTask, mode: 'task'),
           body: Container(
             width: double.infinity,
               margin: EdgeInsets.all(20),
@@ -115,15 +118,20 @@ class _TaskDetailState extends State<TaskDetail> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // task title
                           Text(widget.title,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 24)),
                           Padding(padding: EdgeInsets.all(10)),
+                          // task description
                           Text(widget.description,
                               style: TextStyle(fontSize: 18)),
+                          // Subtasks
                           getSubtasks(),
+                          // task xp
                           Text('XP: ' + widget.xp.toString()),
                           Padding(padding: EdgeInsets.all(10)),
+                          // upload time and date
                           Row(
                             children: [
                               Icon(Icons.access_time_outlined),
@@ -135,8 +143,11 @@ class _TaskDetailState extends State<TaskDetail> {
                           Padding(padding: EdgeInsets.all(10)),
                         ],
                       )),
+                  // Buttons depending on finished/accepted status
+                  // no button if finished by user
                   if (widget.finished && widget.userId == getUid())
                     SizedBox()
+                    // finish and cancel buttons if accepted by user
                   else if (widget.accepted && widget.userId == getUid())
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -181,6 +192,7 @@ class _TaskDetailState extends State<TaskDetail> {
                                 child: Text('Abbrechen')))
                       ],
                     )
+                    // accept button if not finished or accepted
                   else if (!widget.accepted)
                     Container(
                         width: 300,
@@ -214,15 +226,26 @@ class _TaskDetailState extends State<TaskDetail> {
         ));
   }
 
+  // delete task from database
+  void deleteTask() {
+    FirebaseFirestore.instance
+        .collection('tasks')
+        .doc(widget.id)
+        .delete();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
+  // set task as accepted in database
   void acceptTask(String id) {
     FirebaseFirestore.instance
         .collection('tasks')
         .doc(id)
         .update({'accepted': true, 'user': getUid()});
     Navigator.of(context).pop();
-    Navigator.pushReplacementNamed(context, 'tasks');
   }
 
+  // set task as finished in database and check if user has levelup
   Future<void> finishTask(String id) async {
     var task = await FirebaseFirestore.instance
         .collection('tasks')
@@ -238,9 +261,11 @@ class _TaskDetailState extends State<TaskDetail> {
         .collection('user')
         .doc(getUid());
 
+    // check for levelup
     final CalculateLevel logic = new CalculateLevel();
     logic.levelUp(user);
 
+    // update user in database
     user.update({'finishedTasksCount': FieldValue.increment(1)});
     user.update({'xp': FieldValue.increment(taskXp)});
 
@@ -248,6 +273,7 @@ class _TaskDetailState extends State<TaskDetail> {
     Navigator.pushReplacementNamed(context, 'tasks');
   }
 
+  // set task as not accepted in database
   void cancelTask(String id) {
     FirebaseFirestore.instance
         .collection('tasks')
