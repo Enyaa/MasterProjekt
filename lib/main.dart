@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  // Create color Map to use as MaterialColor
   Map<int, Color> color = {
     50: Color.fromRGBO(53, 53, 53, .1),
     100: Color.fromRGBO(53, 53, 53, .2),
@@ -61,6 +62,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    // Colors
     MaterialColor darkGrey = MaterialColor(0xff353535, color);
     MaterialColor grey = MaterialColor(0xff393939, color);
     Color lightOrange = Color(0xffFB9C26);
@@ -69,7 +71,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'TeamRad',
-      theme: ThemeData(
+      theme: ThemeData( // Defines some styling for the whole app
         primaryColor: darkGrey,
         accentColor: lightOrange,
         scaffoldBackgroundColor: darkGrey,
@@ -93,9 +95,9 @@ class _MyAppState extends State<MyApp> {
         hintColor: Colors.white,
         snackBarTheme: SnackBarThemeData(backgroundColor: lightOrange),
       ),
-      initialRoute:
+      initialRoute: // Landing page
           FirebaseAuth.instance.currentUser == null ? '/' : '/homepage',
-      routes: {
+      routes: { // Defining the routes to all the different Screens
         '/': (context) => const Welcome(),
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
