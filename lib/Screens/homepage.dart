@@ -219,7 +219,6 @@ class HomepageState extends State<Homepage> {
                                   return Column(children: [
                                     // Show Todos Title
                                     Container(
-                                        child: Container(
                                           padding: EdgeInsets.only(bottom: 10),
                                           width: 400,
                                             child: Column(
@@ -251,7 +250,6 @@ class HomepageState extends State<Homepage> {
                                                         fontSize: 20))),
                                               ),
                                             ])),
-                                        ),
                                     // if no current todos
                                     if(taskList.isEmpty) Text('Es gibt nichts zu tun.'),
                                     // if there are todos, show as Carousel
@@ -363,7 +361,38 @@ class HomepageState extends State<Homepage> {
                                                 .repeated, // repeats the gradient over the canvas
                                           )));
                               })
-                          : Text('no data');
+                          : Container(
+                          padding: EdgeInsets.only(bottom: 10),
+                          width: 400,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('Du bist aktuell in keinem',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight:
+                                        FontWeight.bold)),
+                                ShaderMask(
+                                  shaderCallback: (Rect rect) {
+                                    return LinearGradient(
+                                        colors: <Color>[
+                                          Color(0xffE53147),
+                                          Color(0xffFB9C26)
+                                        ]).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+                                  },
+                                  child: Container(
+                                    // width: 400,
+                                      child: Text(
+                                          'Team',
+                                          overflow: TextOverflow.visible,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight:
+                                              FontWeight.bold,
+                                              fontSize: 20))),
+                                ),
+                              ]));
                     }),
               ])),
             )));
