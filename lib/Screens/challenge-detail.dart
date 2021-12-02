@@ -47,7 +47,12 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
         text: 'Zur Herausforderungen-Übersicht zurückkehren?',
         destination: '/challenges',
         child: Scaffold(
-          appBar: MyAppbar(title: 'Herausforderungen', leading: true, admin: true, mode: 'challenge', doDelete: deleteChallenge),
+          appBar: MyAppbar(
+              title: 'Herausforderungen',
+              leading: true,
+              admin: true,
+              mode: 'challenge',
+              doDelete: deleteChallenge),
           body: Container(
               width: double.infinity,
               margin: EdgeInsets.all(20),
@@ -128,10 +133,22 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
   }
 
   void deleteChallenge() {
-    FirebaseFirestore.instance
-        .collection('challenges')
-        .doc(widget.id)
-        .delete();
+    FirebaseFirestore.instance.collection('challenges').doc(widget.id).delete();
+
+    FirebaseFirestore.instance.collection('user').snapshots().forEach((snapshot) {
+      snapshot.docs.forEach((doc) {
+        var finished = [];
+        finished = doc['finishedChallenges'];
+        finished.remove(widget.id);
+        String user = doc['uid'];
+        FirebaseFirestore.instance.collection('user').doc(user).update(
+          {
+            'finishedChallenges': finished
+          }
+        );
+      });
+    });
+
     Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
@@ -144,21 +161,26 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     var finishedArr = challenge.docs[0].data()['finished'];
     var challengeXp = challenge.docs[0].data()['xp'];
 
-    var user = FirebaseFirestore.instance
+    var user = await FirebaseFirestore.instance
         .collection('user')
-        .doc(userId);
-    var challengeSnap = await FirebaseFirestore.instance
-        .collection('challenges')
-        .doc(id);
+        .where('uid', isEqualTo: userId)
+        .get();
+    var finishedChallenges = user.docs[0].data()['finishedChallenges'];
+    finishedChallenges.add(id);
+
+    var userSnap = await FirebaseFirestore.instance.collection('user').doc(userId);
+    var challengeSnap = await FirebaseFirestore.instance.collection('challenges').doc(id);
 
     final CalculateLevel logic = new CalculateLevel();
-    logic.levelUp(user);
+    logic.levelUp(userSnap);
 
     finishedArr.add(userId);
     challengeSnap.update({'finished': finishedArr});
-    user.update({'finishedChallengesCount': FieldValue.increment(1)});
-    user.update({'finishedChallenges': FieldValue.arrayUnion([id])});
-    user.update({'xp': FieldValue.increment(challengeXp)});
+    userSnap.update({'finishedChallengesCount': FieldValue.increment(1)});
+    userSnap.update({
+      'finishedChallenges': finishedChallenges
+    });
+    userSnap.update({'xp': FieldValue.increment(challengeXp)});
 
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'challenges');
