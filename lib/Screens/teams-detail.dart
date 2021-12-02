@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
 
@@ -14,7 +15,9 @@ class TeamsDetail extends StatefulWidget {
       required this.admins,
       required this.member,
       required this.creator,
-      required this.teamName})
+      required this.teamName,
+        required this.challenges,
+        required this.tasks})
       : super(key: key);
 
   final String teamID;
@@ -22,6 +25,8 @@ class TeamsDetail extends StatefulWidget {
   final List<dynamic> member;
   final String creator;
   final String teamName;
+  final List<dynamic> tasks;
+  final List<dynamic> challenges;
 
   @override
   _TeamsDetailState createState() => _TeamsDetailState();
@@ -94,14 +99,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
         text: 'Zur Teams-Übersicht zurückkehren?',
         destination: '/teams',
         child: Scaffold(
-          appBar: AppBar(
-              title: const Text('Team verwalten'),
-              leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pushReplacementNamed(context, '/teams');
-                  })),
+          appBar: MyAppbar(title: 'Team verwalten', leading: true, admin: true, mode: 'team', doDelete: deleteTeam),
           body: SingleChildScrollView(
             child: Container(
                 margin: EdgeInsets.all(20),
@@ -338,6 +336,41 @@ class _TeamsDetailState extends State<TeamsDetail> {
         ));
   }
 
+  // Delete team from database
+  Future<void> deleteTeam() async {
+    //TODO: EXPERIMENTAL DELETING
+    if (widget.creator == getUid()){
+      for (var i = 0; i < widget.tasks.length; i++) {
+        print(widget.tasks);
+        FirebaseFirestore.instance
+            .collection('tasks')
+            .doc(widget.tasks[i])
+            .delete();
+      }
+      for (var i = 0; i < widget.challenges.length; i++) {
+        FirebaseFirestore.instance
+            .collection('challenges')
+            .doc(widget.challenges[i])
+            .delete();
+      }
+      //TODO: EXPERIMENTAL DELETING
+      FirebaseFirestore.instance
+          .collection('teams')
+          .doc(widget.teamID)
+          .delete();
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    } else {
+      print(getUid());
+      final snackBar = SnackBar(
+          content: Text('Nur der Creator kann das Team löschen.'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar);
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
+  }
+
   getActiveTeam(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data!.docs.map((doc) => doc['activeTeam']);
   }
@@ -394,29 +427,107 @@ class _TeamsDetailState extends State<TeamsDetail> {
                 dense: true,
                 onTap: () {
                   setState(() {
-                    if (doc['uid'] != widget.creator) {
-                      if (!widget.admins.contains(doc['uid'])) {
-                        widget.admins.add(doc['uid']);
-                        widget.member.remove(doc['uid']);
-                      } else {
-                        widget.member.add(doc['uid']);
-                        widget.admins.remove(doc['uid']);
+                    if (doc['uid'] == getUid()){
+                      _showGetOut();
+                    } else {
+                      if (doc['uid'] != widget.creator) {
+                        if (!widget.admins.contains(doc['uid'])) {
+                          widget.admins.add(doc['uid']);
+                          widget.member.remove(doc['uid']);
+                        } else {
+                          widget.member.add(doc['uid']);
+                          widget.admins.remove(doc['uid']);
+                        }
+
+                        if (changeList.contains(doc['uid']))
+                          changeList.remove(doc['uid']);
+                        else
+                          changeList.add(doc['uid']);
+
+                        if (changeList.isEmpty)
+                          changed = false;
+                        else
+                          changed = true;
                       }
-
-                      if (changeList.contains(doc['uid']))
-                        changeList.remove(doc['uid']);
-                      else
-                        changeList.add(doc['uid']);
-
-                      if (changeList.isEmpty)
-                        changed = false;
-                      else
-                        changed = true;
                     }
                   });
                 },
               )))
           .toList();
     }
+  }
+
+  //Leave Team (for Admin/Member only)
+  _showGetOut() {
+    String question = 'Wollen sie das Team verlassen?';
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: Color(0xff353535),
+              title: new Text(question),
+              actions: [
+                Container(
+                    width: 100,
+                    height: 50,
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          // 10% of the width, so there are ten blinds.
+                          colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
+                          // red to yellow
+                          tileMode: TileMode
+                              .repeated, // repeats the gradient over the canvas
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                            shadowColor:
+                            MaterialStateProperty.all(Colors.transparent)),
+                        onPressed: (){
+                          if (widget.creator == getUid()) {
+                            final snackBar = SnackBar(
+                                content: Text('Der Creator kann das Team nicht verlassen, nur löschen.'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            Navigator.of(context).pop();
+                          }
+                          if (widget.member.contains(getUid())) {
+                            widget.member.remove(getUid());
+                            final snackBar2 = SnackBar(
+                                content: Text('Sie haben das Team verlassen.'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar2);
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          }
+                          if (widget.admins.contains(getUid())) {
+                            final snackBar3 = SnackBar(
+                                content: Text('Sie haben das Team verlassen.'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar3);
+                            widget.admins.remove(getUid());
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        // might not work with iOS
+                        child: Text('Ja'))),
+                Container(
+                    height: 50,
+                    width: 100,
+                    child: OutlinedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Colors.transparent),
+                            shadowColor: MaterialStateProperty.all(
+                                Colors.transparent)),
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('Nein')))
+              ]);
+        });
   }
 }

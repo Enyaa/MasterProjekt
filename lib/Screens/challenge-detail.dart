@@ -176,8 +176,6 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
       Navigator.of(context).pop();
       Navigator.of(context).pop();
     } else {
-      print('Ist kein admin');
-      print(getUid());
       final snackBar = SnackBar(
           content: Text('Nur Admins können Challenges löschen.'));
       ScaffoldMessenger.of(context)
