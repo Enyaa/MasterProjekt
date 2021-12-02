@@ -43,6 +43,37 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     return uid.toString();
   }
 
+  Future<List> getAdminList() async {
+    String activeTeam = '';
+    List adminList = [];
+    String creator = '';
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(getUid())
+        .get()
+        .then((value) => activeTeam = value['activeTeam']);
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => creator = value['creator']);
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => adminList = value['admins']);
+    adminList.add(creator);
+    return adminList;
+  }
+
+  Future<bool> checkAdmin() async {
+    List adminList = await getAdminList();
+    if (adminList.contains(getUid()))
+      return true;
+    else
+      return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyWillPopScope(
@@ -135,13 +166,25 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
   }
 
   // Delete challenge from database
-  void deleteChallenge() {
-    FirebaseFirestore.instance
-        .collection('challenges')
-        .doc(widget.id)
-        .delete();
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
+  Future<void> deleteChallenge() async {
+    bool checkAdmins = await checkAdmin();
+    if (checkAdmins == true){
+      FirebaseFirestore.instance
+          .collection('challenges')
+          .doc(widget.id)
+          .delete();
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    } else {
+      print('Ist kein admin');
+      print(getUid());
+      final snackBar = SnackBar(
+          content: Text('Nur Admins können Challenges löschen.'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar);
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
   }
 
   // Set challenge as finished in database

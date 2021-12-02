@@ -30,6 +30,30 @@ class ChallengesState extends State<Challenges> {
     return uid.toString();
   }
 
+  Future<List> getAdminList() async {
+    String activeTeam = '';
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(getUid())
+        .get()
+        .then((value) => activeTeam = value['activeTeam']);
+    List adminList = [];
+    String creator = '';
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => creator = value['creator']);
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => adminList = value['admins']);
+    adminList.add(creator);
+    print(adminList);
+    return adminList;
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -63,29 +87,42 @@ class ChallengesState extends State<Challenges> {
             },
           ),
           // Floating button to create a challenge
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/challenge-create');
-            },
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-            child: Ink(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    // 10% of the width, so there are ten blinds.
-                    colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
-                    // red to yellow
-                    tileMode: TileMode
-                        .repeated, // repeats the gradient over the canvas
+          floatingActionButton: FutureBuilder(
+            future: getAdminList(),
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                return Visibility(
+                  visible: (snapshot.requireData.contains(getUid()))
+                      ? true
+                      : false,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/challenge-create');
+                    },
+                    shape:
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    child: Ink(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            // 10% of the width, so there are ten blinds.
+                            colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
+                            // red to yellow
+                            tileMode: TileMode
+                                .repeated, // repeats the gradient over the canvas
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      child: Container(
+                        constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
+                        child: const Icon(Icons.add),
+                      ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(50))),
-              child: Container(
-                constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
-                child: const Icon(Icons.add),
-              ),
-            ),
+                );
+              }
+              return Text('');
+            },
           ),
           bottomNavigationBar: NavigationBar(3),
         ));
