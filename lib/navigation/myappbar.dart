@@ -35,7 +35,9 @@ class MyAppbar extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => bottom ? Size.fromHeight(120) : Size.fromHeight(50);
 }
 
+// Custom Appbar
 class _MyAppbarState extends State<MyAppbar> {
+  // show delete button
   _showDelete() {
     String question = '';
     if(widget.mode == 'task') {
@@ -92,6 +94,7 @@ class _MyAppbarState extends State<MyAppbar> {
 
   @override
   Widget build(BuildContext context) {
+    // bottom Tabbar
     if (widget.bottom) {
       return new Container(
           decoration: BoxDecoration(
@@ -110,7 +113,7 @@ class _MyAppbarState extends State<MyAppbar> {
               shadowColor: Colors.transparent,
               title: Text(widget.title),
               bottom: MyTabbar()));
-    } else if (widget.actions) {
+    } else if (widget.actions) { // Filter for tasks and challenges
       return new Container(
         decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
@@ -136,7 +139,7 @@ class _MyAppbarState extends State<MyAppbar> {
           ],
         ),
       );
-    } else if (widget.leading && widget.admin) {
+    } else if (widget.leading && widget.admin) { // show back and delete button
       return new Container(
           decoration: BoxDecoration(
             boxShadow: <BoxShadow>[
@@ -162,7 +165,7 @@ class _MyAppbarState extends State<MyAppbar> {
               )
             ],
           ));
-    } else if (widget.leading) {
+    } else if (widget.leading) { // show only back button
       return new Container(
           decoration: BoxDecoration(
             boxShadow: <BoxShadow>[
@@ -179,7 +182,7 @@ class _MyAppbarState extends State<MyAppbar> {
                   onPressed: () {
                     Navigator.pop(context);
                   })));
-    } else {
+    } else { // simple appbar with only title
       return new Container(
           decoration: BoxDecoration(
             boxShadow: <BoxShadow>[

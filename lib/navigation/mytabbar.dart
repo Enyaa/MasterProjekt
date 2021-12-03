@@ -14,6 +14,7 @@ class MyTabbar extends StatefulWidget implements PreferredSizeWidget {
 class _MyTabbarState extends State<MyTabbar> {
   @override
   Widget build(BuildContext context) {
+    // Tabs for Leaderboards
     return Container(child: const TabBar(
       tabs: [
         Tab(
@@ -26,6 +27,7 @@ class _MyTabbarState extends State<MyTabbar> {
             icon: Icon(Icons.emoji_events),
             child: Text('Herausforderungen', textAlign: TextAlign.center, style: TextStyle(fontSize: 11)))
       ],
+      // Custom design with gradient
       unselectedLabelColor: Colors.white,
       indicatorSize: TabBarIndicatorSize.tab,
       indicator: UnderlineTabIndicator(),

@@ -24,6 +24,7 @@ class _MethodsState extends State<Methods> {
           if (!snapshot.hasData) {
             return Text('Error, keine Daten von User gefunden!');
           } else {
+            // get data from database
             var level = snapshot.data!.docs
                 .firstWhere((user) => user['uid'] == getUid())['level'];
             var currentXp = snapshot.data!.docs
@@ -33,21 +34,23 @@ class _MethodsState extends State<Methods> {
             var userName = snapshot.data!.docs.firstWhere((user) => user['uid'] == getUid())['name'];
             var identifier = snapshot.data!.docs.firstWhere((user) => user['uid'] == getUid())['identifier'];
 
-            //level als String
+            //level as Text
             if (widget.mode == 'level.s') {
               return Text(level.toString());
             }
-            //CurrentXP als String
+            //CurrentXP as Text
             else if (widget.mode == 'currentXp.s') {
               return Text(currentXp.toString());
             }
-            //pointsNeeded als String
+            //pointsNeeded as Text
             else if (widget.mode == 'pointsNeeded.s') {
               return Text(pointsNeeded.toString());
             }
+            // userName as Text
             else if (widget.mode == 'name') {
               return Text(userName.toString(), style: TextStyle(fontSize: 18));
             }
+            // identifier as Text
             else if (widget.mode == 'identifier') {
               return Text(identifier.toString(), style: TextStyle(
                   fontSize: 14,
