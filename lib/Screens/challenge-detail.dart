@@ -43,6 +43,7 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     return uid.toString();
   }
 
+  // get list of admins + creator
   Future<List> getAdminList() async {
     String activeTeam = '';
     List adminList = [];
@@ -66,6 +67,7 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     return adminList;
   }
 
+  // check if user is admin/creator
   Future<bool> checkAdmin() async {
     List adminList = await getAdminList();
     if (adminList.contains(getUid()))
@@ -170,6 +172,7 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
         ));
   }
 
+  // delete challenges from database if the user is admin/creator
   void deleteChallenge() async {
     FirebaseFirestore.instance.collection('challenges').doc(widget.id).delete();
     bool checkAdmins = await checkAdmin();

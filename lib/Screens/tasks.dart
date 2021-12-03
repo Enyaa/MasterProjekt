@@ -29,6 +29,7 @@ class TasksState extends State<Tasks> {
     return uid.toString();
   }
 
+  // get list of admins + creator
   Future<List> getAdminList() async {
     String activeTeam = '';
     await FirebaseFirestore.instance
@@ -90,6 +91,7 @@ class TasksState extends State<Tasks> {
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
                 return Visibility(
+                  // only show if user is admin/creator
                   visible: (snapshot.requireData.contains(getUid()))
                       ? true
                       : false,
