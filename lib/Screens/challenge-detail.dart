@@ -232,13 +232,10 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     final CalculateLevel logic = new CalculateLevel();
     logic.levelUp(userSnap);
 
-    // Check if user has a levelup
-    final CalculateLevel logic = new CalculateLevel();
-    await logic.levelUp(user);
 
     //check if user gets an achievement
     final AchievementHub logic2 = new AchievementHub();
-    logic2.checkAchievement(user);
+    logic2.checkAchievement(userSnap);
 
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'challenges');

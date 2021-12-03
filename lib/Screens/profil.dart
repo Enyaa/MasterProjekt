@@ -38,6 +38,9 @@ class ProfilState extends State<Profil> {
       .where('userFinished', arrayContains: getUid())
       .snapshots();
 
+  var placeholder =
+      "https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/rettich.png?alt=media&token=8c7277fe-f352-4757-8038-70b008b55d77";
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -47,20 +50,85 @@ class ProfilState extends State<Profil> {
             drawer: MyDrawer(),
             body: SafeArea(
               child: Column(children: [
+                StreamBuilder(
+                    stream: snapshots,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.data!.docs.firstWhere((user) =>
+                          user['uid'] == getUid())['imgUrl'] !=
+                              '') {
+                        String imgUrl = snapshot.data!.docs.firstWhere(
+                                (user) => user['uid'] == getUid())['imgUrl'];
+                        return Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black,
+                                        blurRadius: 5,
+                                        spreadRadius: 0.5)
+                                  ],
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      // 10% of the width, so there are ten blinds.
+                                      colors: <Color>[
+                                        Color(0xffE53147),
+                                        Color(0xffFB9C26)
+                                      ],
+                                      // red to yellow
+                                      tileMode: TileMode.repeated),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.all(3),
+                                    child: ClipRRect(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        child: Image.network(imgUrl,
+                                            height: 100,
+                                            width: 100,
+                                            fit: BoxFit.fill)))));
+                      } else {
+                        return Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black,
+                                  blurRadius: 5,
+                                  spreadRadius: 0.5)
+                            ],
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              // 10% of the width, so there are ten blinds.
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Padding(
+                              padding: EdgeInsets.all(3),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Image.network(placeholder,
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.fitHeight))),
+                        );
+                      }
+                    }),
                 Container(
-                  width: double.infinity,
-                  height: 150,
-                  child: Container(
-                    alignment: Alignment(0.0, 2.5),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      backgroundImage: AssetImage('lib/Graphics/rettich.png'),
-                      radius: 60.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsetsDirectional.all(10),
+                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   width: 50,
                   height: 25,
                   alignment: Alignment.center,
