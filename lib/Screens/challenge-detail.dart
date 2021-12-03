@@ -219,8 +219,8 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     var finishedChallenges = user.docs[0].data()['finishedChallenges'];
     finishedChallenges.add(id);
 
-    var userSnap = await FirebaseFirestore.instance.collection('user').doc(userId);
-    var challengeSnap = await FirebaseFirestore.instance.collection('challenges').doc(id);
+    var userSnap = FirebaseFirestore.instance.collection('user').doc(userId);
+    var challengeSnap = FirebaseFirestore.instance.collection('challenges').doc(id);
 
     // Update user and challenge data
     finishedArr.add(userId);

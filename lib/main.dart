@@ -66,8 +66,6 @@ class _MyAppState extends State<MyApp> {
     MaterialColor darkGrey = MaterialColor(0xff353535, color);
     MaterialColor grey = MaterialColor(0xff393939, color);
     Color lightOrange = Color(0xffFB9C26);
-    Color darkOrange = Color(0xffE53147);
-    LinearGradient gradient = LinearGradient(colors: <Color>[darkOrange, lightOrange]);
 
     return MaterialApp(
       title: 'TeamRad',
@@ -104,7 +102,7 @@ class _MyAppState extends State<MyApp> {
         '/password': (context) => const Password(),
         '/homepage': (context) => const Homepage(),
         '/teams': (context) => const Teams(),
-        '/addTeam': (context) => const addTeam(),
+        '/addTeam': (context) => const AddTeam(),
         '/teamDetail': (context) => const TeamsDetail(teamID: '', admins: [], member: [], creator: '', teamName: '', tasks: [], challenges: []),
         '/tasks': (context) => const Tasks(),
         '/challenges': (context) => const Challenges(),

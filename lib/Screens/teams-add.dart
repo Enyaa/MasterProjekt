@@ -9,14 +9,14 @@ import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
 import 'package:uuid/uuid.dart';
 
-class addTeam extends StatefulWidget {
-  const addTeam({Key? key}) : super(key: key);
+class AddTeam extends StatefulWidget {
+  const AddTeam({Key? key}) : super(key: key);
 
   @override
-  _addTeamState createState() => _addTeamState();
+  _AddTeamState createState() => _AddTeamState();
 }
 
-class _addTeamState extends State<addTeam> {
+class _AddTeamState extends State<AddTeam> {
   TextEditingController editingController = TextEditingController();
   List<dynamic> toAddList = [];
   List<dynamic> uidList = [];
