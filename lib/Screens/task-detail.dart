@@ -56,6 +56,7 @@ class _TaskDetailState extends State<TaskDetail> {
     return uid.toString();
   }
 
+  // get list of admins + creator
   Future<List> getAdminList() async {
     String activeTeam = '';
     List adminList = [];
@@ -79,6 +80,7 @@ class _TaskDetailState extends State<TaskDetail> {
     return adminList;
   }
 
+  // check if user is admin/creator of the team
   Future<bool> checkAdmin() async {
     List adminList = await getAdminList();
       if (adminList.contains(getUid()))

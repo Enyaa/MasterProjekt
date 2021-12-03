@@ -90,6 +90,7 @@ class Password extends StatelessWidget {
                                 shadowColor: MaterialStateProperty.all(
                                     Colors.transparent)),
                             onPressed: () {
+                              // reset password if email exists
                           if (_key.currentState!.validate()){
                             passwordReset(emailController.text);
                             Navigator.pushReplacementNamed(context, '/login');
@@ -104,6 +105,7 @@ class Password extends StatelessWidget {
   }
 }
 
+// check e-mail form
 String? validateEmail(String? formEmail) {
   if (formEmail == null || formEmail.isEmpty)
     return 'Bitte gib eine E-Mail an.';
@@ -115,6 +117,7 @@ String? validateEmail(String? formEmail) {
   return null;
 }
 
+// reset password to email
 Future<void> passwordReset(String formEmail) async {
   await FirebaseAuth.instance.sendPasswordResetEmail(email: formEmail);
 }

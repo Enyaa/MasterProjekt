@@ -97,6 +97,7 @@ class Login extends StatelessWidget {
                                     Colors.transparent)),
                             onPressed: () async {
                           if (_key.currentState!.validate()) {
+                            // check input values and signIn
                             await FirebaseAuth.instance.signInWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text);
@@ -119,6 +120,7 @@ class Login extends StatelessWidget {
   }
 }
 
+// check e-mail form
 String? validateEmail(String? formEmail) {
   if (formEmail == null || formEmail.isEmpty)
     return 'Bitte gib eine E-Mail an.';
@@ -130,6 +132,7 @@ String? validateEmail(String? formEmail) {
   return null;
 }
 
+// check password form
 String? validatePassword(String? formPassword) {
   if (formPassword == null || formPassword.isEmpty)
     return 'Bitte gib ein Passwort an.';

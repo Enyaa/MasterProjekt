@@ -28,10 +28,12 @@ class _RegisterState extends State<Register> {
 
     CollectionReference users = FirebaseFirestore.instance.collection('user');
 
+    // get UserID
     Future<void> addUser() async {
       var uuid = Uuid();
       String identifier = nameController.text + '#' + uuid.v4().substring(0, 4);
 
+      // save user data in database with uid as doc key
       return users
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set({
@@ -160,6 +162,7 @@ class _RegisterState extends State<Register> {
                                     Colors.transparent)),
                             onPressed: () async {
                               if (_key.currentState!.validate()) {
+                                // try creating user with e-mail and password
                                 try {
                                   await FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
@@ -179,6 +182,7 @@ class _RegisterState extends State<Register> {
                                 }
                                 print(FirebaseAuth.instance.currentUser!.uid);
                                 addUser();
+                                // send email verification
                                 User? user = FirebaseAuth.instance.currentUser;
                                 if (user != null && !user.emailVerified) {
                                   await user.sendEmailVerification();
@@ -205,7 +209,7 @@ class _RegisterState extends State<Register> {
   }
 }
 
-/// MUSS NOCH EINZIGARTIG SEIN
+// check email form
 String? validateEmail(String? formEmail) {
   if (formEmail == null || formEmail.isEmpty)
     return 'Bitte gib eine E-Mail an.';
@@ -217,6 +221,7 @@ String? validateEmail(String? formEmail) {
   return null;
 }
 
+// check password form
 String? validatePassword(String? formPassword) {
   if (formPassword == null || formPassword.isEmpty)
     return 'Bitte gib ein Passwort an.';
@@ -226,6 +231,7 @@ String? validatePassword(String? formPassword) {
   return null;
 }
 
+// check name form
 String? validateName(String? formName) {
   if (formName == null || formName.isEmpty) return 'Bitte gib einen Namen ein.';
 

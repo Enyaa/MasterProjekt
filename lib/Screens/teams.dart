@@ -16,12 +16,14 @@ class Teams extends StatelessWidget {
   @override
   Widget build (BuildContext context) {
 
+    // get UserID
     String getUid() {
       final User? user = FirebaseAuth.instance.currentUser;
       final uid = user!.uid;
       return uid.toString();
     }
 
+    // define database snapshot
     var snapshots = FirebaseFirestore.instance.collection('teams').where('queryOperator', arrayContains: getUid()).snapshots();
 
     return MyWillPopScope(
@@ -79,6 +81,8 @@ class Teams extends StatelessWidget {
     ));
   }
 
+  // iterate through database snapshot
+  // return Teams as Card-ListTiles with link to detail
   getTeams(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
         .map((doc) => Card(

@@ -30,6 +30,7 @@ class _MyDrawerState extends State<MyDrawer> {
     return new Drawer(
       child: Column(
         children: [
+          // user image that leads to profile
           GestureDetector(
               onTap: () {
                 Navigator.pop(context);
@@ -45,6 +46,7 @@ class _MyDrawerState extends State<MyDrawer> {
                           stream: users,
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
+                            // show image if user has one
                             if (snapshot.hasData &&
                                 snapshot.data!.docs.firstWhere((user) =>
                                         user['uid'] == getUid())['imgUrl'] !=
@@ -82,7 +84,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                               height: 60,
                                               width: 60,
                                               fit: BoxFit.fill)))));
-                            } else {
+                            } else { // show placeholder if user has no image
                               return Container(
                                 decoration: BoxDecoration(
                                   boxShadow: [
@@ -119,10 +121,13 @@ class _MyDrawerState extends State<MyDrawer> {
                             }
                           }),
                       Padding(padding: EdgeInsets.all(3)),
+                      // show user name
                       Methods(mode: 'name'),
                       Padding(padding: EdgeInsets.all(2)),
+                      // show user identifier
                       Methods(mode: 'identifier'),
                       Padding(padding: EdgeInsets.all(2)),
+                      // show user level
                       Row(children: [Text('Level: '), Methods(mode: 'level.s')])
                     ],
                   ),
@@ -132,6 +137,7 @@ class _MyDrawerState extends State<MyDrawer> {
               child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
+              // Go to Homepage
               ListTile(
                 leading: Icon(Icons.home_outlined, color: lightOrange),
                 title: const Text(
@@ -143,6 +149,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   Navigator.pushReplacementNamed(context, '/homepage');
                 },
               ),
+              // Go to tasks page
               ListTile(
                 leading: Icon(Icons.note_alt_outlined, color: lightOrange),
                 title: const Text('Aufgaben'),
@@ -151,6 +158,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   Navigator.pushReplacementNamed(context, '/tasks');
                 },
               ),
+              // Go to challenges page
               ListTile(
                 leading: Icon(Icons.emoji_events_outlined, color: lightOrange),
                 title: const Text('Herausforderungen'),
@@ -159,6 +167,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   Navigator.pushReplacementNamed(context, '/challenges');
                 },
               ),
+              // Go to leaderboards
               ListTile(
                 leading: Icon(Icons.leaderboard_outlined, color: lightOrange),
                 title: const Text('Bestenlisten'),
@@ -167,6 +176,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   Navigator.pushReplacementNamed(context, '/leaderboards');
                 },
               ),
+              // Go to teams page
               ListTile(
                 leading: Icon(Icons.group_outlined, color: lightOrange),
                 title: const Text('Teams'),
@@ -178,6 +188,7 @@ class _MyDrawerState extends State<MyDrawer> {
             ],
           )),
           Divider(),
+          // Go to settings
           ListTile(
             leading: Icon(Icons.settings_outlined, color: lightOrange),
             title: const Text('Einstellungen'),
@@ -186,6 +197,7 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.pushReplacementNamed(context, '/settings');
             },
           ),
+          // Go to help page
           ListTile(
             leading: Icon(Icons.help_outline, color: lightOrange),
             title: const Text('Hilfe'),
@@ -194,6 +206,7 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.pushReplacementNamed(context, '/help');
             },
           ),
+          // User logout
           ListTile(
             leading: Icon(Icons.input_outlined, color: lightOrange),
             title: const Text('Logout'),

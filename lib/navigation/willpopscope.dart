@@ -15,6 +15,7 @@ class MyWillPopScope extends StatefulWidget {
   _MyWillPopScopeState createState() => _MyWillPopScopeState();
 }
 
+// Custom WillPopScope
 class _MyWillPopScopeState extends State<MyWillPopScope> {
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,13 @@ class _MyWillPopScopeState extends State<MyWillPopScope> {
             context: context,
             builder: (_) => AlertDialog(
               backgroundColor: Color(0xff353535),
+                  // Set title
                   title: Text(widget.text),
                   actions: [
                     Container(
                         width: 100,
                         height: 50,
-                        decoration: const BoxDecoration(
+                        decoration: const BoxDecoration( // Button with gradient
                             gradient: LinearGradient(
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
@@ -47,7 +49,7 @@ class _MyWillPopScopeState extends State<MyWillPopScope> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(50))),
                         child: ElevatedButton(
-                            style: ButtonStyle(
+                            style: ButtonStyle( // White outline button
                                 backgroundColor: MaterialStateProperty.all(
                                     Colors.transparent),
                                 shadowColor: MaterialStateProperty.all(

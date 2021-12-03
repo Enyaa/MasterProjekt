@@ -30,6 +30,7 @@ class ChallengesState extends State<Challenges> {
     return uid.toString();
   }
 
+  // get list of admins + creator
   Future<List> getAdminList() async {
     String activeTeam = '';
     await FirebaseFirestore.instance
@@ -92,6 +93,7 @@ class ChallengesState extends State<Challenges> {
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
                 return Visibility(
+                  // only show if the user is admin/creator
                   visible: (snapshot.requireData.contains(getUid()))
                       ? true
                       : false,
