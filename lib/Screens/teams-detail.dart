@@ -341,7 +341,6 @@ class _TeamsDetailState extends State<TeamsDetail> {
   // if user is creator:
   // delete team from database with all tasks and challenges linked to the team
   // iterate through list of tasks/challenges and delete with id
-  // may cause error that tasks will not be deleted
   Future<void> deleteTeam() async {
     if (widget.creator == getUid()){
       for (var i = 0; i < widget.tasks.length; i++) {

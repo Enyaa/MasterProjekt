@@ -31,6 +31,7 @@ class _addTeamState extends State<addTeam> {
 
   // getter List
   getList(List<dynamic> list) {
+    list.remove(getUid());
     return list;
   }
 

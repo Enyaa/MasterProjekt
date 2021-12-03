@@ -61,8 +61,9 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
       await FirebaseFirestore.instance
           .collection('teams')
           .doc(activeTeam)
-          .get()
-          .then((doc) => doc['challenges'].add(uid));
+          .update({
+        'challenges': FieldValue.arrayUnion([uid])
+      });
 
       initializeDateFormatting('de', null);
       return challenges

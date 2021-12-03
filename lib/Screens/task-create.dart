@@ -52,8 +52,9 @@ class _TaskCreateState extends State<TaskCreate> {
       await FirebaseFirestore.instance
           .collection('teams')
           .doc(activeTeam)
-          .get()
-          .then((doc) => doc['tasks'].add(uid));
+          .update({
+        'tasks': FieldValue.arrayUnion([uid])
+      });
 
       //add new task to database
       return tasks
