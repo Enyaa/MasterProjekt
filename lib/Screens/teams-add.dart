@@ -22,16 +22,19 @@ class _addTeamState extends State<addTeam> {
   List<dynamic> uidList = [];
   List<dynamic> memberList = [];
 
+  // get UserID
   String getUid() {
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user!.uid;
     return uid.toString();
   }
 
+  // getter List
   getList(List<dynamic> list) {
     return list;
   }
 
+  // getter QueryList
   getQueryList(List<dynamic> list) {
     list.add(getUid());
     return list;
@@ -40,6 +43,7 @@ class _addTeamState extends State<addTeam> {
 
   @override
   Widget build(BuildContext context) {
+    // get database snapshot
     var snapshots = FirebaseFirestore.instance
         .collection('user')
         .where('uid', isNotEqualTo: getUid())
@@ -47,10 +51,12 @@ class _addTeamState extends State<addTeam> {
 
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
     var uuid = Uuid().v4();
-    memberList = uidList;
-    memberList.remove(getUid());
 
+    // save team data to database with uid as doc key
+    // remove creator from userList but keep in queryList
     Future<void> addTeam() async {
+      memberList = uidList;
+      memberList.remove(getUid());
       return teams.doc(uuid)
           .set({
         'name': nameController.text,
@@ -227,6 +233,8 @@ class _addTeamState extends State<addTeam> {
         ));
   }
 
+  // iterate through database snapshot
+  // return users as Card-ListTiles with logic to move between lists (with setState)
   getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
         .map((doc) => Visibility(

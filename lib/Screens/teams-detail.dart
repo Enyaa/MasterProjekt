@@ -32,6 +32,7 @@ class TeamsDetail extends StatefulWidget {
   _TeamsDetailState createState() => _TeamsDetailState();
 }
 
+// get userID
 String getUid() {
   final User? user = FirebaseAuth.instance.currentUser;
   final uid = user!.uid;
@@ -39,18 +40,12 @@ String getUid() {
 }
 
 class _TeamsDetailState extends State<TeamsDetail> {
+  // define gradient for buttons etc.
   final gradient =
       LinearGradient(colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)]);
   final FirebaseAuth auth = FirebaseAuth.instance;
   List<dynamic> changeList = [];
   bool changed = false;
-
-  String getUid() {
-    final User? user = auth.currentUser;
-    final uid = user!.uid;
-
-    return uid.toString();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +53,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
     List<String> creatorList = [];
     creatorList.add(widget.creator);
 
+    // update list of admins in database with new changes
     Future<void> updateAdmins() async {
       return FirebaseFirestore.instance
           .collection('teams')
@@ -67,6 +63,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
           .catchError((error) => print("Failed to update admins: $error"));
     }
 
+    // update list of members in database with new changes
     Future<void> updateMember() async {
       return FirebaseFirestore.instance
           .collection('teams')
@@ -76,6 +73,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
           .catchError((error) => print("Failed to update member: $error"));
     }
 
+    // set current team as activeTeam in user profile
     Future<void> setTeamActive() async {
       return FirebaseFirestore.instance
           .collection('user')
@@ -85,6 +83,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
           .catchError((error) => print("Failed to update active Team: $error"));
     }
 
+    // get current active team of the user
     Future<String> getActiveTeam() async {
       String activeTeam = '';
       await FirebaseFirestore.instance
@@ -305,6 +304,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
                                   shadowColor: MaterialStateProperty.all(
                                       Colors.transparent)),
                               onPressed: () {
+                                // check if user is admin or creator before
                                 if (widget.admins.contains(getUid()) ||
                                     widget.creator == getUid()) {
                                   updateAdmins();
@@ -313,11 +313,13 @@ class _TeamsDetailState extends State<TeamsDetail> {
                                     changed = false;
                                     changeList.clear();
                                   });
+                                  // is admin/creator
                                   final snackBar = SnackBar(
                                       content: Text('Team angepasst.'));
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 } else {
+                                  // is member
                                   final snackBar2 = SnackBar(
                                       content: Text(
                                           'Keine Admin rechte zur Rollenvergebung. Kontaktiere einen Admin oder Creator.'));
@@ -336,9 +338,11 @@ class _TeamsDetailState extends State<TeamsDetail> {
         ));
   }
 
-  // Delete team from database
+  // if user is creator:
+  // delete team from database with all tasks and challenges linked to the team
+  // iterate through list of tasks/challenges and delete with id
+  // may cause error that tasks will not be deleted
   Future<void> deleteTeam() async {
-    //TODO: EXPERIMENTAL DELETING
     if (widget.creator == getUid()){
       for (var i = 0; i < widget.tasks.length; i++) {
         print(widget.tasks);
@@ -353,7 +357,6 @@ class _TeamsDetailState extends State<TeamsDetail> {
             .doc(widget.challenges[i])
             .delete();
       }
-      //TODO: EXPERIMENTAL DELETING
       FirebaseFirestore.instance
           .collection('teams')
           .doc(widget.teamID)
@@ -361,7 +364,6 @@ class _TeamsDetailState extends State<TeamsDetail> {
       Navigator.of(context).pop();
       Navigator.of(context).pop();
     } else {
-      print(getUid());
       final snackBar = SnackBar(
           content: Text('Nur der Creator kann das Team löschen.'));
       ScaffoldMessenger.of(context)
@@ -371,10 +373,13 @@ class _TeamsDetailState extends State<TeamsDetail> {
     }
   }
 
+  // return active team from snapshot
   getActiveTeam(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data!.docs.map((doc) => doc['activeTeam']);
   }
 
+  // iterate through snapshot and create list of users (depending on input list) of the team with the fitting icon
+  // functionality to assign user roles if the user is admin/creator
   getUsers(
       AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context, List list) {
     if (snapshot.data == null) {
@@ -457,7 +462,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
     }
   }
 
-  //Leave Team (for Admin/Member only)
+  // leave team popup (for Admin/Member only)
   _showGetOut() {
     String question = 'Wollen sie das Team verlassen?';
     showDialog(
