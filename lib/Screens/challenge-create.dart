@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:master_projekt/Screens/teams-detail.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
@@ -45,7 +46,24 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
     // Add a challenge to the database
-    Future<void> addChallenge(title, description, xp, imgUrl) {
+    Future<void> addChallenge(title, description, xp, imgUrl) async {
+
+      // get active team
+      String activeTeam = '';
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(getUid())
+          .get()
+          .then((value) => activeTeam = value['activeTeam']);
+      initializeDateFormatting('de', null);
+
+      // add new Challenge to Team-Task-Array
+      await FirebaseFirestore.instance
+          .collection('teams')
+          .doc(activeTeam)
+          .get()
+          .then((doc) => doc['challenges'].add(uid));
+
       initializeDateFormatting('de', null);
       return challenges
           .doc(uid)
@@ -55,7 +73,8 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
             'description': description,
             'xp': int.parse(xp),
             'finished': <String>[],
-            'imgUrl': imgUrl
+            'imgUrl': imgUrl,
+            'teamID': activeTeam
           })
           .then((value) => print("Challenge added"))
           .catchError((error) => print("Failed to add challenge: $error"));
