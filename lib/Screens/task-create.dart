@@ -19,6 +19,7 @@ class TaskCreate extends StatefulWidget {
 }
 
 class _TaskCreateState extends State<TaskCreate> {
+  // initialize needed variables
   List<dynamic> subTasks = [];
 
   var uid = Uuid().v4();
@@ -29,12 +30,15 @@ class _TaskCreateState extends State<TaskCreate> {
 
   @override
   Widget build(BuildContext context) {
+    // get tasks collection
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference tasks = firestore.collection('tasks');
 
+    // set global key and controller
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final subTaskController = TextEditingController();
 
+    // get active team
     Future<void> addTask(title, description, xp) async {
       String activeTeam = '';
       await FirebaseFirestore.instance
@@ -43,6 +47,15 @@ class _TaskCreateState extends State<TaskCreate> {
           .get()
           .then((value) => activeTeam = value['activeTeam']);
       initializeDateFormatting('de', null);
+
+      //add new Task to Team-Task-Array
+      await FirebaseFirestore.instance
+          .collection('teams')
+          .doc(activeTeam)
+          .get()
+          .then((doc) => doc['tasks'].add(uid));
+
+      //add new task to database
       return tasks
           .doc(uid)
           .set({
@@ -61,6 +74,7 @@ class _TaskCreateState extends State<TaskCreate> {
           .catchError((error) => print("Failed to add task: $error"));
     }
 
+    // add a subtask to the task
     addSubTask(task) {
       if (task.isEmpty || task == null) {
         print('No subtask');
@@ -88,6 +102,7 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(5),
                       ),
+                      // title form field
                       TextFormField(
                         cursorColor: Colors.white,
                         controller: titleController,
@@ -116,6 +131,7 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(10),
                       ),
+                      // description form field
                       TextFormField(
                         cursorColor: Colors.white,
                         controller: descriptionController,
@@ -142,6 +158,7 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(5),
                       ),
+                      // xp form field
                       TextFormField(
                         cursorColor: Colors.white,
                         controller: xpController,
@@ -165,6 +182,7 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(10),
                       ),
+                      // subtask formfield and add button
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -218,6 +236,7 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(5),
                       ),
+                      // added subtasks with button to delete them
                       if(subTasks.isNotEmpty) SizedBox(
                         height: 50,
                         child: ListView.builder(
@@ -261,6 +280,7 @@ class _TaskCreateState extends State<TaskCreate> {
                       Padding(
                         padding: EdgeInsets.all(10),
                       ),
+                      // save task button
                       Container(
                           width: 300,
                           height: 50,

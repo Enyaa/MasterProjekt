@@ -97,6 +97,8 @@ class Teams extends StatelessWidget {
                     admins: doc['admins'],
                     creator: doc['creator'],
                     teamName: doc['name'],
+                    tasks: doc['tasks'],
+                    challenges: doc['challenges']
               )));
         },
       ),

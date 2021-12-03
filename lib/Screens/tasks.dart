@@ -17,14 +17,40 @@ class Tasks extends StatefulWidget {
 }
 
 class TasksState extends State<Tasks> {
+  // get tasks collection and authentication
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // get id of current logged in user
   String getUid() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
 
     return uid.toString();
+  }
+
+  Future<List> getAdminList() async {
+    String activeTeam = '';
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(getUid())
+        .get()
+        .then((value) => activeTeam = value['activeTeam']);
+    List adminList = [];
+    String creator = '';
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => creator = value['creator']);
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => adminList = value['admins']);
+    adminList.add(creator);
+    print(adminList);
+    return adminList;
   }
 
   @override
@@ -38,6 +64,7 @@ class TasksState extends State<Tasks> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData)
+                // if no data loaded show waiting spinner
                 return Container(
                     alignment: Alignment.center,
                     child: GradientCircularProgressIndicator(
@@ -50,41 +77,62 @@ class TasksState extends State<Tasks> {
                           tileMode: TileMode
                               .repeated, // repeats the gradient over the canvas
                         )));
+              // if data is loaded show list of tasks
               return new ListView(
                 padding: EdgeInsets.all(10),
                 children: getTasks(snapshot, context),
               );
             },
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/task-create');
-            },
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-            child: Ink(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    // 10% of the width, so there are ten blinds.
-                    colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
-                    // red to yellow
-                    tileMode: TileMode
-                        .repeated, // repeats the gradient over the canvas
+          // floating button to add a task
+          floatingActionButton: FutureBuilder(
+            future: getAdminList(),
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                return Visibility(
+                  visible: (snapshot.requireData.contains(getUid()))
+                      ? true
+                      : false,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/task-create');
+                    },
+                    shape:
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    child: Ink(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            // 10% of the width, so there are ten blinds.
+                            colors: <Color>[
+                              Color(0xffE53147),
+                              Color(0xffFB9C26)
+                            ],
+                            // red to yellow
+                            tileMode: TileMode
+                                .repeated, // repeats the gradient over the canvas
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      child: Container(
+                        constraints: const BoxConstraints(
+                            minWidth: 60, minHeight: 60),
+                        child: const Icon(Icons.add),
+                      ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(50))),
-              child: Container(
-                constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
-                child: const Icon(Icons.add),
-              ),
-            ),
+                );
+              }
+              return Text('');
+            },
           ),
           bottomNavigationBar: NavigationBar(2)),
         text: 'Zur Homepage zurückkehren?',
     );
   }
 
+  // get list of tasks as cards
   getTasks(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
         .map((doc) => Card(
@@ -123,6 +171,7 @@ class TasksState extends State<Tasks> {
         .toList();
   }
 
+  // filter tasks
   getFiltered(int value) async {
     // Get active Team
     String activeTeam = '';
@@ -134,25 +183,25 @@ class TasksState extends State<Tasks> {
 
     //Get Tasklists depending on context
     var tasks = FirebaseFirestore.instance.collection('tasks');
-    if (value == 1) {
+    if (value == 1) { // all tasks
       setSnapshots(tasks.snapshots());
-    } else if (value == 2) {
+    } else if (value == 2) { // not accepted or finished
       setSnapshots(tasks
           .where('accepted', isEqualTo: false)
           .where('finished', isEqualTo: false)
           .snapshots());
-    } else if (value == 3) {
+    } else if (value == 3) { // only accepted by user but not finished
       setSnapshots(tasks
           .where('accepted', isEqualTo: true)
           .where('user', isEqualTo: getUid())
           .where('finished', isEqualTo: false)
           .snapshots());
-    } else if (value == 4) {
+    } else if (value == 4) { // only finished by user
       setSnapshots(tasks
           .where('finished', isEqualTo: true)
           .where('user', isEqualTo: getUid())
           .snapshots());
-    } else if (value == 5) {
+    } else if (value == 5) { // only tasks of active team
       setSnapshots(tasks
       .where('teamID', isEqualTo: activeTeam)
       .snapshots());

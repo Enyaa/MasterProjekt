@@ -19,15 +19,16 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class SettingsScreenState extends State<SettingsScreen> {
+  // get user collection ant Authentication instance
   final users = FirebaseFirestore.instance.collection('user').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  // Profilbild
+  // profile picture variables
   String? imgUrl = '';
   var progress = 0.0;
   bool finished = false;
 
-  //Controller
+  // controllers for all form fields
   late TextEditingController nameController;
   late TextEditingController oldPasswordController;
   late TextEditingController passwordController;
@@ -35,6 +36,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   late TextEditingController emailController;
   late TextEditingController emailPasswordController;
 
+  // get user id of current logged in user
   String getUid() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
@@ -42,6 +44,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     return uid.toString();
   }
 
+  // save img url in database
   Future<void> saveImg(imgUrl) {
     return FirebaseFirestore.instance
         .collection('user')
@@ -51,6 +54,7 @@ class SettingsScreenState extends State<SettingsScreen> {
         .catchError((error) => print("Failed to add image: $error"));
   }
 
+  // get current img url from database
   getCurrentUrl() {
     var document = FirebaseFirestore.instance.collection('user').doc(getUid());
     String imgUrl = '';
@@ -59,6 +63,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     return imgUrl;
   }
 
+  // get name from database
   getCurrentName() {
     var document = FirebaseFirestore.instance.collection('user').doc(getUid());
     String imgUrl = '';
@@ -66,18 +71,22 @@ class SettingsScreenState extends State<SettingsScreen> {
     return imgUrl;
   }
 
+  // image from gallery
   _imgFromGallery() async {
     final storage = FirebaseStorage.instance;
     final picker = ImagePicker();
     var image;
 
+    // open image picker
     image = await picker.pickImage(source: ImageSource.gallery);
 
+    // upload image to storage
     if (image != null) {
       var file = File(image.path);
       UploadTask task =
           storage.ref().child('profilePictures/' + getUid()).putFile(file);
 
+      // listen to upload progress
       task.snapshotEvents.listen((event) {
         setState(() {
           progress = ((event.bytesTransferred.toDouble() /
@@ -91,6 +100,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           });
         }
       });
+      // save download url when upload is finished
       var downloadUrl = await (await task).ref.getDownloadURL();
       saveImg(downloadUrl);
       setState(() {
@@ -99,6 +109,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  // save new name to database
   Future<void> _saveName(String name) {
     return FirebaseFirestore.instance
         .collection('user')
@@ -108,22 +119,25 @@ class SettingsScreenState extends State<SettingsScreen> {
         .catchError((error) => print("Failed change name: $error"));
   }
 
+  // show snackbar that name has changed and save name
   _nameChanged(String name) {
     _saveName(name);
     final snackBar = SnackBar(content: Text('Name wurde geändert!'));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  // save new password to authentication
   _savePassword(
       String oldPassword, String newPassword, String newPasswordCheck) {
     if (newPassword == newPasswordCheck) {
+      // check if credentials match
       final user = FirebaseAuth.instance.currentUser;
       final cred = EmailAuthProvider.credential(
           email: user!.email.toString(), password: oldPassword);
 
       user.reauthenticateWithCredential(cred).then((value) {
         user.updatePassword(newPassword).then((_) {
-          // success do something
+          // success clear all form fields and show snackbar
           print('password changed!');
           final snackBar = SnackBar(content: Text('Passwort wurde geändert!'));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -131,26 +145,27 @@ class SettingsScreenState extends State<SettingsScreen> {
           passwordController.clear();
           passwordCheckController.clear();
         }).catchError((error) {
-          // error show something
+          // error  show snackbar
           print('Password could not be changed 1.');
           final snackBar =
               SnackBar(content: Text('Passwort konnte nicht geändert werden.'));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         });
       }).catchError((error) {
-        // error do something
+        // error show snackbar
         print('Current password was not correct.');
         final snackBar =
             SnackBar(content: Text('Das aktuelle Passwort ist nicht korrekt.'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
-    } else {
+    } else { // error passwords dont match, show snackbar
       final snackBar =
           SnackBar(content: Text('Die Passwörter stimmen nicht überein.'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
+  // save new email to database
   Future<void> saveEmail(String email) {
     return FirebaseFirestore.instance
         .collection('user')
@@ -160,14 +175,16 @@ class SettingsScreenState extends State<SettingsScreen> {
         .catchError((error) => print("Failed to update email: $error"));
   }
 
+  // call when email is changed
   _changeEmail(String newEmail, String password) {
     final user = FirebaseAuth.instance.currentUser;
+    // check if credentials match
     final cred = EmailAuthProvider.credential(
         email: user!.email.toString(), password: password);
 
     user.reauthenticateWithCredential(cred).then((value) {
       user.updateEmail(newEmail).then((_) {
-        // success do something
+        // success clear form fields, save and show snackbar
         print('email changed!');
         final snackBar = SnackBar(content: Text('Email wurde geändert!'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -175,14 +192,14 @@ class SettingsScreenState extends State<SettingsScreen> {
         emailController.clear();
         emailPasswordController.clear();
       }).catchError((error) {
-        // error show something
+        // error show snackbar
         print('Email could not be changed.');
         final snackBar =
             SnackBar(content: Text('Email konnte nicht geändert werden.'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }).catchError((error) {
-      // error do something
+      // error show snackbar
       print('Current password was not correct.');
       final snackBar =
           SnackBar(content: Text('Das Passwort ist nicht korrekt.'));
@@ -209,7 +226,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                   stream: users,
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData)
+                    if (!snapshot.hasData) // show waiting spinner while data is loading
                       return Container(
                           alignment: Alignment.center,
                           child: GradientCircularProgressIndicator(
@@ -225,7 +242,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 tileMode: TileMode
                                     .repeated, // repeats the gradient over the canvas
                               )));
-                    else {
+                    else { // set controllers
                       nameController = TextEditingController(
                           text: snapshot.data!.docs.firstWhere(
                               (user) => user['uid'] == getUid())['name']);
@@ -237,6 +254,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                               (user) => user['uid'] == getUid())['email']);
                       emailPasswordController = TextEditingController();
 
+                      // get img url and placeholder
                       imgUrl = snapshot.data!.docs.firstWhere(
                           (user) => user['uid'] == getUid())['imgUrl'];
                       var placeholder =
@@ -246,7 +264,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                           Padding(
                             padding: EdgeInsets.all(10),
                           ),
-                          if (imgUrl != '')
+                          if (imgUrl != '') // show image
                             Container(
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
@@ -277,7 +295,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                           Padding(
                             padding: EdgeInsets.all(10),
                           ),
-                          Container(
+                          Container( // upload image button
                               height: 50,
                               width: 300,
                               child: OutlinedButton.icon(
@@ -291,6 +309,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           Colors.transparent)),
                                   onPressed: _imgFromGallery)),
                           Padding(padding: EdgeInsets.all(5)),
+                          // while uploading show progress indicator
                           if(progress != 0) GradientProgressIndicator(
                             value: progress / 100,
                             gradient: LinearGradient(
@@ -307,7 +326,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ),
                           if(progress != 0 && progress != 100) Padding(padding: EdgeInsets.all(5)),
+                          // when finished show upload finished hint
                           if (progress == 100) Text('Upload abgeschlossen!'),
+                          // change name form field and save button
                           Container(
                               margin: EdgeInsets.all(10),
                               child: Column(children: [
@@ -378,6 +399,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                         ])),
                                   ],
                                 ),
+                                // Change Email form fields and save button
                                 ExpansionTile(
                                   title: Text(
                                     'Email ändern',
@@ -473,6 +495,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                         ])),
                                   ],
                                 ),
+                                // change password form fields and save button
                                 ExpansionTile(
                                     title: Text(
                                       'Passwort ändern',

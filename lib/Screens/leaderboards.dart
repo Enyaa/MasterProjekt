@@ -12,6 +12,7 @@ class Leaderboards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get collection of users
     var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
 
     return MyWillPopScope(
@@ -28,6 +29,7 @@ class Leaderboards extends StatelessWidget {
               stream: snapshots,
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
+                // if no data loaded show waiting spinner
                 if (!snapshot.hasData) {
                   return TabBarView(children: [
                     Container(
@@ -76,7 +78,7 @@ class Leaderboards extends StatelessWidget {
                                   .repeated, // repeats the gradient over the canvas
                             )))
                   ]);
-                } else {
+                } else { // if data has been loaded show tabbarview with Lists
                   return TabBarView(children: [
                     ListView(
                         children: getList('xp', snapshot, context),
@@ -96,6 +98,7 @@ class Leaderboards extends StatelessWidget {
         ));
   }
 
+  // get list of users sorted by xp, finished tasks or finished challenges
   getList(String mode, AsyncSnapshot<QuerySnapshot> snapshot,
       BuildContext context) {
     List<MyUser> _users = new List.empty(growable: true);
@@ -106,6 +109,7 @@ class Leaderboards extends StatelessWidget {
       int finishedChallenges = doc['finishedChallengesCount'];
       String image = doc['imgUrl'];
 
+      // if no image provided use placeholder
       if (image == '') {
         image =
             'https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e';
@@ -120,6 +124,7 @@ class Leaderboards extends StatelessWidget {
       _users.add(_user);
     });
 
+    // List sorted by XP
     if (mode == 'xp') {
       return sort(_users, 0)
           .map<Widget>((user) => Row(children: [
@@ -156,7 +161,7 @@ class Leaderboards extends StatelessWidget {
                             onTap: () {})))
               ]))
           .toList();
-    } else if (mode == 'tasks') {
+    } else if (mode == 'tasks') { // list sorted by tasks
       return sort(_users, 1)
           .map<Widget>((user) => Row(children: [
                 new Text((sort(_users, 1).indexOf(user) + 1).toString() + '.',
@@ -193,7 +198,7 @@ class Leaderboards extends StatelessWidget {
                             onTap: () {})))
               ]))
           .toList();
-    } else if (mode == 'achievements') {
+    } else if (mode == 'achievements') { // list sorted by challenges
       return sort(_users, 2)
           .map<Widget>((user) => Row(children: [
                 new Text((sort(_users, 2).indexOf(user) + 1).toString() + '.',
@@ -233,13 +238,14 @@ class Leaderboards extends StatelessWidget {
     }
   }
 
+  // sort users
   sort(List<MyUser> users, int mode) {
     List<MyUser> sorted;
-    if (mode == 0)
+    if (mode == 0) // by xp
       users.sort((a, b) => a.xp.compareTo(b.xp));
-    else if (mode == 1)
+    else if (mode == 1) // by tasks
       users.sort((a, b) => a.tasks.compareTo(b.tasks));
-    else
+    else // by challenges
       users.sort((a, b) => a.challenges.compareTo(b.challenges));
 
     sorted = users.reversed.toList();
