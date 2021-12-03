@@ -135,17 +135,17 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
   void deleteChallenge() {
     FirebaseFirestore.instance.collection('challenges').doc(widget.id).delete();
 
-    // FirebaseFirestore.instance.collection('user').where('finishedChallenges', arrayContains: widget.id).snapshots().forEach((snapshot) {
-    //     var finished = [];
-    //     finished = snapshot.docs[0]['finishedChallenges'];
-    //     finished.remove(widget.id);
-    //     String user = snapshot.docs[0]['uid'];
-    //     FirebaseFirestore.instance.collection('user').doc(user).update(
-    //       {
-    //         'finishedChallenges': finished
-    //       }
-    //   );
-    // });
+    FirebaseFirestore.instance.collection('user').where('finishedChallenges', arrayContains: widget.id).snapshots().forEach((snapshot) {
+        var finished = [];
+        finished = snapshot.docs[0]['finishedChallenges'];
+        finished.remove(widget.id);
+        String user = snapshot.docs[0]['uid'];
+        FirebaseFirestore.instance.collection('user').doc(user).update(
+          {
+            'finishedChallenges': finished
+          }
+      );
+    });
 
     Navigator.of(context).pop();
     Navigator.of(context).pop();
