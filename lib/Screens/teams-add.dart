@@ -239,6 +239,7 @@ class _AddTeamState extends State<AddTeam> {
   getUsers(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
         .map((doc) => Visibility(
+          // sync results in list with search bar
           visible: !(uidList.contains(doc['uid']) || !doc['name'].toString().contains(editingController.text)),
           child: Card(
                   child: ListTile(
