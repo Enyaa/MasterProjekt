@@ -25,7 +25,6 @@ class Login extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(padding: EdgeInsets.all(20)),
                       Image.asset('lib/Graphics/rettich.png', height: 350, width: 350),
                     Padding(padding: EdgeInsets.all(10)),
                       TextFormField(
@@ -70,7 +69,7 @@ class Login extends StatelessWidget {
                         controller: passwordController,
                         validator: validatePassword,
                       ),
-                      Padding(padding: EdgeInsets.all(20)),
+                      Padding(padding: EdgeInsets.all(10)),
                       Container(
                         width: 370,
                         height: 50,
@@ -104,7 +103,6 @@ class Login extends StatelessWidget {
                             Navigator.pushReplacementNamed(context, '/homepage');
                           }}, child: Text("Login")),
                       ),
-                      Padding(padding: EdgeInsets.all(10)),
                       TextButton(onPressed: () {
                         Navigator.pushReplacementNamed(context, '/register');
                       }, child: Text("Ich habe noch kein Konto", style: TextStyle(color: Colors.white),),),
