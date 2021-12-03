@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,19 @@ class MyDrawer extends StatefulWidget {
   _MyDrawerState createState() => _MyDrawerState();
 }
 
-
-
 class _MyDrawerState extends State<MyDrawer> {
   Color lightOrange = Color(0xffFB9C26);
   var placeholder =
       "https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/rettich.png?alt=media&token=8c7277fe-f352-4757-8038-70b008b55d77";
+  final users = FirebaseFirestore.instance.collection('user').snapshots();
+
+  // get user id of current logged in user
+  String getUid() {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user!.uid;
+
+    return uid.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,39 +41,83 @@ class _MyDrawerState extends State<MyDrawer> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black,
-                                blurRadius: 5,
-                                spreadRadius: 0.5)
-                          ],
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            // 10% of the width, so there are ten blinds.
-                            colors: <Color>[
-                              Color(0xffE53147),
-                              Color(0xffFB9C26)
-                            ],
-                            // red to yellow
-                            tileMode: TileMode
-                                .repeated, // repeats the gradient over the canvas
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Padding(
-                            padding: EdgeInsets.all(3),
-                            child: Container(
+                      StreamBuilder(
+                          stream: users,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasData &&
+                                snapshot.data!.docs.firstWhere((user) =>
+                                        user['uid'] == getUid())['imgUrl'] !=
+                                    '') {
+                              String imgUrl = snapshot.data!.docs.firstWhere(
+                                  (user) => user['uid'] == getUid())['imgUrl'];
+                              return Padding(
+                                  padding: EdgeInsets.all(3),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black,
+                                                blurRadius: 5,
+                                                spreadRadius: 0.5)
+                                          ],
+                                          gradient: LinearGradient(
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                              // 10% of the width, so there are ten blinds.
+                                              colors: <Color>[
+                                                Color(0xffE53147),
+                                                Color(0xffFB9C26)
+                                              ],
+                                              // red to yellow
+                                              tileMode: TileMode.repeated),
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      child: Padding(
+                                          padding: EdgeInsets.all(3),
+                                          child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image.network(imgUrl,
+                                              height: 60,
+                                              width: 60,
+                                              fit: BoxFit.fill)))));
+                            } else {
+                              return Container(
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(50)),
-                                child: Image.network(placeholder,
-                                    height: 60,
-                                    width: 60,
-                                    fit: BoxFit.fitHeight))),
-                      ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black,
+                                        blurRadius: 5,
+                                        spreadRadius: 0.5)
+                                  ],
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    // 10% of the width, so there are ten blinds.
+                                    colors: <Color>[
+                                      Color(0xffE53147),
+                                      Color(0xffFB9C26)
+                                    ],
+                                    // red to yellow
+                                    tileMode: TileMode
+                                        .repeated, // repeats the gradient over the canvas
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.all(3),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(50)),
+                                        child: Image.network(placeholder,
+                                            height: 60,
+                                            width: 60,
+                                            fit: BoxFit.fitHeight))),
+                              );
+                            }
+                          }),
                       Padding(padding: EdgeInsets.all(3)),
                       Methods(mode: 'name'),
                       Padding(padding: EdgeInsets.all(2)),
