@@ -105,7 +105,7 @@ class _MyAppState extends State<MyApp> {
         '/homepage': (context) => const Homepage(),
         '/teams': (context) => const Teams(),
         '/addTeam': (context) => const addTeam(),
-        '/teamDetail': (context) => const TeamsDetail(teamID: '', admins: [], member: [], creator: '', teamName: '',),
+        '/teamDetail': (context) => const TeamsDetail(teamID: '', admins: [], member: [], creator: '', teamName: '', tasks: [], challenges: []),
         '/tasks': (context) => const Tasks(),
         '/challenges': (context) => const Challenges(),
         '/leaderboards': (context) => const Leaderboards(),

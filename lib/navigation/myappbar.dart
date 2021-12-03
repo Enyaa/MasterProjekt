@@ -42,6 +42,8 @@ class _MyAppbarState extends State<MyAppbar> {
       question = 'Sind Sie sicher, dass Sie die Aufgabe löschen wollen?';
     } else if(widget.mode == 'challenge') {
       question = 'Sind Sie sicher, dass Sie die Herausforderung löschen wollen?';
+    } else if(widget.mode == 'team') {
+      question = 'Sind Sie sicher, dass Sie das Team löschen wollen?';
     }
     showDialog(
         context: context,
