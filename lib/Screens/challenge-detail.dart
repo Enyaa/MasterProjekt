@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/globalMethods/achievementHub.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
@@ -171,6 +172,9 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     user.update({'finishedChallengesCount': FieldValue.increment(1)});
     user.update({'finishedChallenges': FieldValue.arrayUnion([id])});
     user.update({'xp': FieldValue.increment(challengeXp)});
+
+    final AchievementHub logic2 = new AchievementHub();
+    logic2.checkAchievement(user);
 
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'challenges');

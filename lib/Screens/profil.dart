@@ -20,7 +20,8 @@ String getUid() {
 
 class ProfilState extends State<Profil> {
   var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
-  var achievements = FirebaseFirestore.instance.collection('achievements').snapshots();
+  var achievements =
+      FirebaseFirestore.instance.collection('achievements').snapshots();
 
   var taskSnapshots = FirebaseFirestore.instance
       .collection('tasks')
@@ -47,23 +48,35 @@ class ProfilState extends State<Profil> {
             body: SafeArea(
               child: Column(children: [
                 Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image:
-                              AssetImage('lib/Graphics/profil-background.jpg'),
-                          fit: BoxFit.cover)),
+                  width: double.infinity,
+                  height: 150,
                   child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    child: Container(
-                      alignment: Alignment(0.0, 2.5),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        backgroundImage: AssetImage('lib/Graphics/rettich.png'),
-                        radius: 60.0,
-                      ),
+                    alignment: Alignment(0.0, 2.5),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      backgroundImage: AssetImage('lib/Graphics/rettich.png'),
+                      radius: 60.0,
                     ),
                   ),
+                ),
+                Container(
+                  margin: EdgeInsetsDirectional.all(10),
+                  width: 50,
+                  height: 25,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: <Color>[
+                          Color(0xffE53147),
+                          Color(0xffFB9C26)
+                        ], // red to yellow
+                        tileMode: TileMode
+                            .repeated, // repeats the gradient over the canvas
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: Methods(mode: 'level.s'),
                 ),
                 Container(
                     child: Column(children: [
@@ -89,26 +102,18 @@ class ProfilState extends State<Profil> {
                                   )));
                         } else {
                           return (Container(
-                              margin: EdgeInsets.all(10),
                               child: new Text(
-                                snapshot.data!.docs.firstWhere(
-                                    (user) => user['uid'] == getUid())['name'],
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    color: Colors.black,
-                                    letterSpacing: 2.0,
-                                    fontWeight: FontWeight.w400),
-                              )));
+                            snapshot.data!.docs.firstWhere(
+                                (user) => user['uid'] == getUid())['name'],
+                            style: TextStyle(
+                                fontSize: 25.0,
+                                color: Colors.white,
+                                letterSpacing: 2.0,
+                                fontWeight: FontWeight.w400),
+                          )));
                         }
                       }),
                 ])),
-                Container(
-                    child: Row(
-                  children: [
-                    Text('   Level: '),
-                    Methods(mode: 'level.s'),
-                  ],
-                )),
                 Container(
                     child: StreamBuilder<QuerySnapshot>(
                         stream: snapshots,
@@ -133,46 +138,97 @@ class ProfilState extends State<Profil> {
                           } else {
                             return new Column(children: [
                               Container(
-                                  child: LinearProgressIndicator(
-                                value: snapshotuid.data!.docs.firstWhere(
-                                        (user) =>
-                                            user['uid'] == getUid())['xp'] /
-                                    snapshotuid.data!.docs.firstWhere((user) =>
-                                        user['uid'] ==
-                                        getUid())['pointsNeeded'],
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.deepOrange),
-                                backgroundColor: Colors.grey,
-                              )),
+                                  height: 7,
+                                padding: EdgeInsets.all(0.8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                  color: Colors.white
+                                ),
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 50.0, vertical: 10),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      child:GradientProgressIndicator(
+                                    value: snapshotuid.data!.docs.firstWhere(
+                                            (user) =>
+                                                user['uid'] == getUid())['xp'] /
+                                        snapshotuid.data!.docs.firstWhere(
+                                            (user) =>
+                                                user['uid'] ==
+                                                getUid())['pointsNeeded'],
+                                   gradient: LinearGradient(
+                                     begin: Alignment.centerLeft,
+                                     end: Alignment.centerRight,
+                                     colors: <Color>[
+                                       Color(0xffE53147),
+                                       Color(0xffFB9C26)
+                                     ], // red to yellow
+                                     tileMode: TileMode
+                                         .repeated, // repeats the gradient over the canvas
+                                   ),
+                                   //valueColor: AlwaysStoppedAnimation(
+                                   //    Colors.deepOrange),
+                                   //backgroundColor: Colors.grey,
+                                  ))),
                               Container(
-                                  child: Column(children: [
-                                Methods(mode: 'currentXp.s'),
-                                Methods(mode: 'pointsNeeded.s')
-                              ]))
+                                margin:EdgeInsets.fromLTRB(0, 0, 0, 30),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                    Text(
+                                      (snapshotuid.data!.docs.firstWhere(
+                                                      (user) =>
+                                                          user['uid'] ==
+                                                          getUid())[
+                                                  'pointsNeeded'] -
+                                              snapshotuid.data!.docs.firstWhere(
+                                                  (user) =>
+                                                      user['uid'] ==
+                                                      getUid())['xp'])
+                                          .toString(),
+                                      style:
+                                          TextStyle(color: Color(0xffFB9C26)),
+                                    ),
+                                    Text(' XP BIS LEVEL ' +
+                                        (snapshotuid.data!.docs.firstWhere(
+                                                    (user) =>
+                                                        user['uid'] ==
+                                                        getUid())['level'] +
+                                                1)
+                                            .toString())
+                                  ]))
                             ]);
                           }
                         })),
-                TabBar(tabs: [
+                TabBar(
+                    padding:EdgeInsets.symmetric(horizontal: 20),
+                    tabs: [
                   Tab(
-                      child: Text('Aufgaben',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black))),
+                      child: Text(
+                    'Aufgaben',
+                    textAlign: TextAlign.center,
+                  )),
                   Tab(
-                      child: Text('Heraus-\nforderungen',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black))),
+                      child: Text(
+                    'Heraus-\nforderungen',
+                    textAlign: TextAlign.center,
+                  )),
                   Tab(
-                      child: Text('Erfolge',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black))),
+                      child: Text(
+                    'Erfolge',
+                    textAlign: TextAlign.center,
+                  )),
                 ]),
                 Expanded(
-                    child: TabBarView(children: <Widget>[
+                    child: TabBarView(
+                        children: <Widget>[
                   StreamBuilder(
                     stream: taskSnapshots,
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       return ListView(
+                          padding:EdgeInsets.symmetric(horizontal: 20),
                           children: getList('tasks', snapshot, context));
                     },
                   ),
@@ -181,6 +237,7 @@ class ProfilState extends State<Profil> {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       return ListView(
+                          padding:EdgeInsets.symmetric(horizontal: 20),
                           children: getList('challenges', snapshot, context));
                     },
                   ),
@@ -189,6 +246,7 @@ class ProfilState extends State<Profil> {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       return ListView(
+                          padding:EdgeInsets.symmetric(horizontal: 20),
                           children: getList('achievements', snapshot, context));
                     },
                   ),

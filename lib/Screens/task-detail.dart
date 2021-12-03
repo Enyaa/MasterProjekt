@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/globalMethods/achievementHub.dart';
 import 'package:master_projekt/globalMethods/calculateLevel.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
@@ -268,6 +269,10 @@ class _TaskDetailState extends State<TaskDetail> {
     // update user in database
     user.update({'finishedTasksCount': FieldValue.increment(1)});
     user.update({'xp': FieldValue.increment(taskXp)});
+
+
+    final AchievementHub logic2 = new AchievementHub();
+    logic2.checkAchievement(user);
 
     Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, 'tasks');
