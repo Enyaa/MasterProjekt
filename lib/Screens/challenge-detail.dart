@@ -162,10 +162,6 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
         .collection('challenges')
         .doc(id);
 
-    // Check if user has a levelup
-    final CalculateLevel logic = new CalculateLevel();
-    logic.levelUp(user);
-
     // Update user and challenge data
     finishedArr.add(userId);
     challengeSnap.update({'finished': finishedArr});
@@ -173,6 +169,11 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     user.update({'finishedChallenges': FieldValue.arrayUnion([id])});
     user.update({'xp': FieldValue.increment(challengeXp)});
 
+    // Check if user has a levelup
+    final CalculateLevel logic = new CalculateLevel();
+    await logic.levelUp(user);
+
+    //check if user gets an achievement
     final AchievementHub logic2 = new AchievementHub();
     logic2.checkAchievement(user);
 

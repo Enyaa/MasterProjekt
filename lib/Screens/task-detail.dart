@@ -262,15 +262,15 @@ class _TaskDetailState extends State<TaskDetail> {
         .collection('user')
         .doc(getUid());
 
-    // check for levelup
-    final CalculateLevel logic = new CalculateLevel();
-    logic.levelUp(user);
-
     // update user in database
     user.update({'finishedTasksCount': FieldValue.increment(1)});
     user.update({'xp': FieldValue.increment(taskXp)});
 
+    // check for levelup
+    final CalculateLevel logic = new CalculateLevel();
+   await logic.levelUp(user);
 
+    //check if user gets an achievement
     final AchievementHub logic2 = new AchievementHub();
     logic2.checkAchievement(user);
 
