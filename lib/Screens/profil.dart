@@ -3,44 +3,148 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:master_projekt/level/methods.dart';
+import 'package:master_projekt/globalMethods/methods.dart';
 import 'package:master_projekt/navigation/mydrawer.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 
-class Profil extends StatelessWidget {
+class Profil extends StatefulWidget {
   const Profil({Key? key}) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => new ProfilState();
+}
+
+String getUid() {
+  return FirebaseAuth.instance.currentUser!.uid.toString();
+}
+
+class ProfilState extends State<Profil> {
+  var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
+  var achievements =
+      FirebaseFirestore.instance.collection('achievements').snapshots();
+
+  var taskSnapshots = FirebaseFirestore.instance
+      .collection('tasks')
+      .where('user', isEqualTo: getUid())
+      .snapshots();
+
+  var challengeSnapshots = FirebaseFirestore.instance
+      .collection('challenges')
+      .where('finished', arrayContains: getUid())
+      .snapshots();
+
+  var achievementSnapshots = FirebaseFirestore.instance
+      .collection('achievements')
+      .where('userFinished', arrayContains: getUid())
+      .snapshots();
+
+  var placeholder =
+      "https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/rettich.png?alt=media&token=8c7277fe-f352-4757-8038-70b008b55d77";
+
+  @override
   Widget build(BuildContext context) {
-    var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
             appBar: AppBar(title: const Text('Profil')),
             drawer: MyDrawer(),
             body: SafeArea(
               child: Column(children: [
+                StreamBuilder(
+                    stream: snapshots,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.data!.docs.firstWhere((user) =>
+                          user['uid'] == getUid())['imgUrl'] !=
+                              '') {
+                        String imgUrl = snapshot.data!.docs.firstWhere(
+                                (user) => user['uid'] == getUid())['imgUrl'];
+                        return Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black,
+                                        blurRadius: 5,
+                                        spreadRadius: 0.5)
+                                  ],
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      // 10% of the width, so there are ten blinds.
+                                      colors: <Color>[
+                                        Color(0xffE53147),
+                                        Color(0xffFB9C26)
+                                      ],
+                                      // red to yellow
+                                      tileMode: TileMode.repeated),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.all(3),
+                                    child: ClipRRect(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        child: Image.network(imgUrl,
+                                            height: 100,
+                                            width: 100,
+                                            fit: BoxFit.fill)))));
+                      } else {
+                        return Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black,
+                                  blurRadius: 5,
+                                  spreadRadius: 0.5)
+                            ],
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              // 10% of the width, so there are ten blinds.
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ],
+                              // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Padding(
+                              padding: EdgeInsets.all(3),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Image.network(placeholder,
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.fitHeight))),
+                        );
+                      }
+                    }),
                 Container(
+                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  width: 50,
+                  height: 25,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image:
-                              AssetImage('lib/Graphics/profil-background.jpg'),
-                          fit: BoxFit.cover)),
-                  child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    child: Container(
-                      alignment: Alignment(0.0, 2.5),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        backgroundImage: AssetImage('lib/Graphics/rettich.png'),
-                        radius: 60.0,
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: <Color>[
+                          Color(0xffE53147),
+                          Color(0xffFB9C26)
+                        ], // red to yellow
+                        tileMode: TileMode
+                            .repeated, // repeats the gradient over the canvas
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 70,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: Methods(mode: 'level.s'),
                 ),
                 Container(
                     child: Column(children: [
@@ -49,8 +153,7 @@ class Profil extends StatelessWidget {
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (!snapshot.hasData) {
-                          return
-                            Container(
+                          return Container(
                               alignment: Alignment.center,
                               child: GradientCircularProgressIndicator(
                                   value: null,
@@ -66,19 +169,18 @@ class Profil extends StatelessWidget {
                                         .repeated, // repeats the gradient over the canvas
                                   )));
                         } else {
-                          return (new Text(
+                          return (Container(
+                              child: new Text(
                             snapshot.data!.docs.firstWhere(
                                 (user) => user['uid'] == getUid())['name'],
                             style: TextStyle(
                                 fontSize: 25.0,
-                                color: Colors.black,
+                                color: Colors.white,
                                 letterSpacing: 2.0,
                                 fontWeight: FontWeight.w400),
-                          ));
+                          )));
                         }
                       }),
-                  Text('   Level: '),
-                  Methods(mode: 'level.s'),
                 ])),
                 Container(
                     child: StreamBuilder<QuerySnapshot>(
@@ -104,66 +206,165 @@ class Profil extends StatelessWidget {
                           } else {
                             return new Column(children: [
                               Container(
-                                  child: LinearProgressIndicator(
-                                value: snapshotuid.data!.docs.firstWhere(
-                                        (user) =>
-                                            user['uid'] == getUid())['xp'] /
-                                    snapshotuid.data!.docs.firstWhere((user) =>
-                                        user['uid'] ==
-                                        getUid())['pointsNeeded'],
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.deepOrange),
-                                backgroundColor: Colors.grey,
-                              )),
+                                  height: 7,
+                                padding: EdgeInsets.all(0.8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                  color: Colors.white
+                                ),
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 50.0, vertical: 10),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      child:GradientProgressIndicator(
+                                    value: snapshotuid.data!.docs.firstWhere(
+                                            (user) =>
+                                                user['uid'] == getUid())['xp'] /
+                                        snapshotuid.data!.docs.firstWhere(
+                                            (user) =>
+                                                user['uid'] ==
+                                                getUid())['pointsNeeded'],
+                                   gradient: LinearGradient(
+                                     begin: Alignment.centerLeft,
+                                     end: Alignment.centerRight,
+                                     colors: <Color>[
+                                       Color(0xffE53147),
+                                       Color(0xffFB9C26)
+                                     ], // red to yellow
+                                     tileMode: TileMode
+                                         .repeated, // repeats the gradient over the canvas
+                                   ),
+                                   //valueColor: AlwaysStoppedAnimation(
+                                   //    Colors.deepOrange),
+                                   //backgroundColor: Colors.grey,
+                                  ))),
                               Container(
-                                  child: Column(children: [
-                                Methods(mode: 'currentXp.s'),
-                                Methods(mode: 'pointsNeeded.s')
-                              ]))
+                                margin:EdgeInsets.fromLTRB(0, 0, 0, 30),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                    Text(
+                                      (snapshotuid.data!.docs.firstWhere(
+                                                      (user) =>
+                                                          user['uid'] ==
+                                                          getUid())[
+                                                  'pointsNeeded'] -
+                                              snapshotuid.data!.docs.firstWhere(
+                                                  (user) =>
+                                                      user['uid'] ==
+                                                      getUid())['xp'])
+                                          .toString(),
+                                      style:
+                                          TextStyle(color: Color(0xffFB9C26)),
+                                    ),
+                                    Text(' XP BIS LEVEL ' +
+                                        (snapshotuid.data!.docs.firstWhere(
+                                                    (user) =>
+                                                        user['uid'] ==
+                                                        getUid())['level'] +
+                                                1)
+                                            .toString())
+                                  ]))
                             ]);
                           }
                         })),
-                TabBar(tabs: [
+                TabBar(
+                    padding:EdgeInsets.symmetric(horizontal: 20),
+                    tabs: [
                   Tab(
-                      child: Text('Punkte',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black))),
+                      child: Text(
+                    'Aufgaben',
+                    textAlign: TextAlign.center,
+                  )),
                   Tab(
-                      child: Text('Aufgaben',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black))),
+                      child: Text(
+                    'Heraus-\nforderungen',
+                    textAlign: TextAlign.center,
+                  )),
+                  Tab(
+                      child: Text(
+                    'Erfolge',
+                    textAlign: TextAlign.center,
+                  )),
                 ]),
-                SizedBox(
-                  height: 20,
-                  //child: StreamBuilder<QuerySnapshot>(
-                  //    stream: snapshots,
-                  //    builder: (BuildContext context,
-                  //        AsyncSnapshot<QuerySnapshot> snapshot) {
-                  //      if (!snapshot.hasData) {
-                  //        return TabBarView(
-                  //          children: [
-                  //            ListView(
-                  //                children: [Text('Keine Daten gefunden!')]),
-                  //            ListView(
-                  //              children: [Text('Keine Daten gefunden!')],
-                  //            )
-                  //          ],
-                  //        );
-                  //      } else {
-                  //        return TabBarView(children: [
-                  //          ListView(children: []),
-                  //          ListView(children: [])
-                  //        ]);
-                  //     }
-                  //}
-                  // )
-                )
+                Expanded(
+                    child: TabBarView(
+                        children: <Widget>[
+                  StreamBuilder(
+                    stream: taskSnapshots,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      return ListView(
+                          padding:EdgeInsets.symmetric(horizontal: 20),
+                          children: getList('tasks', snapshot, context));
+                    },
+                  ),
+                  StreamBuilder(
+                    stream: challengeSnapshots,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      return ListView(
+                          padding:EdgeInsets.symmetric(horizontal: 20),
+                          children: getList('challenges', snapshot, context));
+                    },
+                  ),
+                  StreamBuilder(
+                    stream: achievementSnapshots,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      return ListView(
+                          padding:EdgeInsets.symmetric(horizontal: 20),
+                          children: getList('achievements', snapshot, context));
+                    },
+                  ),
+                ]))
               ]),
             ),
             bottomNavigationBar: NavigationBar(0)));
   }
 
-  String getUid() {
-    return FirebaseAuth.instance.currentUser!.uid.toString();
+  getList(String mode, AsyncSnapshot<QuerySnapshot> snapshot,
+      BuildContext context) {
+    if (!snapshot.hasData) {
+      return [Center(child: CircularProgressIndicator())];
+    } else if (mode == 'tasks') {
+      return snapshot.data!.docs
+          .map<Widget>((doc) => Card(
+                  child: ListTile(
+                title: new Text(doc['title']),
+                subtitle: new Text(doc['description']),
+                trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(child: new Text(doc['xp'].toString() + ' XP')),
+                      Container(child: new Text(doc['time'].toString())),
+                    ]),
+              )))
+          .toList();
+    } else if (mode == 'challenges') {
+      return snapshot.data!.docs
+          .map<Widget>((doc) => Card(
+                  child: ListTile(
+                title: new Text(doc['title']),
+                subtitle: new Text(doc['description']),
+                trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(child: new Text(doc['xp'].toString() + ' XP')),
+                    ]),
+              )))
+          .toList();
+    } else if (mode == 'achievements') {
+      return snapshot.data!.docs
+          .map<Widget>((doc) => Card(
+                  child: ListTile(
+                title: new Text(doc['title']),
+                subtitle: new Text(doc['description']),
+                trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center, children: []),
+              )))
+          .toList();
+    }
   }
 }
