@@ -56,6 +56,37 @@ class _TaskDetailState extends State<TaskDetail> {
     return uid.toString();
   }
 
+  Future<List> getAdminList() async {
+    String activeTeam = '';
+    List adminList = [];
+    String creator = '';
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(getUid())
+        .get()
+        .then((value) => activeTeam = value['activeTeam']);
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => creator = value['creator']);
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(activeTeam)
+        .get()
+        .then((value) => adminList = value['admins']);
+    adminList.add(creator);
+    return adminList;
+  }
+
+  Future<bool> checkAdmin() async {
+    List adminList = await getAdminList();
+      if (adminList.contains(getUid()))
+        return true;
+      else
+        return false;
+  }
+
   // add subtasks to list
   void _add(String input) {
     _items.add(ListTileModel(false, input));
@@ -228,13 +259,25 @@ class _TaskDetailState extends State<TaskDetail> {
   }
 
   // delete task from database
-  void deleteTask() {
-    FirebaseFirestore.instance
-        .collection('tasks')
-        .doc(widget.id)
-        .delete();
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
+  Future<void> deleteTask() async {
+    bool checkAdmins = await checkAdmin();
+    if (checkAdmins == true){
+      FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(widget.id)
+          .delete();
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    } else {
+      print('Ist kein admin');
+      print(getUid());
+      final snackBar = SnackBar(
+          content: Text('Nur Admins können Tasks löschen.'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar);
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
   }
 
   // set task as accepted in database

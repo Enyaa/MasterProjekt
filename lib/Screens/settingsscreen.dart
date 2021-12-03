@@ -59,15 +59,6 @@ class SettingsScreenState extends State<SettingsScreen> {
     var document = FirebaseFirestore.instance.collection('user').doc(getUid());
     String imgUrl = '';
     document.get().then((value) => imgUrl = value['imgUrl']);
-    print(imgUrl);
-    return imgUrl;
-  }
-
-  // get name from database
-  getCurrentName() {
-    var document = FirebaseFirestore.instance.collection('user').doc(getUid());
-    String imgUrl = '';
-    document.get().then((value) => imgUrl = value['imgUrl']);
     return imgUrl;
   }
 

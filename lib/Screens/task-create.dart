@@ -38,7 +38,7 @@ class _TaskCreateState extends State<TaskCreate> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final subTaskController = TextEditingController();
 
-    // add a new task to the database
+    // get active team
     Future<void> addTask(title, description, xp) async {
       String activeTeam = '';
       await FirebaseFirestore.instance
@@ -47,6 +47,15 @@ class _TaskCreateState extends State<TaskCreate> {
           .get()
           .then((value) => activeTeam = value['activeTeam']);
       initializeDateFormatting('de', null);
+
+      //add new Task to Team-Task-Array
+      await FirebaseFirestore.instance
+          .collection('teams')
+          .doc(activeTeam)
+          .get()
+          .then((doc) => doc['tasks'].add(uid));
+
+      //add new task to database
       return tasks
           .doc(uid)
           .set({
