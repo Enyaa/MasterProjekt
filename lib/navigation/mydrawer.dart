@@ -10,8 +10,6 @@ class MyDrawer extends StatefulWidget {
   _MyDrawerState createState() => _MyDrawerState();
 }
 
-
-
 class _MyDrawerState extends State<MyDrawer> {
   Color lightOrange = Color(0xffFB9C26);
   var placeholder =
@@ -22,6 +20,7 @@ class _MyDrawerState extends State<MyDrawer> {
     return new Drawer(
       child: Column(
         children: [
+          // user image that leads to profile
           GestureDetector(
               onTap: () {
                 Navigator.pop(context);
