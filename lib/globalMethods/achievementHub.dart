@@ -8,10 +8,12 @@ class AchievementHub {
   final dateNow = DateTime.now();
   final createDate = FirebaseAuth.instance.currentUser!.metadata.creationTime;
 
+  // UID as String
   String getUid() {
     return FirebaseAuth.instance.currentUser!.uid.toString();
   }
 
+  // sets Achievements and updates Firestore
   checkAchievement(DocumentReference user) async {
     var level;
     var finishedTasksCount;
@@ -21,7 +23,7 @@ class AchievementHub {
           level = value['level'],
           finishedTasksCount = value['finishedTasksCount'],
         });
-
+//for Level
     if (level >= 5) {
       switch (level) {
         case 5:
@@ -51,6 +53,7 @@ class AchievementHub {
           break;
       }
     }
+    // For Time
     if (daysSinceCreation >= 31) {
       switch (daysSinceCreation) {
         case 31:
@@ -75,6 +78,7 @@ class AchievementHub {
           break;
       }
     }
+    //for finished Tasks
     if (finishedTasksCount >= 1) {
       switch (finishedTasksCount) {
         case 1:

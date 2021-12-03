@@ -11,11 +11,10 @@ class Methods extends StatefulWidget {
 }
 
 class _MethodsState extends State<Methods> {
-
+  // UID as String
   String getUid() {
     return FirebaseAuth.instance.currentUser!.uid.toString();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +31,10 @@ class _MethodsState extends State<Methods> {
                 .firstWhere((user) => user['uid'] == getUid())['xp'];
             var pointsNeeded = snapshot.data!.docs
                 .firstWhere((user) => user['uid'] == getUid())['pointsNeeded'];
-            var userName = snapshot.data!.docs.firstWhere((user) => user['uid'] == getUid())['name'];
-            var identifier = snapshot.data!.docs.firstWhere((user) => user['uid'] == getUid())['identifier'];
+            var userName = snapshot.data!.docs
+                .firstWhere((user) => user['uid'] == getUid())['name'];
+            var identifier = snapshot.data!.docs
+                .firstWhere((user) => user['uid'] == getUid())['identifier'];
 
             //level as Text
             if (widget.mode == 'level.s') {
@@ -53,11 +54,9 @@ class _MethodsState extends State<Methods> {
             }
             // identifier as Text
             else if (widget.mode == 'identifier') {
-              return Text(identifier.toString(), style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xffFB9C26)));
-            }
-            else {
+              return Text(identifier.toString(),
+                  style: TextStyle(fontSize: 14, color: Color(0xffFB9C26)));
+            } else {
               return Text('Keine Daten gefunden!');
             }
           }
