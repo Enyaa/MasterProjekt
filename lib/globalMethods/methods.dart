@@ -11,6 +11,7 @@ class Methods extends StatefulWidget {
 }
 
 class _MethodsState extends State<Methods> {
+
   String getUid() {
     return FirebaseAuth.instance.currentUser!.uid.toString();
   }

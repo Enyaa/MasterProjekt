@@ -18,7 +18,7 @@ class CalculateLevel {
     // update points and level
     if (points >= pointsNeeded) {
       level += 1;
-      pointsNeeded += level * 500;
+      pointsNeeded += level * 1500;
 
       user.update({'level': level, 'pointsNeeded': pointsNeeded});
     }
