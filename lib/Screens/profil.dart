@@ -269,25 +269,27 @@ class ProfilState extends State<Profil> {
                             ]);
                           }
                         })),
-                TabBar(
-                    padding:EdgeInsets.symmetric(horizontal: 20),
-                    tabs: [
-                  Tab(
-                      child: Text(
-                    'Aufgaben',
-                    textAlign: TextAlign.center,
-                  )),
-                  Tab(
-                      child: Text(
-                    'Heraus-\nforderungen',
-                    textAlign: TextAlign.center,
-                  )),
-                  Tab(
-                      child: Text(
-                    'Erfolge',
-                    textAlign: TextAlign.center,
-                  )),
-                ]),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TabBar(
+                      tabs: [
+                    Tab(
+                        child: Text(
+                      'Aufgaben',
+                      textAlign: TextAlign.center,
+                    )),
+                    Tab(
+                        child: Text(
+                      'Heraus-\nforderungen',
+                      textAlign: TextAlign.center,
+                    )),
+                    Tab(
+                        child: Text(
+                      'Erfolge',
+                      textAlign: TextAlign.center,
+                    )),
+                  ]),
+                ),
                 Expanded(
                     child: TabBarView(
                         children: <Widget>[
