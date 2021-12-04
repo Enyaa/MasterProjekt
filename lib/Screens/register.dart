@@ -184,6 +184,8 @@ class _RegisterState extends State<Register> {
                                 }
                                 print(FirebaseAuth.instance.currentUser!.uid);
                                 addUser();
+                                //set first Achievemebnt ->Welcome to TeamRad
+                                setFirstAchievement( FirebaseAuth.instance.currentUser!.uid);
                                 // send email verification
                                 User? user = FirebaseAuth.instance.currentUser;
                                 if (user != null && !user.emailVerified) {
@@ -209,8 +211,16 @@ class _RegisterState extends State<Register> {
               )),
             )));
   }
+
+
 }
 
+void setFirstAchievement(String uid) {
+var achievements = FirebaseFirestore.instance.collection('achievements');
+  achievements.doc('level01').update({
+    'userFinished': FieldValue.arrayUnion([uid])
+  });
+}
 // check email form
 String? validateEmail(String? formEmail) {
   if (formEmail == null || formEmail.isEmpty)

@@ -383,7 +383,8 @@ class ProfilState extends State<Profil> {
                 title: new Text(doc['title']),
                 subtitle: new Text(doc['description']),
                 trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center, children: []),
+                    mainAxisAlignment: MainAxisAlignment.center, children: [
+                ]),
               )))
           .toList();
     }
