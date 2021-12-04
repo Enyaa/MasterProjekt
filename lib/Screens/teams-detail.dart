@@ -122,6 +122,7 @@ class _TeamsDetailState extends State<TeamsDetail> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24)),
                               ),
+                              Padding(padding: EdgeInsets.all(5)),
                               FutureBuilder(
                                   future: getActiveTeam(),
                                   builder: (BuildContext context,
