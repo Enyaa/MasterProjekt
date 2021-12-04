@@ -56,24 +56,29 @@ class _TaskDetailState extends State<TaskDetail> {
     return uid.toString();
   }
 
-  // get list of admins + creator
-  Future<List> getAdminList() async {
+  // get active Team
+  Future<String> getActiveTeam() async {
     String activeTeam = '';
-    List adminList = [];
-    String creator = '';
     await FirebaseFirestore.instance
         .collection('user')
         .doc(getUid())
         .get()
         .then((value) => activeTeam = value['activeTeam']);
+    return activeTeam;
+  }
+
+  // get list of admins + creator
+  Future<List> getAdminList() async {
+    List adminList = [];
+    String creator = '';
     await FirebaseFirestore.instance
         .collection('teams')
-        .doc(activeTeam)
+        .doc(await getActiveTeam())
         .get()
         .then((value) => creator = value['creator']);
     await FirebaseFirestore.instance
         .collection('teams')
-        .doc(activeTeam)
+        .doc(await getActiveTeam())
         .get()
         .then((value) => adminList = value['admins']);
     adminList.add(creator);
@@ -270,6 +275,10 @@ class _TaskDetailState extends State<TaskDetail> {
           .collection('tasks')
           .doc(widget.id)
           .delete();
+      FirebaseFirestore.instance.collection('teams').doc(await getActiveTeam()).update(
+          {
+            'tasks': FieldValue.arrayRemove([widget.id])
+          });
       Navigator.of(context).pop();
       Navigator.of(context).pop();
     } else {
