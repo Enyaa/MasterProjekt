@@ -78,7 +78,8 @@ class Leaderboards extends StatelessWidget {
                                   .repeated, // repeats the gradient over the canvas
                             )))
                   ]);
-                } else { // if data has been loaded show tabbarview with Lists
+                } else {
+                  // if data has been loaded show tabbarview with Lists
                   return TabBarView(children: [
                     ListView(
                         children: getList('xp', snapshot, context),
@@ -128,12 +129,15 @@ class Leaderboards extends StatelessWidget {
     if (mode == 'xp') {
       return sort(_users, 0)
           .map<Widget>((user) => Row(children: [
-                new Text((sort(_users, 0).indexOf(user) + 1).toString() + '.',
+                Expanded(
+                  flex: 2,
+                    child: Text((sort(_users, 0).indexOf(user) + 1).toString() + '.',
                     style: TextStyle(fontSize: 40),
-                    textAlign: TextAlign.center),
-                SizedBox(
+                    textAlign: TextAlign.center)),
+                Expanded(
+                  flex: 8,
+                    child: SizedBox(
                     height: 80,
-                    width: 310,
                     child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
@@ -157,19 +161,23 @@ class Leaderboards extends StatelessWidget {
                                     fit: BoxFit.fill,
                                   )),
                             ),
-                            subtitle: new Text('XP: ' + user.xp.toString()),
+                            subtitle: new Text('Punkte: ' + user.xp.toString()),
                             onTap: () {})))
-              ]))
+                )]))
           .toList();
-    } else if (mode == 'tasks') { // list sorted by tasks
+    } else if (mode == 'tasks') {
+      // list sorted by tasks
       return sort(_users, 1)
           .map<Widget>((user) => Row(children: [
-                new Text((sort(_users, 1).indexOf(user) + 1).toString() + '.',
+                Expanded(
+                  flex: 2,
+                    child: Text((sort(_users, 1).indexOf(user) + 1).toString() + '.',
                     style: TextStyle(fontSize: 40),
-                    textAlign: TextAlign.center),
-                SizedBox(
+                    textAlign: TextAlign.center)),
+                Expanded(
+                  flex: 8,
+                    child: SizedBox(
                     height: 80,
-                    width: 310,
                     child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
@@ -193,18 +201,23 @@ class Leaderboards extends StatelessWidget {
                                     fit: BoxFit.fill,
                                   )),
                             ),
-                            subtitle: new Text('Abgeschlossene Aufgaben: ' +
-                                user.tasks.toString()),
+                            subtitle:
+                                new Text('Aufgaben: ' + user.tasks.toString()),
                             onTap: () {})))
-              ]))
+                )]))
           .toList();
-    } else if (mode == 'achievements') { // list sorted by challenges
+    } else if (mode == 'achievements') {
+      // list sorted by challenges
       return sort(_users, 2)
           .map<Widget>((user) => Row(children: [
-                new Text((sort(_users, 2).indexOf(user) + 1).toString() + '.',
+                Expanded(
+                  flex: 2,
+                    child: Text((sort(_users, 2).indexOf(user) + 1).toString() + '.',
                     style: TextStyle(fontSize: 40),
-                    textAlign: TextAlign.center),
-                SizedBox(
+                    textAlign: TextAlign.center)),
+                Expanded(
+                  flex: 8,
+                    child: SizedBox(
                     height: 80,
                     width: 310,
                     child: Card(
@@ -230,10 +243,10 @@ class Leaderboards extends StatelessWidget {
                                     fit: BoxFit.fill,
                                   )),
                             ),
-                            subtitle: new Text('Abgeschlossene Achievements: ' +
+                            subtitle: new Text('Herausforderungen: ' +
                                 user.challenges.toString()),
                             onTap: () {})))
-              ]))
+                )]))
           .toList();
     }
   }

@@ -21,6 +21,12 @@ class TasksState extends State<Tasks> {
   var snapshots = FirebaseFirestore.instance.collection('tasks').snapshots();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // init State with filtered snapshot
+  void initState() {
+    getFiltered(1);
+      super.initState();
+  }
+
   // get id of current logged in user
   String getUid() {
     final User? user = auth.currentUser;
@@ -184,7 +190,7 @@ class TasksState extends State<Tasks> {
         .then((value) => activeTeam = value['activeTeam']);
 
     //Get Tasklists depending on context
-    var tasks = FirebaseFirestore.instance.collection('tasks');
+    var tasks = FirebaseFirestore.instance.collection('tasks').where('teamID', isEqualTo: activeTeam);
     if (value == 1) { // all tasks
       setSnapshots(tasks.snapshots());
     } else if (value == 2) { // not accepted or finished
@@ -203,11 +209,7 @@ class TasksState extends State<Tasks> {
           .where('finished', isEqualTo: true)
           .where('user', isEqualTo: getUid())
           .snapshots());
-    } else if (value == 5) { // only tasks of active team
-      setSnapshots(tasks
-      .where('teamID', isEqualTo: activeTeam)
-      .snapshots());
-    }
+    } 
   }
 
   //Update Widgets with new SnapshotFilter
