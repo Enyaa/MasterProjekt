@@ -94,10 +94,12 @@ class _TaskDetailState extends State<TaskDetail> {
     _items.add(ListTileModel(false, input));
     setState(() {});
   }
+
   void initState() {
     for (int i = 0; i < widget.subTasks.length; i++) {
       _add(widget.subTasks[i]);
     }
+    super.initState();
   }
 
   // get all subtasks
