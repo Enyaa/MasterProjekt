@@ -55,6 +55,13 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
           .doc(getUid())
           .get()
           .then((value) => activeTeam = value['activeTeam']);
+      var members = [];
+      await FirebaseFirestore.instance
+          .collection('teams')
+          .doc(activeTeam)
+          .get()
+          .then((value) => members = value['queryOperator']);
+
       initializeDateFormatting('de', null);
 
       // add new Challenge to Team-Task-Array
@@ -74,6 +81,7 @@ class _ChallengeCreateState extends State<ChallengeCreate> {
             'description': description,
             'xp': int.parse(xp),
             'finished': <String>[],
+            'notfinished': members,
             'imgUrl': imgUrl,
             'teamID': activeTeam
           })
