@@ -14,7 +14,7 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   Color lightOrange = Color(0xffFB9C26);
   var placeholder =
-      "https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/rettich.png?alt=media&token=8c7277fe-f352-4757-8038-70b008b55d77";
+      "https://firebasestorage.googleapis.com/v0/b/teamrad-41db5.appspot.com/o/profilePictures%2Frettichplaceholder.png?alt=media&token=f4fdc841-5c28-486a-848d-fde5fb64c21e";
   final users = FirebaseFirestore.instance.collection('user').snapshots();
 
   // get user id of current logged in user
@@ -84,38 +84,34 @@ class _MyDrawerState extends State<MyDrawer> {
                                               fit: BoxFit.fill))));
                             } else { // show placeholder if user has no image
                               return Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black,
-                                        blurRadius: 5,
-                                        spreadRadius: 0.5)
-                                  ],
-                                  gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    // 10% of the width, so there are ten blinds.
-                                    colors: <Color>[
-                                      Color(0xffE53147),
-                                      Color(0xffFB9C26)
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 5,
+                                          spreadRadius: 0.5)
                                     ],
-                                    // red to yellow
-                                    tileMode: TileMode
-                                        .repeated, // repeats the gradient over the canvas
+                                    gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        // 10% of the width, so there are ten blinds.
+                                        colors: <Color>[
+                                          Color(0xffE53147),
+                                          Color(0xffFB9C26)
+                                        ],
+                                        // red to yellow
+                                        tileMode: TileMode.repeated),
+                                    borderRadius: BorderRadius.circular(50),
                                   ),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(3),
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(50)),
-                                        child: Image.network(placeholder,
-                                            height: 60,
-                                            width: 60,
-                                            fit: BoxFit.fill))),
-                              );
+                                  child: Padding(
+                                      padding: EdgeInsets.all(3),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                          BorderRadius.circular(50),
+                                          child: Image.network(placeholder,
+                                              height: 60,
+                                              width: 60,
+                                              fit: BoxFit.fill))));
                             }
                           }),
                       Padding(padding: EdgeInsets.all(3)),

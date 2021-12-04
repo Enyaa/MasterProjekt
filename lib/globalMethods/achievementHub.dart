@@ -24,20 +24,10 @@ class AchievementHub {
           finishedTasksCount = value['finishedTasksCount'],
         });
     //for Level
-    if (level >= 5) {
+    if (level >= 10) {
       switch (level) {
-        case 5:
-          achievements.doc('level05').update({
-            'userFinished': FieldValue.arrayUnion([getUid()])
-          });
-          break;
-        case 15:
+        case 10:
           achievements.doc('level10').update({
-            'userFinished': FieldValue.arrayUnion([getUid()])
-          });
-          break;
-        case 15:
-          achievements.doc('level15').update({
             'userFinished': FieldValue.arrayUnion([getUid()])
           });
           break;
@@ -46,8 +36,8 @@ class AchievementHub {
             'userFinished': FieldValue.arrayUnion([getUid()])
           });
           break;
-        case 25:
-          achievements.doc('level25').update({
+        case 30:
+          achievements.doc('level30').update({
             'userFinished': FieldValue.arrayUnion([getUid()])
           });
           break;
