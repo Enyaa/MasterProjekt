@@ -22,7 +22,7 @@ class _MethodsState extends State<Methods> {
         stream: FirebaseFirestore.instance.collection('user').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return Text('Error, keine Daten von User gefunden!');
+            return Text('Keine Nutzerdaten gefunden!');
           } else {
             // get data from database
             var level = snapshot.data!.docs
