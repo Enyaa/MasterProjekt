@@ -22,6 +22,12 @@ class ChallengesState extends State<Challenges> {
   // Get Authentication
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // init State with filtered snapshot
+  void initState() {
+    getFiltered(1);
+    super.initState();
+  }
+
   // Get uid of current logged in user
   String getUid() {
     final User? user = auth.currentUser;
@@ -170,7 +176,15 @@ class ChallengesState extends State<Challenges> {
 
   // Filter challenges
   getFiltered(int value) async{
-    var challenges = FirebaseFirestore.instance.collection('challenges');
+    // Get active Team
+    String activeTeam = '';
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(getUid())
+        .get()
+        .then((value) => activeTeam = value['activeTeam']);
+
+    var challenges = FirebaseFirestore.instance.collection('challenges').where('teamID', isEqualTo: activeTeam);
     var user = await FirebaseFirestore.instance.collection('user').where('uid', isEqualTo: getUid()).get();
     var finishedChallenges = user.docs[0].data()['finishedChallenges'];
 
