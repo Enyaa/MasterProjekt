@@ -43,31 +43,25 @@ class AchievementHub {
           break;
       }
     }
-    // for Time
-    if (daysSinceCreation >= 31) {
-      switch (daysSinceCreation) {
-        case 31:
-          achievements.doc('useTime1M').update({
-            'userFinished': FieldValue.arrayUnion([getUid()])
-          });
-          break;
-        case 90:
-          achievements.doc('useTime3M').update({
-            'userFinished': FieldValue.arrayUnion([getUid()])
-          });
-          break;
-        case 182:
-          achievements.doc('useTime6M').update({
-            'userFinished': FieldValue.arrayUnion([getUid()])
-          });
-          break;
-        case 365:
-          achievements.doc('useTime1J').update({
-            'userFinished': FieldValue.arrayUnion([getUid()])
-          });
-          break;
-      }
+    // for Time.
+    if (daysSinceCreation >= 365) {
+      achievements.doc('useTime1J').update({
+        'userFinished': FieldValue.arrayUnion([getUid()])
+      });
+    } else if (daysSinceCreation >= 182) {
+      achievements.doc('useTime6M').update({
+        'userFinished': FieldValue.arrayUnion([getUid()])
+      });
+    } else if (daysSinceCreation >= 90) {
+      achievements.doc('useTime3M').update({
+        'userFinished': FieldValue.arrayUnion([getUid()])
+      });
+    } else if (daysSinceCreation >= 31) {
+      achievements.doc('useTime1M').update({
+        'userFinished': FieldValue.arrayUnion([getUid()])
+      });
     }
+
     //for finished Tasks
     if (finishedTasksCount >= 1) {
       switch (finishedTasksCount) {

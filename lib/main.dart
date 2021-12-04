@@ -6,7 +6,6 @@ import 'package:master_projekt/Screens/challenge-create.dart';
 import 'package:master_projekt/Screens/login.dart';
 import 'package:master_projekt/Screens/challenges.dart';
 import 'package:master_projekt/Screens/help.dart';
-import 'package:master_projekt/Screens/teams-detail.dart';
 import 'package:master_projekt/Screens/leaderboards.dart';
 import 'package:master_projekt/Screens/settingsscreen.dart';
 import 'package:master_projekt/Screens/task-create.dart';
@@ -18,6 +17,32 @@ import 'package:master_projekt/Screens/teams.dart';
 import 'package:master_projekt/Screens/teams-add.dart';
 import 'Screens/homepage.dart';
 import 'Screens/profil.dart';
+
+
+///                    _________________________________
+///                   |.-------------------------------.|
+///                   ||       44  44     2222         ||
+///                   ||       44  44   22   22        ||
+///                   ||       444444       22         ||
+///                   ||           44      22          ||
+///                   ||           44    222222        ||
+///                   ;;`,                            ,:|
+///                  ((_(-,----------.---.----------.-.)`)
+///                   \__ )        ,'     `.        \ _/
+///                   :  :        |_________|       :  :
+///                   |-'|       ,'-.-.--.-.`.      |`-|
+///                   |_.|      (( (*  )(*  )))     |._|
+///                   |  |       `.-`-'--`-'.'      |  |
+///                   |-'|        | ,-.-.-. |       |._|
+///                   |  |        |(|-|-|-|)|       |  |
+///                   :,':        |_`-'-'-'_|       ;`.;
+///                    \  \     ,'           `.    /._/
+///                     \/ `._ /_______________\_,'  /
+///                      \  / :   ___________   : \,'
+///                       `.| |  |           |  |,'
+///                         `.|  |           |  |
+///                           |  |           |  |
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
