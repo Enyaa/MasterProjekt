@@ -9,10 +9,11 @@ import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
 
 class AddTeamUser extends StatefulWidget {
-  const AddTeamUser({Key? key, required this.member,required this.teamID}) : super(key: key);
+  const AddTeamUser({Key? key, required this.member,required this.teamID, required this.challenges}) : super(key: key);
 
   final String teamID;
   final List<dynamic> member;
+  final List<dynamic> challenges;
 
   @override
   _AddTeamUserState createState() => _AddTeamUserState();
@@ -32,7 +33,6 @@ class _AddTeamUserState extends State<AddTeamUser> {
 
   @override
   void initState() {
-    print(widget.member);
     super.initState();
   }
 
@@ -45,9 +45,11 @@ class _AddTeamUserState extends State<AddTeamUser> {
         .snapshots();
 
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
+    CollectionReference challenges = FirebaseFirestore.instance.collection('challenges');
 
     // save team data to database with uid as doc key
     // iterate through uidList and addUsers to member/query
+    // iterate through challenges and addUsers to notfinished in Challenge
     Future<void> addTeamUser() async {
       for (var i = 0; i < uidList.length; i++) {
         teams.doc(widget.teamID).update({
@@ -56,6 +58,13 @@ class _AddTeamUserState extends State<AddTeamUser> {
         })
             .then((value) => print("User added to team"))
             .catchError((error) => print("Failed to add user to team"));
+        for (var j = 0; j < widget.challenges.length; j++){
+          challenges.doc(widget.challenges[j]).update({
+            'notfinished': FieldValue.arrayUnion(uidList[i])
+          })
+            .then((value) => print("User added to notfinished in Challenge"))
+            .catchError((error) => print("Failed to add notfinished Challenge"));
+        }
       }
     }
 

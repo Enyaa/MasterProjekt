@@ -361,7 +361,8 @@ class _TeamsDetailState extends State<TeamsDetail> {
                   MaterialPageRoute(
                       builder: (context) => AddTeamUser(
                           teamID: widget.teamID,
-                          member: widget.queryOperator
+                          member: widget.queryOperator,
+                          challenges: widget.challenges
                       )));
             },
             shape:
