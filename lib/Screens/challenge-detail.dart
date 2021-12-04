@@ -44,24 +44,29 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     return uid.toString();
   }
 
-  // get list of admins + creator
-  Future<List> getAdminList() async {
+  // get active Team
+  Future<String> getActiveTeam() async {
     String activeTeam = '';
-    List adminList = [];
-    String creator = '';
     await FirebaseFirestore.instance
         .collection('user')
         .doc(getUid())
         .get()
         .then((value) => activeTeam = value['activeTeam']);
+    return activeTeam;
+  }
+
+  // get list of admins + creator
+  Future<List> getAdminList() async {
+    List adminList = [];
+    String creator = '';
     await FirebaseFirestore.instance
         .collection('teams')
-        .doc(activeTeam)
+        .doc(await getActiveTeam())
         .get()
         .then((value) => creator = value['creator']);
     await FirebaseFirestore.instance
         .collection('teams')
-        .doc(activeTeam)
+        .doc(await getActiveTeam())
         .get()
         .then((value) => adminList = value['admins']);
     adminList.add(creator);
@@ -176,6 +181,10 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
   // delete challenges from database if the user is admin/creator
   void deleteChallenge() async {
     FirebaseFirestore.instance.collection('challenges').doc(widget.id).delete();
+    FirebaseFirestore.instance.collection('teams').doc(await getActiveTeam()).update(
+        {
+          'challenges': FieldValue.arrayRemove([widget.id]),
+        });
     bool checkAdmins = await checkAdmin();
     if(checkAdmins == true) {
       FirebaseFirestore.instance.collection('user').where('finishedChallenges', arrayContains: widget.id).snapshots().forEach((snapshot) {

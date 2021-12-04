@@ -60,7 +60,7 @@ class _AddTeamUserState extends State<AddTeamUser> {
             .catchError((error) => print("Failed to add user to team"));
         for (var j = 0; j < widget.challenges.length; j++){
           challenges.doc(widget.challenges[j]).update({
-            'notfinished': FieldValue.arrayUnion(uidList[i])
+            'notfinished': FieldValue.arrayUnion([uidList[i]])
           })
             .then((value) => print("User added to notfinished in Challenge"))
             .catchError((error) => print("Failed to add notfinished Challenge"));
