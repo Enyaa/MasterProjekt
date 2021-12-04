@@ -62,153 +62,154 @@ class _RegisterState extends State<Register> {
         close: true,
         child: Scaffold(
             backgroundColor: Colors.transparent,
-            body: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  // 10% of the width, so there are ten blinds.
-                  colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
-                  // red to yellow
-                  tileMode:
-                      TileMode.repeated, // repeats the gradient over the canvas
+            body: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    // 10% of the width, so there are ten blinds.
+                    colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
+                    // red to yellow
+                    tileMode:
+                        TileMode.repeated, // repeats the gradient over the canvas
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                  child: Form(
-                key: _key,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Center(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'lib/Graphics/rettichShadow.png',
-                        height: 350,
-                        width: 350,
-                      ),
-                      TextFormField(
-                        cursorColor: Colors.white,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          icon: Icon(Icons.email, color: Colors.white),
-                          hintText: 'Email *',
-                          fillColor: Color(0xff393939),
-                          filled: true,
-                          border: InputBorder.none,
+                child: Form(
+                  key: _key,
+                  child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Center(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'lib/Graphics/rettichShadow.png',
+                      height: 350,
+                      width: 350,
+                    ),
+                    TextFormField(
+                      cursorColor: Colors.white,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
-                        controller: emailController,
-                        validator: validateEmail,
-                      ),
-                      Padding(padding: EdgeInsets.all(10)),
-                      TextFormField(
-                        cursorColor: Colors.white,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          icon: Icon(Icons.password, color: Colors.white),
-                          hintText: 'Passwort *',
-                          fillColor: Color(0xff393939),
-                          filled: true,
-                          border: InputBorder.none,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
-                        obscureText: true,
-                        controller: passwordController,
-                        validator: validatePassword,
+                        icon: Icon(Icons.email, color: Colors.white),
+                        hintText: 'Email *',
+                        fillColor: Color(0xff393939),
+                        filled: true,
+                        border: InputBorder.none,
                       ),
-                      Padding(padding: EdgeInsets.all(10)),
-                      TextFormField(
-                        cursorColor: Colors.white,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          icon: Icon(Icons.person, color: Colors.white),
-                          hintText: 'Anzeigename *',
-                          fillColor: Color(0xff393939),
-                          filled: true,
-                          border: InputBorder.none,
+                      controller: emailController,
+                      validator: validateEmail,
+                    ),
+                    Padding(padding: EdgeInsets.all(10)),
+                    TextFormField(
+                      cursorColor: Colors.white,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
-                        controller: nameController,
-                        validator: validateName,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        icon: Icon(Icons.password, color: Colors.white),
+                        hintText: 'Passwort *',
+                        fillColor: Color(0xff393939),
+                        filled: true,
+                        border: InputBorder.none,
                       ),
-                      Padding(padding: EdgeInsets.all(10)),
-                      Container(
-                        height: 50,
-                        width: 300,
-                        child: OutlinedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.transparent),
-                                shadowColor: MaterialStateProperty.all(
-                                    Colors.transparent)),
-                            onPressed: () async {
-                              if (_key.currentState!.validate()) {
-                                // try creating user with e-mail and password
-                                try {
-                                  await FirebaseAuth.instance
-                                      .createUserWithEmailAndPassword(
-                                          email: emailController.text,
-                                          password: passwordController.text);
-                                } catch (signUpError) {
-                                  if (signUpError is PlatformException) {
-                                    if (signUpError.code ==
-                                        'ERROR_EMAIL_ALREADY_IN_USE') {
-                                      final snackBar = SnackBar(
-                                          content: Text(
-                                              'Es existiert bereits ein Account mit dieser Adresse.'));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                    }
+                      obscureText: true,
+                      controller: passwordController,
+                      validator: validatePassword,
+                    ),
+                    Padding(padding: EdgeInsets.all(10)),
+                    TextFormField(
+                      cursorColor: Colors.white,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        icon: Icon(Icons.person, color: Colors.white),
+                        hintText: 'Anzeigename *',
+                        fillColor: Color(0xff393939),
+                        filled: true,
+                        border: InputBorder.none,
+                      ),
+                      controller: nameController,
+                      validator: validateName,
+                    ),
+                    Padding(padding: EdgeInsets.all(10)),
+                    Container(
+                      height: 50,
+                      width: 300,
+                      child: OutlinedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.transparent),
+                              shadowColor: MaterialStateProperty.all(
+                                  Colors.transparent)),
+                          onPressed: () async {
+                            if (_key.currentState!.validate()) {
+                              // try creating user with e-mail and password
+                              try {
+                                await FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
+                                        email: emailController.text,
+                                        password: passwordController.text);
+                              } catch (signUpError) {
+                                if (signUpError is PlatformException) {
+                                  if (signUpError.code ==
+                                      'ERROR_EMAIL_ALREADY_IN_USE') {
+                                    final snackBar = SnackBar(
+                                        content: Text(
+                                            'Es existiert bereits ein Account mit dieser Adresse.'));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
                                   }
                                 }
-                                print(FirebaseAuth.instance.currentUser!.uid);
-                                addUser();
-                                //set first Achievemebnt ->Welcome to TeamRad
-                                setFirstAchievement( FirebaseAuth.instance.currentUser!.uid);
-                                // send email verification
-                                User? user = FirebaseAuth.instance.currentUser;
-                                if (user != null && !user.emailVerified) {
-                                  await user.sendEmailVerification();
-                                }
-                                Navigator.pushReplacementNamed(
-                                    context, '/homepage');
                               }
-                            },
-                            child: Text("Registrieren")),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/login');
+                              print(FirebaseAuth.instance.currentUser!.uid);
+                              addUser();
+                              //set first Achievemebnt ->Welcome to TeamRad
+                              setFirstAchievement( FirebaseAuth.instance.currentUser!.uid);
+                              // send email verification
+                              User? user = FirebaseAuth.instance.currentUser;
+                              if (user != null && !user.emailVerified) {
+                                await user.sendEmailVerification();
+                              }
+                              Navigator.pushReplacementNamed(
+                                  context, '/homepage');
+                            }
                           },
-                          child: Text(
-                            "Ich habe bereits ein Konto",
-                            style: TextStyle(color: Colors.white),
-                          ))
-                    ],
-                  )),
+                          child: Text("Registrieren")),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/login');
+                        },
+                        child: Text(
+                          "Ich habe bereits ein Konto",
+                          style: TextStyle(color: Colors.white),
+                        ))
+                  ],
+                )),
+                  ),
                 ),
-              )),
+              ),
             )));
   }
 
