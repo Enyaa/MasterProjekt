@@ -379,7 +379,7 @@ class ProfilState extends State<Profil> {
                     contentPadding: EdgeInsets.all(10),
                 title: new Text(doc['title']),
                 subtitle: new Text(doc['description']),
-                leading: Container(child: Icon(Icons.emoji_events))
+                leading: Container(child: Icon(Icons.emoji_events, color: Colors.white))
               )))
           .toList();
     }
