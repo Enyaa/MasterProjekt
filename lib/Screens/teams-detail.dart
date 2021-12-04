@@ -50,12 +50,28 @@ class _TeamsDetailState extends State<TeamsDetail> {
   List<dynamic> changeList = [];
   bool changed = false;
 
+  // update all lists containing this uid
+  Future<void> leaveTeam() async {
+    List userL = [];
+    userL.add(getUid());
+    return FirebaseFirestore.instance
+        .collection('teams')
+        .doc(widget.teamID)
+        .update({
+      'admins': FieldValue.arrayRemove(userL),
+      'member': FieldValue.arrayRemove(userL),
+      'queryOperator': FieldValue.arrayRemove(userL)
+    })
+        .then((value) => print("Admins updated"))
+        .catchError((error) => print("Failed to update admins: $error"));
+  }
+
   @override
   Widget build(BuildContext context) {
     var snapshots = FirebaseFirestore.instance.collection('user').snapshots();
     List<String> creatorList = [];
     creatorList.add(widget.creator);
-
+    
     // update list of admins in database with new changes
     Future<void> updateAdmins() async {
       return FirebaseFirestore.instance
@@ -532,22 +548,12 @@ class _TeamsDetailState extends State<TeamsDetail> {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                             Navigator.of(context).pop();
-                          }
-                          if (widget.member.contains(getUid())) {
-                            widget.member.remove(getUid());
+                          } else {
+                            leaveTeam();
                             final snackBar2 = SnackBar(
                                 content: Text('Sie haben das Team verlassen.'));
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar2);
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          }
-                          if (widget.admins.contains(getUid())) {
-                            final snackBar3 = SnackBar(
-                                content: Text('Sie haben das Team verlassen.'));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar3);
-                            widget.admins.remove(getUid());
                             Navigator.of(context).pop();
                             Navigator.of(context).pop();
                           }
