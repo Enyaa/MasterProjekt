@@ -73,7 +73,7 @@ class Teams extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(50))),
           child: Container(
             constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add, color: Colors.white),
           ),
         ),
       ),
