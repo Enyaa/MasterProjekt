@@ -50,106 +50,116 @@ class ProfilState extends State<Profil> {
             drawer: MyDrawer(),
             body: SafeArea(
               child: Column(children: [
-                StreamBuilder(
-                    stream: snapshots,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData &&
-                          snapshot.data!.docs.firstWhere((user) =>
-                                  user['uid'] == getUid())['imgUrl'] !=
-                              '') {
-                        String imgUrl = snapshot.data!.docs.firstWhere(
-                            (user) => user['uid'] == getUid())['imgUrl'];
-                        return Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black,
-                                        blurRadius: 5,
-                                        spreadRadius: 0.5)
-                                  ],
-                                  gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      // 10% of the width, so there are ten blinds.
-                                      colors: <Color>[
-                                        Color(0xffE53147),
-                                        Color(0xffFB9C26)
-                                      ],
-                                      // red to yellow
-                                      tileMode: TileMode.repeated),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(3),
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Image.network(imgUrl,
-                                            height: 100,
-                                            width: 100,
-                                            fit: BoxFit.fill)))));
-                      } else {
-                        return Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black,
-                                      blurRadius: 5,
-                                      spreadRadius: 0.5)
-                                ],
-                                gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  // 10% of the width, so there are ten blinds.
-                                  colors: <Color>[
-                                    Color(0xffE53147),
-                                    Color(0xffFB9C26)
-                                  ],
-                                  // red to yellow
-                                  tileMode: TileMode
-                                      .repeated, // repeats the gradient over the canvas
-                                ),
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Padding(
-                                  padding: EdgeInsets.all(3),
+                Stack(
+                  clipBehavior: Clip.none,
+                    children: [
+                      StreamBuilder(
+                          stream: snapshots,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasData &&
+                                snapshot.data!.docs.firstWhere((user) =>
+                                        user['uid'] == getUid())['imgUrl'] !=
+                                    '') {
+                              String imgUrl = snapshot.data!.docs.firstWhere(
+                                  (user) => user['uid'] == getUid())['imgUrl'];
+                              return Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                                   child: Container(
                                       decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                      child: Image.network(placeholder,
-                                          height: 100,
-                                          width: 100,
-                                          fit: BoxFit.fitHeight))),
-                            ));
-                      }
-                    }),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.black,
+                                              blurRadius: 5,
+                                              spreadRadius: 0.5)
+                                        ],
+                                        gradient: LinearGradient(
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                            // 10% of the width, so there are ten blinds.
+                                            colors: <Color>[
+                                              Color(0xffE53147),
+                                              Color(0xffFB9C26)
+                                            ],
+                                            // red to yellow
+                                            tileMode: TileMode.repeated),
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      child: Padding(
+                                          padding: EdgeInsets.all(3),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image.network(imgUrl,
+                                                  height: 100,
+                                                  width: 100,
+                                                  fit: BoxFit.fill)))));
+                            } else {
+                              return Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.black,
+                                            blurRadius: 5,
+                                            spreadRadius: 0.5)
+                                      ],
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        // 10% of the width, so there are ten blinds.
+                                        colors: <Color>[
+                                          Color(0xffE53147),
+                                          Color(0xffFB9C26)
+                                        ],
+                                        // red to yellow
+                                        tileMode: TileMode
+                                            .repeated, // repeats the gradient over the canvas
+                                      ),
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: Padding(
+                                        padding: EdgeInsets.all(3),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(50)),
+                                            child: Image.network(placeholder,
+                                                height: 100,
+                                                width: 100,
+                                                fit: BoxFit.fitHeight))),
+                                  ));
+                            }
+                          }),
+                new Positioned(
+                    left:30,
+                    top: 110,
+                    child:Container(
+                        margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        width: 50,
+                        height: 25,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: <Color>[
+                                Color(0xffE53147),
+                                Color(0xffFB9C26)
+                              ], // red to yellow
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: Methods(mode: 'level.s'),
+                      )),
+                    ]),
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  width: 50,
-                  height: 25,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: <Color>[
-                          Color(0xffE53147),
-                          Color(0xffFB9C26)
-                        ], // red to yellow
-                        tileMode: TileMode
-                            .repeated, // repeats the gradient over the canvas
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: Methods(mode: 'level.s'),
-                ),
-                Container(
-                    child: Column(children: [
+                    child: Column(
+                        children: [
                   StreamBuilder<QuerySnapshot>(
                       stream: snapshots,
                       builder: (BuildContext context,
@@ -172,6 +182,7 @@ class ProfilState extends State<Profil> {
                                   )));
                         } else {
                           return (Container(
+                            margin: EdgeInsets.fromLTRB(0, 25, 0, 0),
                               child: new Text(
                             snapshot.data!.docs.firstWhere(
                                 (user) => user['uid'] == getUid())['name'],
@@ -220,15 +231,17 @@ class ProfilState extends State<Profil> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(10)),
                                       child: GradientProgressIndicator(
-                                        value: (snapshotuid.data!.docs.firstWhere((user) =>
-                                                user['uid'] == getUid())['xp'] -
-                                            snapshotuid.data!.docs.firstWhere((user) => user['uid'] == getUid())['pointsNeededBevor'])/
-                                                (
-                                                snapshotuid.data!.docs.firstWhere((user) =>
+                                        value: (snapshotuid.data!.docs.firstWhere((user) => user['uid'] == getUid())['xp'] -
+                                                snapshotuid.data!.docs
+                                                        .firstWhere((user) => user['uid'] == getUid())[
+                                                    'pointsNeededBevor']) /
+                                            (snapshotuid.data!.docs.firstWhere((user) =>
                                                     user['uid'] ==
                                                     getUid())['pointsNeeded'] -
-                                            snapshotuid.data!.docs.firstWhere(
-                                                        (user) => user['uid'] == getUid())['pointsNeededBevor']),
+                                                snapshotuid.data!.docs
+                                                    .firstWhere((user) =>
+                                                        user['uid'] ==
+                                                        getUid())['pointsNeededBevor']),
                                         gradient: LinearGradient(
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,
