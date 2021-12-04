@@ -327,6 +327,7 @@ class ProfilState extends State<Profil> {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       return ListView(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
                           children: getList('achievements', snapshot, context));
                     },
                   ),
@@ -375,6 +376,7 @@ class ProfilState extends State<Profil> {
       return snapshot.data!.docs
           .map<Widget>((doc) => Card(
                   child: ListTile(
+                    contentPadding: EdgeInsets.all(10),
                 title: new Text(doc['title']),
                 subtitle: new Text(doc['description']),
                 leading: Container(child: Icon(Icons.emoji_events))
