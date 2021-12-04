@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+import 'package:master_projekt/Screens/teams-addUser.dart';
 import 'package:master_projekt/navigation/myappbar.dart';
 import 'package:master_projekt/navigation/navigationbar.dart';
 import 'package:master_projekt/navigation/willpopscope.dart';
@@ -17,7 +18,8 @@ class TeamsDetail extends StatefulWidget {
       required this.creator,
       required this.teamName,
         required this.challenges,
-        required this.tasks})
+        required this.tasks,
+      required this.queryOperator})
       : super(key: key);
 
   final String teamID;
@@ -27,6 +29,7 @@ class TeamsDetail extends StatefulWidget {
   final String teamName;
   final List<dynamic> tasks;
   final List<dynamic> challenges;
+  final List<dynamic> queryOperator;
 
   @override
   _TeamsDetailState createState() => _TeamsDetailState();
@@ -334,6 +337,36 @@ class _TeamsDetailState extends State<TeamsDetail> {
                     )
                   ],
                 )),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddTeamUser(
+                          teamID: widget.teamID,
+                          member: widget.queryOperator
+                      )));
+            },
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            child: Ink(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    // 10% of the width, so there are ten blinds.
+                    colors: <Color>[Color(0xffE53147), Color(0xffFB9C26)],
+                    // red to yellow
+                    tileMode: TileMode
+                        .repeated, // repeats the gradient over the canvas
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
+            ),
           ),
           bottomNavigationBar: NavigationBar(0),
         ));

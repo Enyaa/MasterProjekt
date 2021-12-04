@@ -102,7 +102,8 @@ class Teams extends StatelessWidget {
                     creator: doc['creator'],
                     teamName: doc['name'],
                     tasks: doc['tasks'],
-                    challenges: doc['challenges']
+                    challenges: doc['challenges'],
+                    queryOperator: doc['queryOperator']
               )));
         },
       ),
