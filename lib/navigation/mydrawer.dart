@@ -53,9 +53,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                     '') {
                               String imgUrl = snapshot.data!.docs.firstWhere(
                                   (user) => user['uid'] == getUid())['imgUrl'];
-                              return Padding(
-                                  padding: EdgeInsets.all(3),
-                                  child: Container(
+                              return Container(
                                       decoration: BoxDecoration(
                                           boxShadow: [
                                             BoxShadow(
@@ -83,7 +81,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                           child: Image.network(imgUrl,
                                               height: 60,
                                               width: 60,
-                                              fit: BoxFit.fill)))));
+                                              fit: BoxFit.fill))));
                             } else { // show placeholder if user has no image
                               return Container(
                                 decoration: BoxDecoration(
@@ -116,7 +114,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                         child: Image.network(placeholder,
                                             height: 60,
                                             width: 60,
-                                            fit: BoxFit.fitHeight))),
+                                            fit: BoxFit.fill))),
                               );
                             }
                           }),
