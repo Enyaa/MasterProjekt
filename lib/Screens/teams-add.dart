@@ -29,17 +29,6 @@ class _AddTeamState extends State<AddTeam> {
     return uid.toString();
   }
 
-  // getter List
-  getList(List<dynamic> list) {
-    list.remove(getUid());
-    return list;
-  }
-
-  // getter QueryList
-  getQueryList(List<dynamic> list) {
-    list.add(getUid());
-    return list;
-  }
   final nameController = TextEditingController();
 
   @override
@@ -56,14 +45,15 @@ class _AddTeamState extends State<AddTeam> {
     // save team data to database with uid as doc key
     // remove creator from userList but keep in queryList
     Future<void> addTeam() async {
-      memberList = uidList;
+      uidList.add(getUid());
+      memberList = uidList.toList();
       memberList.remove(getUid());
       return teams.doc(uuid)
           .set({
         'name': nameController.text,
-        'member': getList(memberList),
+        'member': memberList,
         'creator': getUid(),
-        'queryOperator': getQueryList(uidList),
+        'queryOperator': uidList,
         'admins': <String>[],
         'tasks': <dynamic>[],
         'challenges': <dynamic>[],
