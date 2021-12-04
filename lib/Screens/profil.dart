@@ -91,39 +91,42 @@ class ProfilState extends State<Profil> {
                                             width: 100,
                                             fit: BoxFit.fill)))));
                       } else {
-                        return Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black,
-                                  blurRadius: 5,
-                                  spreadRadius: 0.5)
-                            ],
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              // 10% of the width, so there are ten blinds.
-                              colors: <Color>[
-                                Color(0xffE53147),
-                                Color(0xffFB9C26)
-                              ],
-                              // red to yellow
-                              tileMode: TileMode
-                                  .repeated, // repeats the gradient over the canvas
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Padding(
-                              padding: EdgeInsets.all(3),
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(50)),
-                                  child: Image.network(placeholder,
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.fitHeight))),
-                        );
+                        return Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black,
+                                      blurRadius: 5,
+                                      spreadRadius: 0.5)
+                                ],
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  // 10% of the width, so there are ten blinds.
+                                  colors: <Color>[
+                                    Color(0xffE53147),
+                                    Color(0xffFB9C26)
+                                  ],
+                                  // red to yellow
+                                  tileMode: TileMode
+                                      .repeated, // repeats the gradient over the canvas
+                                ),
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Padding(
+                                  padding: EdgeInsets.all(3),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(50)),
+                                      child: Image.network(placeholder,
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.fitHeight))),
+                            ));
                       }
                     }),
                 Container(
@@ -217,14 +220,8 @@ class ProfilState extends State<Profil> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(10)),
                                       child: GradientProgressIndicator(
-                                        value: snapshotuid.data!.docs
-                                                .firstWhere((user) =>
-                                                    user['uid'] ==
-                                                    getUid())['xp'] /
-                                            snapshotuid.data!.docs.firstWhere(
-                                                (user) =>
-                                                    user['uid'] ==
-                                                    getUid())['pointsNeeded'],
+                                        //TODO : XP
+                                        value:0/100,
                                         gradient: LinearGradient(
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,
