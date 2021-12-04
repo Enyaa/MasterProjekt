@@ -377,9 +377,7 @@ class ProfilState extends State<Profil> {
                   child: ListTile(
                 title: new Text(doc['title']),
                 subtitle: new Text(doc['description']),
-                trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center, children: [
-                ]),
+                leading: Container(child: Icon(Icons.emoji_events))
               )))
           .toList();
     }
