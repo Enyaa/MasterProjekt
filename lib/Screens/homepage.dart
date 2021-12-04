@@ -120,7 +120,7 @@ class HomepageState extends State<Homepage> {
     sort(List<MyUser> users) {
       users.sort((a, b) => a.xp.compareTo(b.xp));
       users = users.reversed.toList();
-      users = users.sublist(0, 3);
+      if(users.length > 3) users = users.sublist(0, 3);
       return users;
     }
 
@@ -148,6 +148,7 @@ class HomepageState extends State<Homepage> {
             image: image);
         _users.add(_user);
       });
+
       // sort users and return as list
       return sort(_users)
           .map<Widget>((user) => Row(children: [
