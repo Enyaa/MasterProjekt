@@ -21,7 +21,9 @@ class _RegisterState extends State<Register> {
     final GlobalKey<FormState> _key = GlobalKey<FormState>();
     int xp = 0;
     int level = 1;
-    int pointsNeeded = 1000;
+    // if you change init pointsNeeded you may also want to change it in calculateLevel.dart
+    int pointsNeeded = 1500;
+    int pointsNeededBevor = 0;
     int finishedTaskCount = 0;
     int finishedChallengesCount = 0;
     List<dynamic> finishedChallenges = [];
@@ -42,6 +44,7 @@ class _RegisterState extends State<Register> {
             'identifier': identifier,
             'xp': xp,
             'pointsNeeded': pointsNeeded,
+            'pointsNeededBevor': pointsNeededBevor,
             'level': level,
             'finishedTasksCount': finishedTaskCount,
             'finishedChallengesCount': finishedChallengesCount,

@@ -23,7 +23,7 @@ class AchievementHub {
           level = value['level'],
           finishedTasksCount = value['finishedTasksCount'],
         });
-//for Level
+    //for Level
     if (level >= 5) {
       switch (level) {
         case 5:
@@ -53,7 +53,7 @@ class AchievementHub {
           break;
       }
     }
-    // For Time
+    // for Time
     if (daysSinceCreation >= 31) {
       switch (daysSinceCreation) {
         case 31:
