@@ -220,8 +220,15 @@ class ProfilState extends State<Profil> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(10)),
                                       child: GradientProgressIndicator(
-                                        //TODO : XP
-                                        value:0/100,
+                                        value: (snapshotuid.data!.docs.firstWhere((user) =>
+                                                user['uid'] == getUid())['xp'] -
+                                            snapshotuid.data!.docs.firstWhere((user) => user['uid'] == getUid())['pointsNeededBevor'])/
+                                                (
+                                                snapshotuid.data!.docs.firstWhere((user) =>
+                                                    user['uid'] ==
+                                                    getUid())['pointsNeeded'] -
+                                            snapshotuid.data!.docs.firstWhere(
+                                                        (user) => user['uid'] == getUid())['pointsNeededBevor']),
                                         gradient: LinearGradient(
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,

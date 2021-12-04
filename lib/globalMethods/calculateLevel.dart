@@ -5,22 +5,25 @@ class CalculateLevel {
   levelUp(DocumentReference user) async {
     var points;
     var pointsNeeded;
+    var pointsNeededBevor;
     var level;
 
     // get xp, pointsNeeded and level of user
     await user.get().then((value) => {
       points = value['xp'],
       pointsNeeded = value['pointsNeeded'],
+      pointsNeededBevor = value['pointsNeededBevor'],
       level = value['level']
     });
 
     // check if user has more points than needed
     // update points and level
     if (points >= pointsNeeded) {
+      pointsNeededBevor= pointsNeeded;
       level += 1;
       pointsNeeded += level * 1500;
 
-      user.update({'level': level, 'pointsNeeded': pointsNeeded});
+      user.update({'level': level, 'pointsNeeded': pointsNeeded, 'pointsNeededBevor':pointsNeededBevor});
     }
   }
 }

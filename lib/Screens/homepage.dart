@@ -289,12 +289,11 @@ class HomepageState extends State<Homepage> {
                                         );
                                       }).toList(),
                                     ),
-                                    SizedBox(height: 20),
                                     // Top 3 Title
                                     Container(
                                         child: Padding(
                                             padding: EdgeInsets.only(
-                                                left: 20, right: 20, top: 20),
+                                                left: 20, right: 20, top: 10),
                                             child: Text('Top 3',
                                                 style: TextStyle(
                                                     fontSize: 24,
