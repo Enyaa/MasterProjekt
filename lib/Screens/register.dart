@@ -62,8 +62,7 @@ class _RegisterState extends State<Register> {
         close: true,
         child: Scaffold(
             backgroundColor: Colors.transparent,
-            body: SingleChildScrollView(
-              child: Container(
+            body: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.centerLeft,
@@ -210,7 +209,7 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
-            )));
+            ));
   }
 
 
