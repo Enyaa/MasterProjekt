@@ -50,20 +50,26 @@ class _TeamsDetailState extends State<TeamsDetail> {
   List<dynamic> changeList = [];
   bool changed = false;
 
-  // update all lists containing this uid
+  // update all lists containing this uid and delete in teamChallenges
   Future<void> leaveTeam() async {
-    List userL = [];
-    userL.add(getUid());
-    return FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('teams')
         .doc(widget.teamID)
         .update({
-      'admins': FieldValue.arrayRemove(userL),
-      'member': FieldValue.arrayRemove(userL),
-      'queryOperator': FieldValue.arrayRemove(userL)
+      'admins': FieldValue.arrayRemove([getUid()]),
+      'member': FieldValue.arrayRemove([getUid()]),
+      'queryOperator': FieldValue.arrayRemove([getUid()])
     })
-        .then((value) => print("Admins updated"))
-        .catchError((error) => print("Failed to update admins: $error"));
+        .then((value) => print("Team left"))
+        .catchError((error) => print("Failed to leave team: $error"));
+    // iterate through challenges
+    for (var i = 0; i < widget.challenges.length; i++){
+      FirebaseFirestore.instance.collection('challenges').doc(widget.challenges[i]).update(
+          {
+            'finished': FieldValue.arrayRemove([getUid()]),
+            'notfinished': FieldValue.arrayRemove([getUid()])
+          });
+    }
   }
 
   @override
