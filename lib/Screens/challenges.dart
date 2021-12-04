@@ -185,15 +185,12 @@ class ChallengesState extends State<Challenges> {
         .then((value) => activeTeam = value['activeTeam']);
 
     var challenges = FirebaseFirestore.instance.collection('challenges').where('teamID', isEqualTo: activeTeam);
-    var user = await FirebaseFirestore.instance.collection('user').where('uid', isEqualTo: getUid()).get();
-    var finishedChallenges = user.docs[0].data()['finishedChallenges'];
 
     // show all
     if(value == 1) {
       setSnapshots(challenges.snapshots());
     } else if (value == 2) { // show only challenges that havent been finished by user
-      if(finishedChallenges.isNotEmpty) setSnapshots(challenges.where('id', whereNotIn: finishedChallenges).snapshots());
-      else setSnapshots(challenges.snapshots());
+      setSnapshots(challenges.where('notfinished', arrayContains: getUid()).snapshots());
     } else if (value == 4) { // show only challenges that have been finished by user
       setSnapshots(challenges.where('finished', arrayContains: getUid()).snapshots());
     }

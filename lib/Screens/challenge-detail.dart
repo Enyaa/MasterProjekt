@@ -210,6 +210,7 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
         .get();
     // Get challenge xp and list of users that finished it
     var finishedArr = challenge.docs[0].data()['finished'];
+    var notfinishedArr = challenge.docs[0].data()['notfinished'];
     var challengeXp = challenge.docs[0].data()['xp'];
 
     var user = await FirebaseFirestore.instance
@@ -225,6 +226,8 @@ class _ChallengeDetailState extends State<ChallengeDetail> {
     // Update user and challenge data
     finishedArr.add(userId);
     challengeSnap.update({'finished': finishedArr});
+    notfinishedArr.remove(userId);
+    challengeSnap.update({'notfinished': notfinishedArr});
     userSnap.update({'finishedChallengesCount': FieldValue.increment(1)});
     userSnap.update({
       'finishedChallenges': finishedChallenges
