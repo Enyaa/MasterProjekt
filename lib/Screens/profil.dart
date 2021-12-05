@@ -50,88 +50,86 @@ class ProfilState extends State<Profil> {
             drawer: MyDrawer(),
             body: SafeArea(
               child: Column(children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                    children: [
-                      StreamBuilder(
-                          stream: snapshots,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasData &&
-                                snapshot.data!.docs.firstWhere((user) =>
-                                        user['uid'] == getUid())['imgUrl'] !=
-                                    '') {
-                              String imgUrl = snapshot.data!.docs.firstWhere(
-                                  (user) => user['uid'] == getUid())['imgUrl'];
-                              return Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black,
-                                              blurRadius: 5,
-                                              spreadRadius: 0.5)
+                Stack(clipBehavior: Clip.none, children: [
+                  StreamBuilder(
+                      stream: snapshots,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData &&
+                            snapshot.data!.docs.firstWhere((user) =>
+                                    user['uid'] == getUid())['imgUrl'] !=
+                                '') {
+                          String imgUrl = snapshot.data!.docs.firstWhere(
+                              (user) => user['uid'] == getUid())['imgUrl'];
+                          return Padding(
+                              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 5,
+                                          spreadRadius: 0.5)
+                                    ],
+                                    gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        // 10% of the width, so there are ten blinds.
+                                        colors: <Color>[
+                                          Color(0xffE53147),
+                                          Color(0xffFB9C26)
                                         ],
-                                        gradient: LinearGradient(
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
-                                            // 10% of the width, so there are ten blinds.
-                                            colors: <Color>[
-                                              Color(0xffE53147),
-                                              Color(0xffFB9C26)
-                                            ],
-                                            // red to yellow
-                                            tileMode: TileMode.repeated),
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Padding(
-                                          padding: EdgeInsets.all(3),
-                                          child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              child: Image.network(imgUrl,
-                                                  height: 100,
-                                                  width: 100,
-                                                  fit: BoxFit.fill)))));
-                            } else {
-                              return Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black,
-                                              blurRadius: 5,
-                                              spreadRadius: 0.5)
-                                        ],
-                                        gradient: LinearGradient(
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
-                                            // 10% of the width, so there are ten blinds.
-                                            colors: <Color>[
-                                              Color(0xffE53147),
-                                              Color(0xffFB9C26)
-                                            ],
-                                            // red to yellow
-                                            tileMode: TileMode.repeated),
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Padding(
-                                          padding: EdgeInsets.all(3),
-                                          child: ClipRRect(
-                                              borderRadius:
+                                        // red to yellow
+                                        tileMode: TileMode.repeated),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Padding(
+                                      padding: EdgeInsets.all(3),
+                                      child: ClipRRect(
+                                          borderRadius:
                                               BorderRadius.circular(50),
-                                              child: Image.network(placeholder,
-                                                  height: 100,
-                                                  width: 100,
-                                                  fit: BoxFit.fill)))));
-                            }
-                          }),
-                new Positioned(
-                    left:30,
-                    top: 110,
-                    child:Container(
+                                          child: Image.network(imgUrl,
+                                              height: 100,
+                                              width: 100,
+                                              fit: BoxFit.fill)))));
+                        } else {
+                          return Padding(
+                              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 5,
+                                          spreadRadius: 0.5)
+                                    ],
+                                    gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        // 10% of the width, so there are ten blinds.
+                                        colors: <Color>[
+                                          Color(0xffE53147),
+                                          Color(0xffFB9C26)
+                                        ],
+                                        // red to yellow
+                                        tileMode: TileMode.repeated),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Padding(
+                                      padding: EdgeInsets.all(3),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image.network(placeholder,
+                                              height: 100,
+                                              width: 100,
+                                              fit: BoxFit.fill)))));
+                        }
+                      }),
+                  new Positioned(
+                      left: 30,
+                      top: 110,
+                      child: Container(
                         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                         width: 50,
                         height: 25,
@@ -151,10 +149,9 @@ class ProfilState extends State<Profil> {
                                 BorderRadius.all(Radius.circular(20))),
                         child: Methods(mode: 'level.s'),
                       )),
-                    ]),
+                ]),
                 Container(
-                    child: Column(
-                        children: [
+                    child: Column(children: [
                   StreamBuilder<QuerySnapshot>(
                       stream: snapshots,
                       builder: (BuildContext context,
@@ -177,16 +174,16 @@ class ProfilState extends State<Profil> {
                                   )));
                         } else {
                           return (Container(
-                            margin: EdgeInsets.fromLTRB(0, 25, 0, 0),
+                              margin: EdgeInsets.fromLTRB(0, 25, 0, 0),
                               child: new Text(
-                            snapshot.data!.docs.firstWhere(
-                                (user) => user['uid'] == getUid())['name'],
-                            style: TextStyle(
-                                fontSize: 25.0,
-                                color: Colors.white,
-                                letterSpacing: 2.0,
-                                fontWeight: FontWeight.w400),
-                          )));
+                                snapshot.data!.docs.firstWhere(
+                                    (user) => user['uid'] == getUid())['name'],
+                                style: TextStyle(
+                                    fontSize: 25.0,
+                                    color: Colors.white,
+                                    letterSpacing: 2.0,
+                                    fontWeight: FontWeight.w400),
+                              )));
                         }
                       }),
                 ])),
@@ -327,7 +324,7 @@ class ProfilState extends State<Profil> {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       return ListView(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
                           children: getList('achievements', snapshot, context));
                     },
                   ),
@@ -345,42 +342,62 @@ class ProfilState extends State<Profil> {
       return [Center(child: CircularProgressIndicator())];
     } else if (mode == 'tasks') {
       return snapshot.data!.docs
-          .map<Widget>((doc) => Card(
-                  child: ListTile(
-                title: new Text(doc['title']),
-                subtitle: new Text(doc['description']),
-                trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(child: new Text(doc['xp'].toString() + ' XP')),
-                      Container(child: new Text(doc['time'].toString())),
-                    ]),
-              )))
+          .map<Widget>((doc) => Container(
+              height: 80,
+              child: Card(
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: ListTile(
+                        title: new Text(doc['title']),
+                        subtitle: new Text(doc['description'],
+                            maxLines: 3, overflow: TextOverflow.ellipsis),
+                        trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  child:
+                                      new Text(doc['xp'].toString() + ' XP')),
+                              Container(
+                                  child: new Text(doc['time'].toString())),
+                            ]),
+                      )))))
           .toList();
       //Cards for Challenges
     } else if (mode == 'challenges') {
       return snapshot.data!.docs
-          .map<Widget>((doc) => Card(
-                  child: ListTile(
-                title: new Text(doc['title']),
-                subtitle: new Text(doc['description']),
-                trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(child: new Text(doc['xp'].toString() + ' XP')),
-                    ]),
-              )))
+          .map<Widget>((doc) => Container(
+              height: 80,
+              child: Card(
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: ListTile(
+                        title: new Text(doc['title']),
+                        subtitle: new Text(doc['description'],
+                            maxLines: 3, overflow: TextOverflow.ellipsis),
+                        trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  child:
+                                      new Text(doc['xp'].toString() + ' XP')),
+                            ]),
+                      )))))
           .toList();
       // Cards for Achievements
     } else if (mode == 'achievements') {
       return snapshot.data!.docs
-          .map<Widget>((doc) => Card(
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(10),
-                title: new Text(doc['title']),
-                subtitle: new Text(doc['description']),
-                leading: Container(child: Icon(Icons.emoji_events, color: Colors.white))
-              )))
+          .map<Widget>((doc) => Container(
+              height: 80,
+              child: Card(
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: ListTile(
+                          title: new Text(doc['title']),
+                          subtitle: new Text(doc['description'],
+                              maxLines: 3, overflow: TextOverflow.ellipsis),
+                          leading: Container(
+                              child: Icon(Icons.emoji_events,
+                                  color: Colors.white)))))))
           .toList();
     }
   }

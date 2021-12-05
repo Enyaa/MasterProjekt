@@ -143,10 +143,14 @@ class TasksState extends State<Tasks> {
   // get list of tasks as cards
   getTasks(AsyncSnapshot<QuerySnapshot> snapshot, BuildContext context) {
     return snapshot.data!.docs
-        .map((doc) => Card(
+        .map((doc) => Container(
+        height: 80,
+        child: Card(
+            child: Container(
+              alignment: Alignment.center,
             child: ListTile(
                 title: new Text(doc['title']),
-                subtitle: new Text(doc['description']),
+                subtitle: new Text(doc['description'], maxLines: 2, overflow: TextOverflow.ellipsis),
                 trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -175,7 +179,7 @@ class TasksState extends State<Tasks> {
                           userId: doc['user'],
                         ),
                       ));
-                })))
+                })))))
         .toList();
   }
 
